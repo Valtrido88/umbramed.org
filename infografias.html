@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografías Médicas - UmbraMed.Org</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <div class="logo-dna">
+                        <!-- SVG del logo -->
+                    </div>
+                    <div>
+                        <div class="brand-text">UMBRAMED</div>
+                        <div class="subtitle">MEDICAL DIVISION</div>
+                    </div>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="herramientas.html">Herramientas</a></li>
+                    <li class="nav-item"><a href="software.html">Software</a></li>
+                    <li class="nav-item"><a href="infografias.html" class="active">Infografías</a></li>
+                    <li class="nav-item admin-only" style="display: none;"><a href="index.html#admin">Admin</a></li>
+                    <li class="nav-item">
+                        <div id="loginArea">
+                            <button class="login-btn" onclick="showLogin()">LOGIN</button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="tools-section">
+            <h2 class="section-title">INFOGRAFÍAS MÉDICAS</h2>
+            <div class="tools-grid" id="infographicsGrid">
+                <div class="tool-card">
+                    <span class="tool-icon">🧬</span>
+                    <h3 class="tool-title">Atlas Genético</h3>
+                    <p class="tool-description">
+                        Colección completa de infografías sobre genética médica, mutaciones 
+                        y enfermedades hereditarias. Material educativo de alta calidad.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='infografias/atlas-genetico.html'">VER DETALLES</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🦠</span>
+                    <h3 class="tool-title">Guía Patógenos</h3>
+                    <p class="tool-description">
+                        Infografías detalladas sobre patógenos comunes, sus características, 
+                        tratamientos y protocolos de prevención.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='infografias/guia-patogenos.html'">VER DETALLES</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🫀</span>
+                    <h3 class="tool-title">Atlas Anatómico</h3>
+                    <p class="tool-description">
+                        Atlas anatómico digital con ilustraciones médicas de alta calidad. 
+                        Incluye todos los sistemas del cuerpo humano.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='infografias/atlas-anatomico.html'">VER DETALLES</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
+            </p>
+            <p class="footer-warning">
+                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

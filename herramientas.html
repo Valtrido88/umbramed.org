@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas Médicas - UmbraMed.Org</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <div class="logo-dna">
+                        <!-- SVG del logo -->
+                    </div>
+                    <div>
+                        <div class="brand-text">UMBRAMED</div>
+                        <div class="subtitle">MEDICAL DIVISION</div>
+                    </div>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="herramientas.html" class="active">Herramientas</a></li>
+                    <li class="nav-item"><a href="software.html">Software</a></li>
+                    <li class="nav-item"><a href="infografias.html">Infografías</a></li>
+                    <li class="nav-item admin-only" style="display: none;"><a href="index.html#admin">Admin</a></li>
+                    <li class="nav-item">
+                        <div id="loginArea">
+                            <button class="login-btn" onclick="showLogin()">LOGIN</button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="tools-section">
+            <h2 class="section-title">HERRAMIENTAS MÉDICAS</h2>
+            <div class="tools-grid" id="toolsGrid">
+                <div class="tool-card">
+                    <span class="tool-icon">🤖</span>
+                    <h3 class="tool-title">Bot de Catering</h3>
+                    <p class="tool-description">
+                        Automatizador inteligente para selección de menús de guardia médica. 
+                        Integración con Google Calendar y navegación web automatizada.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='herramientas/catering-bot.html'">VER DETALLES</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">📊</span>
+                    <h3 class="tool-title">Calculadora Dosis</h3>
+                    <p class="tool-description">
+                        Herramienta de cálculo preciso de dosificaciones médicas con base de datos 
+                        de medicamentos actualizada y algoritmos de seguridad.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='herramientas/calculadora-dosis.html'">VER DETALLES</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🩺</span>
+                    <h3 class="tool-title">Diagnóstico Asistido</h3>
+                    <p class="tool-description">
+                        Sistema de soporte diagnóstico basado en síntomas y parámetros clínicos. 
+                        Algoritmos avanzados de análisis médico.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='herramientas/diagnostico-asistido.html'">VER DETALLES</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">📋</span>
+                    <h3 class="tool-title">Gestor de Historiales</h3>
+                    <p class="tool-description">
+                        Aplicación completa para gestión de historiales clínicos con encriptación 
+                        avanzada y cumplimiento de normativas RGPD.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="location.href='herramientas/gestor-historiales.html'">VER DETALLES</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
+            </p>
+            <p class="footer-warning">
+                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

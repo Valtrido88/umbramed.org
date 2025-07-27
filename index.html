@@ -861,6 +861,100 @@
             </div>
         </section>
 
+        <section id="software" class="tools-section">
+            <h2 class="section-title">SOFTWARE MÉDICO</h2>
+            <div class="tools-grid" id="softwareGrid">
+                <div class="tool-card">
+                    <span class="tool-icon">💊</span>
+                    <h3 class="tool-title">Farmacia Virtual</h3>
+                    <p class="tool-description">
+                        Software de gestión farmacéutica con base de datos actualizada de medicamentos, 
+                        interacciones y contraindicaciones. Control de inventario y recetas electrónicas.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('pharmacy-manager')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">📈</span>
+                    <h3 class="tool-title">Análisis Estadístico</h3>
+                    <p class="tool-description">
+                        Herramienta avanzada para análisis estadístico médico. Incluye procesamiento 
+                        de datos clínicos, generación de gráficos y reportes personalizados.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('stats-analyzer')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🔬</span>
+                    <h3 class="tool-title">Laboratorio Digital</h3>
+                    <p class="tool-description">
+                        Sistema integral para gestión de laboratorio clínico. Control de muestras, 
+                        resultados y generación automática de informes.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('lab-system')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="infografias" class="tools-section">
+            <h2 class="section-title">INFOGRAFÍAS MÉDICAS</h2>
+            <div class="tools-grid" id="infographicsGrid">
+                <div class="tool-card">
+                    <span class="tool-icon">🧬</span>
+                    <h3 class="tool-title">Atlas Genético</h3>
+                    <p class="tool-description">
+                        Colección completa de infografías sobre genética médica, mutaciones 
+                        y enfermedades hereditarias. Formato PDF de alta resolución.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('genetic-atlas')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🦠</span>
+                    <h3 class="tool-title">Guía Patógenos</h3>
+                    <p class="tool-description">
+                        Infografías detalladas sobre patógenos comunes, sus características, 
+                        tratamientos y protocolos de prevención.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('pathogen-guide')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <span class="tool-icon">🫀</span>
+                    <h3 class="tool-title">Atlas Anatómico</h3>
+                    <p class="tool-description">
+                        Atlas anatómico digital con ilustraciones médicas de alta calidad. 
+                        Incluye todas las sistemas del cuerpo humano.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" onclick="downloadTool('anatomy-atlas')">DESCARGAR</button>
+                        <button class="edit-button" onclick="editTool(this)">EDITAR</button>
+                        <button class="delete-button" onclick="deleteTool(this)">ELIMINAR</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Admin Panel (Solo visible para admin) -->
         <section id="admin" class="admin-panel">
             <h2 class="admin-title">⚠️ PANEL DE ADMINISTRACIÓN ⚠️</h2>
@@ -1048,7 +1142,13 @@
                 'catering-bot': 'files/catering-bot.zip',
                 'dose-calc': 'files/dose-calculator.zip',
                 'diagnostic-ai': 'files/diagnostic-assistant.zip',
-                'history-manager': 'files/history-manager.zip'
+                'history-manager': 'files/history-manager.zip',
+                'pharmacy-manager': 'files/pharmacy-manager.zip',
+                'stats-analyzer': 'files/stats-analyzer.zip',
+                'lab-system': 'files/lab-system.zip',
+                'genetic-atlas': 'files/genetic-atlas.pdf',
+                'pathogen-guide': 'files/pathogen-guide.pdf',
+                'anatomy-atlas': 'files/anatomy-atlas.pdf'
             };
             
             if (downloadUrls[toolId]) {
