@@ -1,0 +1,2661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Pediátrica Avanzada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            color: white;
+            padding: 24px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #bfdbfe;
+            font-size: 14px;
+        }
+
+        .navigation {
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            padding: 0 24px;
+        }
+
+        .nav-button {
+            padding: 16px 8px;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: #6b7280;
+            margin-right: 32px;
+            transition: all 0.2s;
+        }
+
+        .nav-button.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .nav-button:hover {
+            color: #374151;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            gap: 32px;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-blue {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+        }
+
+        .card-green {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input, .select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .button-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .button-green {
+            background: #16a34a;
+            color: white;
+        }
+
+        .button-green:hover {
+            background: #15803d;
+        }
+
+        .button-red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .button-red:hover {
+            background: #b91c1c;
+        }
+
+        .result-card {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .warning-card {
+            background: #fef2f2;
+            border-left: 4px solid #dc2626;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-title {
+            font-weight: 500;
+            color: #991b1b;
+            margin-bottom: 4px;
+        }
+
+        .warning-text {
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        .info-card {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .medication-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .medication-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .medication-header {
+            display: flex;
+            justify-content: between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .medication-name {
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .medication-category {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .scale-item {
+            background: #f9fafb;
+            border: 2px solid transparent;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .scale-item:hover {
+            background: #f3f4f6;
+        }
+
+        .scale-item.selected {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .scale-item input {
+            margin-top: 4px;
+        }
+
+        .scale-content {
+            flex: 1;
+        }
+
+        .scale-text {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .scale-points {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .score-max {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .interpretation {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 2px solid;
+        }
+
+        .interpretation.green {
+            background: #f0fdf4;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .interpretation.yellow {
+            background: #fefce8;
+            color: #854d0e;
+            border-color: #fde047;
+        }
+
+        .interpretation.orange {
+            background: #fff7ed;
+            color: #9a3412;
+            border-color: #fed7aa;
+        }
+
+        .interpretation.red {
+            background: #fef2f2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+
+        .interpretation-level {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .interpretation-desc {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .advice-content {
+            white-space: pre-wrap;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-wrap: wrap;
+            }
+            
+            .nav-button {
+                margin-right: 16px;
+                margin-bottom: 8px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .back-button:hover {
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧮 Calculadora Pediátrica Avanzada</h1>
+            <p>Herramienta integral para el manejo farmacológico y evaluación clínica pediátrica</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-button active" onclick="showTab('calculator')">🧮 Calculadora</button>
+            <button class="nav-button" onclick="showTab('scales')">📊 Escalas Clínicas</button>
+            <button class="nav-button" onclick="showTab('vademecum')">📚 Vademécum</button>
+            <button class="nav-button" onclick="showTab('advice')">❤️ Consejos Padres</button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Calculator Tab -->
+            <div id="calculator" class="tab-content active">
+                <div class="grid grid-2">
+                    <!-- Input Section -->
+                    <div>
+                        <div class="card card-blue">
+                            <h2 class="result-title">🧮 Datos del Paciente</h2>
+                            
+                            <div class="input-group">
+                                <label class="label">Peso del niño (kg)</label>
+                                <input type="number" id="weight" class="input" placeholder="Ej: 15.5" step="0.1" min="0.5" max="100" oninput="updateCalculations()">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="label">Seleccionar medicamento</label>
+                                <select id="medication" class="select" onchange="updateCalculations()">
+                                    <option value="">-- Seleccionar medicamento --</option>
+                                    <optgroup label="🦠 Antibióticos">
+                                        <option value="amoxicilina">Amoxicilina</option>
+                                        <option value="amoxicilina_clavulanico">Amoxicilina-Clavulánico</option>
+                                        <option value="azitromicina">Azitromicina</option>
+                                        <option value="claritromicina">Claritromicina</option>
+                                        <option value="cefalexina">Cefalexina</option>
+                                        <option value="cefixima">Cefixima</option>
+                                        <option value="eritromicina">Eritromicina</option>
+                                        <option value="ceftriaxona">Ceftriaxona (hospitalaria)</option>
+                                    </optgroup>
+                                    <optgroup label="🌡️ Analgésicos/Antipiréticos">
+                                        <option value="paracetamol">Paracetamol</option>
+                                        <option value="ibuprofeno">Ibuprofeno</option>
+                                        <option value="metamizol">Metamizol (Nolotil)</option>
+                                        <option value="paracetamol_supositorios">Paracetamol supositorios</option>
+                                    </optgroup>
+                                    <optgroup label="💊 Corticoides">
+                                        <option value="prednisolona">Prednisolona</option>
+                                        <option value="dexametasona">Dexametasona</option>
+                                        <option value="hidrocortisona">Hidrocortisona</option>
+                                    </optgroup>
+                                    <optgroup label="🫁 Broncodilatadores">
+                                        <option value="salbutamol">Salbutamol</option>
+                                        <option value="terbutalina">Terbutalina</option>
+                                    </optgroup>
+                                    <optgroup label="🤧 Antihistamínicos">
+                                        <option value="cetirizina">Cetirizina</option>
+                                        <option value="loratadina">Loratadina</option>
+                                        <option value="hidroxicina">Hidroxicina (sedante)</option>
+                                    </optgroup>
+                                    <optgroup label="🤢 Antieméticos">
+                                        <option value="domperidona">Domperidona</option>
+                                        <option value="ondansetron">Ondansetrón</option>
+                                        <option value="metoclopramida">Metoclopramida</option>
+                                    </optgroup>
+                                    <optgroup label="💨 Mucolíticos/Expectorantes">
+                                        <option value="mucosolvan">Ambroxol (Mucosolvan)</option>
+                                        <option value="acetilcisteina">Acetilcisteína</option>
+                                    </optgroup>
+                                    <optgroup label="🛡️ Protectores Gástricos">
+                                        <option value="omeprazol">Omeprazol</option>
+                                        <option value="lansoprazol">Lansoprazol</option>
+                                    </optgroup>
+                                    <optgroup label="💩 Laxantes">
+                                        <option value="lactulosa">Lactulosa</option>
+                                        <option value="macrogol">Macrogol (Movicol)</option>
+                                    </optgroup>
+                                    <optgroup label="🦠 Probióticos">
+                                        <option value="lactobacillus">Lactobacillus rhamnosus</option>
+                                    </optgroup>
+                                    <optgroup label="💧 Rehidratación">
+                                        <option value="sro">Suero Rehidratación Oral</option>
+                                    </optgroup>
+                                    <optgroup label="🧴 Tópicos">
+                                        <option value="fluticasona">Fluticasona nasal</option>
+                                        <option value="betametasona">Betametasona tópica</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div>
+                        <div id="results-card" class="card hidden">
+                            <h2 class="result-title">✅ Resultado del Cálculo</h2>
+                            
+                            <div class="result-card">
+                                <h3 id="selected-med-name" class="medication-name"></h3>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <p class="result-label">Dosis calculada:</p>
+                                        <p class="result-value" id="calculated-mg">0 mg</p>
+                                    </div>
+                                    <div class="result-item">
+                                        <p class="result-label">Volumen a administrar:</p>
+                                        <p class="result-value" id="calculated-ml">0 ml</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 8px; margin: 12px 0; border-radius: 4px;">
+                                    <p style="font-size: 11px; color: #92400e; margin: 0;">
+                                        <strong>⚠️</strong> Volumen calculado para la presentación especificada. Verificar concentración en envase.
+                                    </p>
+                                </div>
+                                
+                                <div id="medication-details"></div>
+                            </div>
+
+                            <div id="medication-warnings"></div>
+                        </div>
+
+                        <!-- Automatic Analgesic Calculation -->
+                        <div id="analgesics-card" class="card card-green hidden">
+                            <h3 class="result-title">❤️ Analgésicos Automáticos (por peso)</h3>
+                            
+                            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 16px; border-radius: 6px;">
+                                <p style="font-size: 12px; color: #92400e; margin: 0;">
+                                    <strong>⚠️ IMPORTANTE:</strong> Verificar SIEMPRE la concentración en el envase del medicamento antes de administrar.
+                                </p>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="card">
+                                    <h4 class="medication-name">Paracetamol</h4>
+                                    <div style="margin-bottom: 12px;">
+                                        <p style="font-size: 12px; color: #6b7280;">Jarabe 160mg/5ml (32mg/ml):</p>
+                                        <p class="result-value" id="paracetamol-jarabe-ml" style="color: #16a34a;">0 ml</p>
+                                    </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <p style="font-size: 12px; color: #6b7280;">Gotas 100mg/ml (concentrado):</p>
+                                        <p class="result-value" id="paracetamol-gotas-ml" style="color: #16a34a;">0 ml</p>
+                                    </div>
+                                    <p class="result-label">Cada 4-6 horas (máx 5 dosis/día)</p>
+                                </div>
+                                
+                                <div class="card">
+                                    <h4 class="medication-name">Ibuprofeno</h4>
+                                    <div style="margin-bottom: 12px;">
+                                        <p style="font-size: 12px; color: #6b7280;">Jarabe 100mg/5ml (20mg/ml):</p>
+                                        <p class="result-value" id="ibuprofeno-jarabe-ml" style="color: #2563eb;">0 ml</p>
+                                    </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <p style="font-size: 12px; color: #6b7280;">Gotas 200mg/ml (CONCENTRADO):</p>
+                                        <p class="result-value" id="ibuprofeno-concentrado-ml" style="color: #2563eb;">0 ml</p>
+                                    </div>
+                                    <p class="result-label">Cada 6-8 horas (>6 meses)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scales Tab -->
+            <div id="scales" class="tab-content">
+                <h2 class="result-title">📊 Escalas Clínicas Pediátricas</h2>
+                
+                <div id="scales-list">
+                    <div class="grid grid-3">
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🧠 Escala de Glasgow Pediátrica</h3>
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Evaluación del nivel de conciencia en niños</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: #6b7280;">Max: 15 puntos</span>
+                                <button class="button button-primary" onclick="showScale('glasgow')">Evaluar</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🫁 Escala de Silverman-Andersen</h3>
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Evaluación de dificultad respiratoria neonatal</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: #6b7280;">Max: 10 puntos</span>
+                                <button class="button button-primary" onclick="showScale('silverman')">Evaluar</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🌊 Wood-Downes-Ferrés</h3>
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Evaluación de gravedad en bronquiolitis</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: #6b7280;">Max: 15 puntos</span>
+                                <button class="button button-primary" onclick="showScale('wood_downes')">Evaluar</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">⚠️ PEWS</h3>
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Predicción de deterioro clínico pediátrico</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: #6b7280;">Max: 9 puntos</span>
+                                <button class="button button-primary" onclick="showScale('pews')">Evaluar</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🎭 Escala de Westley</h3>
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Evaluación de gravedad del crup/laringitis</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: #6b7280;">Max: 17 puntos</span>
+                                <button class="button button-primary" onclick="showScale('westley')">Evaluar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 32px 0 16px 0; color: #374151; font-size: 20px;">🌡️ Escalas de Evaluación de Fiebre</h3>
+                <div class="grid grid-2">
+                    <div class="medication-card">
+                        <div class="medication-header">
+                            <h3 class="medication-name">🌡️ Fiebre Pediátrica General</h3>
+                        </div>
+                        <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Evaluación de riesgo en niños con fiebre</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 12px; color: #6b7280;">Max: 12 puntos</span>
+                            <button class="button button-primary" onclick="showScale('fiebre')">Evaluar</button>
+                        </div>
+                    </div>
+
+                    <div class="medication-card">
+                        <div class="medication-header">
+                            <h3 class="medication-name">👶 Young Infant (YIOS)</h3>
+                        </div>
+                        <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Lactantes febriles 1-3 meses</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 12px; color: #6b7280;">Max: 18 puntos</span>
+                            <button class="button button-primary" onclick="showScale('young_infant')">Evaluar</button>
+                        </div>
+                    </div>
+
+                    <div class="medication-card">
+                        <div class="medication-header">
+                            <h3 class="medication-name">🎯 Yale Observation (YOS)</h3>
+                        </div>
+                        <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Niños febriles 3-36 meses</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 12px; color: #6b7280;">Max: 18 puntos</span>
+                            <button class="button button-primary" onclick="showScale('yale_observation')">Evaluar</button>
+                        </div>
+                    </div>
+
+                    <div class="medication-card">
+                        <div class="medication-header">
+                            <h3 class="medication-name">🚨 Sepsis Pediátrica</h3>
+                        </div>
+                        <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">Criterios de sepsis/shock séptico</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 12px; color: #6b7280;">Max: 15 puntos</span>
+                            <button class="button button-primary" onclick="showScale('sepsis_pediatrica')">Evaluar</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <div id="scale-evaluation" class="hidden">
+                    <button class="back-button" onclick="backToScales()">← Volver a escalas</button>
+                    
+                    <div class="grid grid-3">
+                        <!-- Evaluation Area -->
+                        <div style="grid-column: span 2;">
+                            <div class="card">
+                                <h4 class="result-title">📋 Evaluación</h4>
+                                <div id="scale-categories"></div>
+                            </div>
+                        </div>
+
+                        <!-- Results Area -->
+                        <div>
+                            <!-- Score -->
+                            <div class="card">
+                                <h4 class="result-title">🎯 Puntuación</h4>
+                                <div class="score-display">
+                                    <div class="score-number" id="current-score">0</div>
+                                    <div class="score-max">de <span id="max-score">0</span> puntos</div>
+                                </div>
+                                <div id="interpretation-result"></div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="card">
+                                <h4 class="result-title">🎬 Acciones</h4>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <button class="button button-green" onclick="copyScaleReport()" id="copy-report-btn">
+                                        📄 Copiar Informe
+                                    </button>
+                                    <button class="button button-red" onclick="clearCurrentScale()">
+                                        🗑️ Limpiar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Instructions -->
+                            <div class="info-card">
+                                <div style="display: flex; align-items: start;">
+                                    <span style="color: #f59e0b; margin-right: 8px;">ℹ️</span>
+                                    <div style="font-size: 14px; color: #92400e;">
+                                        <p style="font-weight: 500; margin-bottom: 4px;">Instrucciones:</p>
+                                        <ul style="font-size: 12px; line-height: 1.4;">
+                                            <li>• Marque los hallazgos encontrados</li>
+                                            <li>• La puntuación se calcula automáticamente</li>
+                                            <li>• Use "Copiar Informe" para pegar en historia clínica</li>
+                                            <li>• El informe incluye fecha, hora e interpretación</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vademecum Tab -->
+            <div id="vademecum" class="tab-content">
+                <h2 class="result-title">📚 Vademécum Pediátrico</h2>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="input search-input" placeholder="Buscar medicamento..." id="search-medication" oninput="filterMedications()">
+                </div>
+
+                <div id="medications-grid" class="grid grid-3">
+                    <!-- Medications will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Advice Tab -->
+            <div id="advice" class="tab-content">
+                <h2 class="result-title">❤️ Consejos para Padres</h2>
+                
+                <div id="advice-list">
+                    <div class="grid grid-3">
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">💧 Manejo de la Gastroenteritis Aguda</h3>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                                <button class="button button-primary" onclick="showAdvice('gastroenteritis')">📄 Ver Guía Completa</button>
+                                <button class="button button-green" onclick="printAdvice('gastroenteritis')">🖨️ Imprimir Guía</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🌡️ Manejo de la Fiebre en Niños</h3>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                                <button class="button button-primary" onclick="showAdvice('fiebre')">📄 Ver Guía Completa</button>
+                                <button class="button button-green" onclick="printAdvice('fiebre')">🖨️ Imprimir Guía</button>
+                            </div>
+                        </div>
+
+                        <div class="medication-card">
+                            <div class="medication-header">
+                                <h3 class="medication-name">🛡️ Administración Segura de Medicamentos</h3>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                                <button class="button button-primary" onclick="showAdvice('administracion_medicamentos')">📄 Ver Guía Completa</button>
+                                <button class="button button-green" onclick="printAdvice('administracion_medicamentos')">🖨️ Imprimir Guía</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="advice-content" class="hidden">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 id="advice-title" class="result-title"></h3>
+                            <button class="back-button" onclick="backToAdvice()">✕</button>
+                        </div>
+                        
+                        <div class="advice-content" id="advice-text"></div>
+                        
+                        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                            <button class="button button-green" onclick="printCurrentAdvice()">
+                                🖨️ Imprimir esta Guía
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>⚠️ Esta herramienta es de apoyo clínico. Siempre verificar dosis y consultar con profesional sanitario.</p>
+            <p>🏥 <strong>VERIFICAR SIEMPRE la concentración exacta en el envase del medicamento antes de administrar.</strong></p>
+            <p>📊 Las escalas clínicas son herramientas de cribado - No sustituyen la evaluación clínica completa.</p>
+            <p>Basado en evidencia científica actualizada 2024 • Desarrollado para profesionales de la salud</p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentScale = '';
+        let scaleScores = {};
+        let currentAdvice = '';
+
+        // Medication database
+        const medications = {
+            // ANTIBIÓTICOS
+            amoxicilina: {
+                name: 'Amoxicilina',
+                category: 'Antibiótico',
+                dose: '40-90 mg/kg/día',
+                frequency: 'cada 8-12 horas',
+                maxDose: '3000 mg/día',
+                presentation: 'Jarabe 250mg/5ml (50mg/ml) | Comp. 500mg, 875mg (≥15kg)',
+                contraindications: 'Alergia a penicilinas',
+                warnings: 'Vigilar reacciones alérgicas. VERIFICAR concentración en envase.',
+                calculate: (weight) => {
+                    const dailyDose = weight * 50;
+                    const perDose = dailyDose / 3;
+                    const ml = (perDose / 250) * 5;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            amoxicilina_clavulanico: {
+                name: 'Amoxicilina-Clavulánico',
+                category: 'Antibiótico',
+                dose: '40-80 mg/kg/día (amoxicilina)',
+                frequency: 'cada 8-12 horas',
+                maxDose: '2000 mg/día',
+                presentation: 'Jarabe 400/57mg por 5ml | Comp. 500/125mg, 875/125mg',
+                contraindications: 'Alergia a penicilinas, hepatotoxicidad previa',
+                warnings: 'Administrar con alimentos. Riesgo de diarrea',
+                calculate: (weight) => {
+                    const dailyDose = weight * 50;
+                    const perDose = dailyDose / 3;
+                    const ml = (perDose / 400) * 5;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            azitromicina: {
+                name: 'Azitromicina',
+                category: 'Antibiótico',
+                dose: '10 mg/kg/día',
+                frequency: 'una vez al día por 3-5 días',
+                maxDose: '500 mg/día',
+                presentation: 'Jarabe 40mg/ml | Comp. 250mg, 500mg (≥15kg)',
+                contraindications: 'Alergia a macrólidos, arritmias cardíacas',
+                warnings: 'Administrar con estómago vacío. VERIFICAR concentración en envase.',
+                calculate: (weight) => {
+                    const dailyDose = weight * 10;
+                    const ml = dailyDose / 40;
+                    return { mg: dailyDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            claritromicina: {
+                name: 'Claritromicina',
+                category: 'Antibiótico',
+                dose: '15 mg/kg/día',
+                frequency: 'cada 12 horas por 5-10 días',
+                maxDose: '1000 mg/día',
+                presentation: 'Jarabe 25mg/ml | Comp. 250mg, 500mg',
+                contraindications: 'Alergia a macrólidos',
+                warnings: 'Administrar con alimentos. Interacciones múltiples',
+                calculate: (weight) => {
+                    const dailyDose = weight * 15;
+                    const perDose = dailyDose / 2;
+                    const ml = perDose / 25;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            cefalexina: {
+                name: 'Cefalexina',
+                category: 'Antibiótico',
+                dose: '25-100 mg/kg/día',
+                frequency: 'cada 6-8 horas',
+                maxDose: '4000 mg/día',
+                presentation: 'Jarabe 250mg/5ml (50mg/ml) | Cáps. 500mg (≥15kg)',
+                contraindications: 'Alergia a cefalosporinas',
+                warnings: 'Precaución en alergia a penicilinas. VERIFICAR concentración en envase.',
+                calculate: (weight) => {
+                    const dailyDose = weight * 50;
+                    const perDose = dailyDose / 4;
+                    const ml = (perDose / 250) * 5;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            cefixima: {
+                name: 'Cefixima',
+                category: 'Antibiótico',
+                dose: '8 mg/kg/día',
+                frequency: 'una vez al día o dividido cada 12h',
+                maxDose: '400 mg/día',
+                presentation: 'Jarabe 20mg/ml | Comp. 200mg, 400mg',
+                contraindications: 'Alergia a cefalosporinas',
+                warnings: 'Puede causar diarrea. Administrar con alimentos',
+                calculate: (weight) => {
+                    const dailyDose = weight * 8;
+                    const ml = dailyDose / 20;
+                    return { mg: dailyDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            eritromicina: {
+                name: 'Eritromicina',
+                category: 'Antibiótico',
+                dose: '30-50 mg/kg/día',
+                frequency: 'cada 6-8 horas',
+                maxDose: '2000 mg/día',
+                presentation: 'Jarabe 25mg/ml | Comp. 250mg, 500mg',
+                contraindications: 'Alergia a macrólidos',
+                warnings: 'Administrar con estómago vacío. Náuseas frecuentes',
+                calculate: (weight) => {
+                    const dailyDose = weight * 40;
+                    const perDose = dailyDose / 4;
+                    const ml = perDose / 25;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            ceftriaxona: {
+                name: 'Ceftriaxona (hospitalaria)',
+                category: 'Antibiótico',
+                dose: '50-100 mg/kg/día',
+                frequency: 'cada 12-24 horas IM/IV',
+                maxDose: '4000 mg/día',
+                presentation: 'Vial 500mg, 1g, 2g',
+                contraindications: 'Alergia a cefalosporinas, hiperbilirrubinemia neonatal',
+                warnings: 'Solo uso hospitalario. No mezclar con calcio',
+                calculate: (weight) => {
+                    const dailyDose = weight * 75;
+                    return { mg: dailyDose.toFixed(1), ml: 'Inyectable' };
+                }
+            },
+            // ANALGÉSICOS/ANTIPIRÉTICOS
+            paracetamol: {
+                name: 'Paracetamol',
+                category: 'Analgésico/Antipirético',
+                dose: '10-15 mg/kg/dosis',
+                frequency: 'cada 4-6 horas (máx 5 dosis/día)',
+                maxDose: '75 mg/kg/día',
+                presentation: 'Jarabe 160mg/5ml (32mg/ml) | Gotas 100mg/ml',
+                contraindications: 'Hepatopatía grave',
+                warnings: 'No exceder dosis máxima por riesgo hepático',
+                calculate: (weight) => {
+                    const doseMg = weight * 15;
+                    const jarabeMl = doseMg / 32;
+                    return { mg: doseMg.toFixed(1), ml: jarabeMl.toFixed(1) };
+                }
+            },
+            ibuprofeno: {
+                name: 'Ibuprofeno',
+                category: 'Analgésico/Antipirético/Antiinflamatorio',
+                dose: '5-10 mg/kg/dosis',
+                frequency: 'cada 6-8 horas',
+                maxDose: '40 mg/kg/día',
+                presentation: 'Jarabe 100mg/5ml (20mg/ml) | Gotas 200mg/ml (CONCENTRADO)',
+                contraindications: 'Alergia a AINEs, asma inducido por AINEs, <6 meses',
+                warnings: 'No usar en varicela o deshidratación',
+                calculate: (weight) => {
+                    const doseMg = weight * 7;
+                    const jarabeMl = doseMg / 20;
+                    return { mg: doseMg.toFixed(1), ml: jarabeMl.toFixed(1) };
+                }
+            },
+            metamizol: {
+                name: 'Metamizol (Nolotil)',
+                category: 'Analgésico/Antipirético',
+                dose: '10-15 mg/kg/dosis',
+                frequency: 'cada 6-8 horas',
+                maxDose: '60 mg/kg/día',
+                presentation: 'Gotas 500mg/ml | Amp. 575mg/ml',
+                contraindications: 'Discrasias sanguíneas, porfiria',
+                warnings: 'Risk de agranulocitosis. Uso restrictivo',
+                calculate: (weight) => {
+                    const doseMg = weight * 12;
+                    const ml = doseMg / 500;
+                    return { mg: doseMg.toFixed(1), ml: ml.toFixed(2) };
+                }
+            },
+            // CORTICOIDES
+            prednisolona: {
+                name: 'Prednisolona',
+                category: 'Corticoide',
+                dose: '1-2 mg/kg/día',
+                frequency: 'una vez al día o dividido en 2 dosis',
+                maxDose: '60 mg/día',
+                presentation: '15mg/5ml',
+                contraindications: 'Infecciones sistémicas no tratadas',
+                warnings: 'Administrar con alimentos, no suspender bruscamente',
+                calculate: (weight) => {
+                    const dailyDose = weight * 1;
+                    const ml = (dailyDose / 15) * 5;
+                    return { mg: dailyDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            dexametasona: {
+                name: 'Dexametasona',
+                category: 'Corticoide',
+                dose: '0.15-0.6 mg/kg/día',
+                frequency: 'una vez al día',
+                maxDose: '16 mg/día',
+                presentation: 'Jarabe 0.5mg/5ml | Amp. 4mg/ml',
+                contraindications: 'Infecciones no tratadas',
+                warnings: 'Potente corticoide. Usar mínima dosis efectiva',
+                calculate: (weight) => {
+                    const dailyDose = weight * 0.3;
+                    const ml = (dailyDose / 0.5) * 5;
+                    return { mg: dailyDose.toFixed(2), ml: ml.toFixed(1) };
+                }
+            },
+            hidrocortisona: {
+                name: 'Hidrocortisona',
+                category: 'Corticoide',
+                dose: '2-8 mg/kg/día',
+                frequency: 'cada 6-8 horas',
+                maxDose: '300 mg/día',
+                presentation: 'Vial 100mg, 500mg',
+                contraindications: 'Infecciones no controladas',
+                warnings: 'Para uso en crisis adrenal o shock',
+                calculate: (weight) => {
+                    const dailyDose = weight * 5;
+                    const perDose = dailyDose / 4;
+                    return { mg: perDose.toFixed(1), ml: 'Inyectable' };
+                }
+            },
+            // BRONCODILATADORES
+            salbutamol: {
+                name: 'Salbutamol',
+                category: 'Broncodilatador',
+                dose: '0.1-0.15 mg/kg/dosis',
+                frequency: 'cada 4-6 horas',
+                maxDose: '5 mg/dosis',
+                presentation: '2mg/5ml',
+                contraindications: 'Hipersensibilidad',
+                warnings: 'Puede causar taquicardia y temblor',
+                calculate: (weight) => {
+                    const perDose = weight * 0.15;
+                    const ml = (perDose / 2) * 5;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            terbutalina: {
+                name: 'Terbutalina',
+                category: 'Broncodilatador',
+                dose: '0.05-0.1 mg/kg/dosis',
+                frequency: 'cada 6-8 horas',
+                maxDose: '7.5 mg/día',
+                presentation: 'Jarabe 0.3mg/ml | Comp. 2.5mg',
+                contraindications: 'Hipersensibilidad a simpaticomiméticos',
+                warnings: 'Monitorizar frecuencia cardíaca',
+                calculate: (weight) => {
+                    const perDose = weight * 0.075;
+                    const ml = perDose / 0.3;
+                    return { mg: perDose.toFixed(2), ml: ml.toFixed(1) };
+                }
+            },
+            // ANTIHISTAMÍNICOS
+            cetirizina: {
+                name: 'Cetirizina',
+                category: 'Antihistamínico',
+                dose: '0.25 mg/kg/día',
+                frequency: 'una vez al día',
+                maxDose: '10 mg/día',
+                presentation: '1mg/ml',
+                contraindications: 'Insuficiencia renal grave',
+                warnings: 'Puede causar sedación leve',
+                calculate: (weight) => {
+                    const dailyDose = weight * 0.25;
+                    const ml = dailyDose;
+                    return { mg: dailyDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            loratadina: {
+                name: 'Loratadina',
+                category: 'Antihistamínico',
+                dose: '0.2 mg/kg/día',
+                frequency: 'una vez al día',
+                maxDose: '10 mg/día',
+                presentation: 'Jarabe 1mg/ml | Comp. 10mg',
+                contraindications: 'Hipersensibilidad',
+                warnings: 'No sedante. Seguro para uso prolongado',
+                calculate: (weight) => {
+                    const dailyDose = weight * 0.2;
+                    const ml = dailyDose;
+                    return { mg: dailyDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            hidroxicina: {
+                name: 'Hidroxicina',
+                category: 'Antihistamínico sedante',
+                dose: '2 mg/kg/día',
+                frequency: 'cada 8-12 horas',
+                maxDose: '100 mg/día',
+                presentation: 'Jarabe 2mg/ml | Comp. 25mg',
+                contraindications: 'Porfiria, retención urinaria',
+                warnings: 'Causa sedación. No usar >7 días sin supervisión',
+                calculate: (weight) => {
+                    const dailyDose = weight * 2;
+                    const perDose = dailyDose / 3;
+                    const ml = perDose / 2;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            // ANTIEMÉTICOS
+            domperidona: {
+                name: 'Domperidona',
+                category: 'Antiemético',
+                dose: '0.25 mg/kg/dosis',
+                frequency: 'cada 6-8 horas antes de comidas',
+                maxDose: '30 mg/día',
+                presentation: 'Jarabe 1mg/ml | Comp. 10mg',
+                contraindications: 'Hemorragia GI, obstrucción intestinal',
+                warnings: 'Administrar 15-30 min antes de comidas',
+                calculate: (weight) => {
+                    const perDose = weight * 0.25;
+                    const ml = perDose;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            ondansetron: {
+                name: 'Ondansetrón',
+                category: 'Antiemético',
+                dose: '0.15 mg/kg/dosis',
+                frequency: 'cada 8 horas',
+                maxDose: '32 mg/día',
+                presentation: 'Jarabe 0.8mg/ml | Amp. 2mg/ml',
+                contraindications: 'Hipersensibilidad',
+                warnings: 'Puede causar cefalea y estreñimiento',
+                calculate: (weight) => {
+                    const perDose = weight * 0.15;
+                    const ml = perDose / 0.8;
+                    return { mg: perDose.toFixed(2), ml: ml.toFixed(1) };
+                }
+            },
+            metoclopramida: {
+                name: 'Metoclopramida',
+                category: 'Antiemético',
+                dose: '0.1-0.2 mg/kg/dosis',
+                frequency: 'cada 6-8 horas',
+                maxDose: '30 mg/día',
+                presentation: 'Jarabe 1mg/ml | Amp. 5mg/ml',
+                contraindications: 'Obstrucción intestinal, epilepsia',
+                warnings: 'Riesgo de distonías. Uso limitado en pediatría',
+                calculate: (weight) => {
+                    const perDose = weight * 0.15;
+                    const ml = perDose;
+                    return { mg: perDose.toFixed(2), ml: ml.toFixed(1) };
+                }
+            },
+            // MUCOLÍTICOS/EXPECTORANTES
+            mucosolvan: {
+                name: 'Ambroxol (Mucosolvan)',
+                category: 'Mucolítico',
+                dose: '1.2-1.6 mg/kg/día',
+                frequency: 'cada 8-12 horas',
+                maxDose: '90 mg/día',
+                presentation: 'Jarabe 3mg/ml | Comp. 30mg',
+                contraindications: 'Úlcera gastroduodenal activa',
+                warnings: 'Aumentar ingesta de líquidos',
+                calculate: (weight) => {
+                    const dailyDose = weight * 1.5;
+                    const perDose = dailyDose / 2;
+                    const ml = perDose / 3;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            acetilcisteina: {
+                name: 'Acetilcisteína',
+                category: 'Mucolítico',
+                dose: '10-15 mg/kg/día',
+                frequency: 'cada 8-12 horas',
+                maxDose: '600 mg/día',
+                presentation: 'Jarabe 20mg/ml | Sobres 100mg, 200mg',
+                contraindications: 'Úlcera péptica activa',
+                warnings: 'Olor característico. Diluir con zumo',
+                calculate: (weight) => {
+                    const dailyDose = weight * 12;
+                    const perDose = dailyDose / 2;
+                    const ml = perDose / 20;
+                    return { mg: perDose.toFixed(1), ml: ml.toFixed(1) };
+                }
+            },
+            // INHIBIDORES BOMBA PROTONES
+            omeprazol: {
+                name: 'Omeprazol',
+                category: 'Inhibidor bomba protones',
+                dose: '1 mg/kg/día',
+                frequency: 'una vez al día en ayunas',
+                maxDose: '40 mg/día',
+                presentation: 'Cáps. 10mg, 20mg | Sobres 10mg',
+                contraindications: 'Hipersensibilidad',
+                warnings: 'Administrar 30 min antes del desayuno',
+                calculate: (weight) => {
+                    const dailyDose = weight * 1;
+                    return { mg: dailyDose.toFixed(1), ml: 'Cápsula' };
+                }
+            },
+            lansoprazol: {
+                name: 'Lansoprazol',
+                category: 'Inhibidor bomba protones',
+                dose: '1-1.5 mg/kg/día',
+                frequency: 'una vez al día',
+                maxDose: '30 mg/día',
+                presentation: 'Cáps. 15mg, 30mg',
+                contraindications: 'Hipersensibilidad',
+                warnings: 'Administrar antes del desayuno',
+                calculate: (weight) => {
+                    const dailyDose = weight * 1.2;
+                    return { mg: dailyDose.toFixed(1), ml: 'Cápsula' };
+                }
+            },
+            // LAXANTES
+            lactulosa: {
+                name: 'Lactulosa',
+                category: 'Laxante osmótico',
+                dose: '1-3 ml/kg/día',
+                frequency: 'una o dos veces al día',
+                maxDose: '40 ml/día',
+                presentation: 'Jarabe 667mg/ml',
+                contraindications: 'Obstrucción intestinal, galactosemia',
+                warnings: 'Puede causar flatulencia inicial',
+                calculate: (weight) => {
+                    const dailyDose = weight * 2;
+                    return { mg: (dailyDose * 667).toFixed(0), ml: dailyDose.toFixed(1) };
+                }
+            },
+            macrogol: {
+                name: 'Macrogol (Movicol)',
+                category: 'Laxante osmótico',
+                dose: '1-4 sobres/día según edad',
+                frequency: 'una o dos veces al día',
+                maxDose: '4 sobres/día',
+                presentation: 'Sobres 6.9g',
+                contraindications: 'Obstrucción intestinal, perforación',
+                warnings: 'Disolver en agua. Aumentar ingesta líquidos',
+                calculate: (weight) => {
+                    const sobres = weight < 12 ? 1 : weight < 25 ? 2 : 3;
+                    return { mg: `${sobres} sobres`, ml: `${sobres * 125}ml agua` };
+                }
+            },
+            // PROBIÓTICOS
+            lactobacillus: {
+                name: 'Lactobacillus rhamnosus',
+                category: 'Probiótico',
+                dose: '1-2 sobres/día',
+                frequency: 'con las comidas',
+                maxDose: '2 sobres/día',
+                presentation: 'Sobres 6x10⁹ UFC',
+                contraindications: 'Inmunodeficiencia severa',
+                warnings: 'Conservar en frío. Separar de antibióticos',
+                calculate: (weight) => {
+                    const sobres = weight < 10 ? 1 : 2;
+                    return { mg: `${sobres} sobres`, ml: 'Con comida' };
+                }
+            },
+            // SOLUCIONES REHIDRATACIÓN
+            sro: {
+                name: 'Suero Rehidratación Oral',
+                category: 'Rehidratante',
+                dose: '75 ml/kg en 4 horas',
+                frequency: 'pequeñas cantidades frecuentes',
+                maxDose: 'Según necesidades',
+                presentation: 'Sobres con 245mOsm/L',
+                contraindications: 'Vómitos incoercibles, shock',
+                warnings: 'Preparar fresco. Usar en 24h',
+                calculate: (weight) => {
+                    const volumen4h = weight * 75;
+                    const porHora = volumen4h / 4;
+                    return { mg: `${volumen4h}ml en 4h`, ml: `${porHora.toFixed(0)}ml/h` };
+                }
+            },
+            // TÓPICOS
+            fluticasona: {
+                name: 'Fluticasona nasal',
+                category: 'Corticoide tópico',
+                dose: '1-2 pulverizaciones/fosa nasal',
+                frequency: 'una vez al día',
+                maxDose: '200 mcg/día',
+                presentation: 'Spray nasal 50mcg/dosis',
+                contraindications: 'Infección nasal no tratada',
+                warnings: 'Uso prolongado: vigilar crecimiento',
+                calculate: (weight) => {
+                    return { mg: '50-100 mcg', ml: '1-2 pulv/fosa' };
+                }
+            },
+            betametasona: {
+                name: 'Betametasona tópica',
+                category: 'Corticoide tópico',
+                dose: 'Aplicación tópica 2-3 veces/día',
+                frequency: 'cada 8-12 horas',
+                maxDose: 'Según extensión lesión',
+                presentation: 'Crema 0.05%, Loción 0.05%',
+                contraindications: 'Infecciones cutáneas, rosacea',
+                warnings: 'No usar en cara >7 días. Capa fina',
+                calculate: (weight) => {
+                    return { mg: 'Tópico', ml: 'Capa fina' };
+                }
+            },
+            // ANTITÉRMICOS RECTALES  
+            paracetamol_supositorios: {
+                name: 'Paracetamol supositorios',
+                category: 'Antipirético rectal',
+                dose: '15-20 mg/kg/dosis',
+                frequency: 'cada 6-8 horas',
+                maxDose: '75 mg/kg/día',
+                presentation: 'Sup. 125mg, 250mg, 500mg',
+                contraindications: 'Fisuras anales, hepatopatía',
+                warnings: 'Refrigerar. Inserción suave',
+                calculate: (weight) => {
+                    const doseMg = weight * 17;
+                    let supositorios = '';
+                    if (doseMg <= 125) supositorios = '1 sup 125mg';
+                    else if (doseMg <= 250) supositorios = '1 sup 250mg';
+                    else if (doseMg <= 375) supositorios = '1.5 sup 250mg';
+                    else supositorios = '1 sup 500mg';
+                    return { mg: doseMg.toFixed(1), ml: supositorios };
+                }
+            }
+        };
+
+        // Clinical scales database
+        const clinicalScales = {
+            glasgow: {
+                name: 'Escala de Glasgow Pediátrica',
+                description: 'Evaluación del nivel de conciencia en niños',
+                maxScore: 15,
+                categories: {
+                    apertura_ocular: {
+                        name: 'Apertura Ocular',
+                        items: [
+                            { id: '4', text: 'Espontánea', points: 4 },
+                            { id: '3', text: 'Al estímulo verbal', points: 3 },
+                            { id: '2', text: 'Al dolor', points: 2 },
+                            { id: '1', text: 'No respuesta', points: 1 }
+                        ]
+                    },
+                    respuesta_verbal: {
+                        name: 'Respuesta Verbal',
+                        items: [
+                            { id: '5', text: '>2 años: Orientado, charla social | <2 años: Sonríe, sigue objetos, interactúa', points: 5 },
+                            { id: '4', text: '>2 años: Confuso | <2 años: Llanto consolable, interacción inapropiada', points: 4 },
+                            { id: '3', text: '>2 años: Palabras inapropiadas | <2 años: Llanto inconsolable, irritable', points: 3 },
+                            { id: '2', text: '>2 años: Sonidos incomprensibles | <2 años: Quejidos, agitación', points: 2 },
+                            { id: '1', text: 'Sin respuesta', points: 1 }
+                        ]
+                    },
+                    respuesta_motora: {
+                        name: 'Respuesta Motora',
+                        items: [
+                            { id: '6', text: '>1 año: Obedece órdenes | <1 año: Movimientos normales espontáneos', points: 6 },
+                            { id: '5', text: 'Localiza el dolor', points: 5 },
+                            { id: '4', text: 'Se retira al dolor', points: 4 },
+                            { id: '3', text: 'Flexión anormal (decorticación)', points: 3 },
+                            { id: '2', text: 'Extensión anormal (descerebración)', points: 2 },
+                            { id: '1', text: 'Sin respuesta', points: 1 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score >= 13) return { level: 'Normal', color: 'green', description: 'Nivel de conciencia normal' };
+                    if (score >= 9) return { level: 'Leve', color: 'yellow', description: 'Traumatismo craneal leve' };
+                    if (score >= 5) return { level: 'Moderado', color: 'orange', description: 'Traumatismo craneal moderado' };
+                    return { level: 'Grave', color: 'red', description: 'Traumatismo craneal grave' };
+                }
+            },
+            silverman: {
+                name: 'Escala de Silverman-Andersen',
+                description: 'Evaluación de dificultad respiratoria neonatal',
+                maxScore: 10,
+                categories: {
+                    movimiento_toracoabdominal: {
+                        name: 'Movimiento Tóraco-abdominal',
+                        items: [
+                            { id: '0', text: 'Sincronizado', points: 0 },
+                            { id: '1', text: 'Retraso en la inspiración', points: 1 },
+                            { id: '2', text: 'Movimiento paradójico (tórax en balancín)', points: 2 }
+                        ]
+                    },
+                    tiraje_intercostal: {
+                        name: 'Tiraje Intercostal',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Discreto', points: 1 },
+                            { id: '2', text: 'Intenso', points: 2 }
+                        ]
+                    },
+                    retraccion_xifoidea: {
+                        name: 'Retracción Xifoidea',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Moderada', points: 1 },
+                            { id: '2', text: 'Intensa', points: 2 }
+                        ]
+                    },
+                    aleteo_nasal: {
+                        name: 'Aleteo Nasal',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Mínimo', points: 1 },
+                            { id: '2', text: 'Intenso', points: 2 }
+                        ]
+                    },
+                    quejido_espiratorio: {
+                        name: 'Quejido Espiratorio',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Audible con estetoscopio', points: 1 },
+                            { id: '2', text: 'Audible sin estetoscopio', points: 2 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score === 0) return { level: 'Normal', color: 'green', description: 'Sin dificultad respiratoria' };
+                    if (score <= 3) return { level: 'Leve', color: 'yellow', description: 'Dificultad respiratoria leve' };
+                    if (score <= 6) return { level: 'Moderada', color: 'orange', description: 'Dificultad respiratoria moderada' };
+                    return { level: 'Grave', color: 'red', description: 'Dificultad respiratoria grave - Requiere soporte respiratorio' };
+                }
+            },
+            wood_downes: {
+                name: 'Escala de Wood-Downes-Ferrés',
+                description: 'Evaluación de gravedad en bronquiolitis',
+                maxScore: 15,
+                categories: {
+                    sibilancias: {
+                        name: 'Sibilancias',
+                        items: [
+                            { id: '0', text: 'Ausentes', points: 0 },
+                            { id: '1', text: 'Solo al final de la espiración con estetoscopio', points: 1 },
+                            { id: '2', text: 'Toda la espiración con estetoscopio', points: 2 },
+                            { id: '3', text: 'Inspiración y espiración sin estetoscopio', points: 3 }
+                        ]
+                    },
+                    tirajes: {
+                        name: 'Tirajes',
+                        items: [
+                            { id: '0', text: 'Ausentes', points: 0 },
+                            { id: '1', text: 'Intercostales y subcostales', points: 1 },
+                            { id: '2', text: 'Como en 1 + supraesternal', points: 2 },
+                            { id: '3', text: 'Como en 2 + supraclavicular y aleteo nasal', points: 3 }
+                        ]
+                    },
+                    frecuencia_respiratoria: {
+                        name: 'Frecuencia Respiratoria',
+                        items: [
+                            { id: '0', text: '<30 rpm', points: 0 },
+                            { id: '1', text: '31-45 rpm', points: 1 },
+                            { id: '2', text: '46-60 rpm', points: 2 },
+                            { id: '3', text: '>60 rpm', points: 3 }
+                        ]
+                    },
+                    frecuencia_cardiaca: {
+                        name: 'Frecuencia Cardíaca',
+                        items: [
+                            { id: '0', text: '<120 lpm', points: 0 },
+                            { id: '1', text: '120-140 lpm', points: 1 },
+                            { id: '2', text: '141-160 lpm', points: 2 },
+                            { id: '3', text: '>160 lpm', points: 3 }
+                        ]
+                    },
+                    cianosis: {
+                        name: 'Cianosis',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Perioral con llanto', points: 1 },
+                            { id: '2', text: 'Perioral en reposo', points: 2 },
+                            { id: '3', text: 'Generalizada en reposo', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 3) return { level: 'Leve', color: 'green', description: 'Bronquiolitis leve - Tratamiento ambulatorio' };
+                    if (score <= 8) return { level: 'Moderada', color: 'orange', description: 'Bronquiolitis moderada - Vigilancia hospitalaria' };
+                    return { level: 'Grave', color: 'red', description: 'Bronquiolitis grave - Ingreso hospitalario urgente' };
+                }
+            },
+            pews: {
+                name: 'PEWS (Pediatric Early Warning Score)',
+                description: 'Predicción de deterioro clínico en pacientes pediátricos',
+                maxScore: 9,
+                categories: {
+                    comportamiento: {
+                        name: 'Comportamiento',
+                        items: [
+                            { id: '0', text: 'Jugando/Apropiado', points: 0 },
+                            { id: '1', text: 'Durmiendo', points: 1 },
+                            { id: '2', text: 'Irritable', points: 2 },
+                            { id: '3', text: 'Letárgico/Confuso', points: 3 }
+                        ]
+                    },
+                    cardiovascular: {
+                        name: 'Sistema Cardiovascular',
+                        items: [
+                            { id: '0', text: 'Rosado O pulsos capilares <2 seg', points: 0 },
+                            { id: '1', text: 'Palidez O pulsos capilares 3 seg', points: 1 },
+                            { id: '2', text: 'Gris O pulsos capilares 4 seg O taquicardia 20 lpm sobre normal', points: 2 },
+                            { id: '3', text: 'Gris Y moteado O pulsos capilares ≥5 seg O taquicardia 30 lpm sobre normal', points: 3 }
+                        ]
+                    },
+                    respiratorio: {
+                        name: 'Sistema Respiratorio',
+                        items: [
+                            { id: '0', text: 'En parámetros normales', points: 0 },
+                            { id: '1', text: '>10 rpm sobre normal O usa músculos accesorios O oxígeno al 30%', points: 1 },
+                            { id: '2', text: '>20 rpm sobre normal O oxígeno al 40% O tiraje', points: 2 },
+                            { id: '3', text: '>30 rpm sobre normal O oxígeno >50% O tiraje + quejido', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 2) return { level: 'Bajo riesgo', color: 'green', description: 'Continuar observación rutinaria' };
+                    if (score <= 4) return { level: 'Riesgo moderado', color: 'yellow', description: 'Aumentar frecuencia de observación' };
+                    if (score <= 6) return { level: 'Alto riesgo', color: 'orange', description: 'Contactar médico urgente' };
+                    return { level: 'Crítico', color: 'red', description: 'Activar equipo de emergencia pediátrica' };
+                }
+            },
+            westley: {
+                name: 'Escala de Westley (Crup)',
+                description: 'Evaluación de gravedad del crup/laringitis',
+                maxScore: 17,
+                categories: {
+                    nivel_conciencia: {
+                        name: 'Nivel de Conciencia',
+                        items: [
+                            { id: '0', text: 'Normal', points: 0 },
+                            { id: '5', text: 'Alterado', points: 5 }
+                        ]
+                    },
+                    cianosis: {
+                        name: 'Cianosis',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '4', text: 'Con agitación', points: 4 },
+                            { id: '5', text: 'En reposo', points: 5 }
+                        ]
+                    },
+                    estridor: {
+                        name: 'Estridor',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Con agitación', points: 1 },
+                            { id: '2', text: 'En reposo', points: 2 }
+                        ]
+                    },
+                    entrada_aire: {
+                        name: 'Entrada de Aire',
+                        items: [
+                            { id: '0', text: 'Normal', points: 0 },
+                            { id: '1', text: 'Levemente disminuida', points: 1 },
+                            { id: '2', text: 'Moderadamente disminuida', points: 2 }
+                        ]
+                    },
+                    tiraje: {
+                        name: 'Tiraje',
+                        items: [
+                            { id: '0', text: 'Ausente', points: 0 },
+                            { id: '1', text: 'Leve', points: 1 },
+                            { id: '2', text: 'Moderado', points: 2 },
+                            { id: '3', text: 'Severo', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 2) return { level: 'Leve', color: 'green', description: 'Crup leve - Tratamiento ambulatorio' };
+                    if (score <= 7) return { level: 'Moderado', color: 'orange', description: 'Crup moderado - Valorar ingreso' };
+                    return { level: 'Severo', color: 'red', description: 'Crup severo - Ingreso hospitalario urgente' };
+                }
+            },
+            fiebre: {
+                name: 'Escala de Evaluación de Fiebre Pediátrica',
+                description: 'Evaluación de riesgo en niños con fiebre',
+                maxScore: 12,
+                categories: {
+                    edad: {
+                        name: 'Edad del Paciente',
+                        items: [
+                            { id: '0', text: '>6 meses', points: 0 },
+                            { id: '2', text: '3-6 meses', points: 2 },
+                            { id: '4', text: '<3 meses', points: 4 }
+                        ]
+                    },
+                    temperatura: {
+                        name: 'Temperatura Máxima',
+                        items: [
+                            { id: '0', text: '38-38.9°C', points: 0 },
+                            { id: '1', text: '39-39.9°C', points: 1 },
+                            { id: '2', text: '≥40°C', points: 2 }
+                        ]
+                    },
+                    estado_general: {
+                        name: 'Estado General',
+                        items: [
+                            { id: '0', text: 'Activo, reactivo, juega', points: 0 },
+                            { id: '1', text: 'Irritable pero consolable', points: 1 },
+                            { id: '2', text: 'Letárgico, poco reactivo', points: 2 },
+                            { id: '3', text: 'Muy alterado, inconsolable', points: 3 }
+                        ]
+                    },
+                    signos_focales: {
+                        name: 'Signos de Alarma',
+                        items: [
+                            { id: '0', text: 'Ninguno', points: 0 },
+                            { id: '1', text: 'Dificultad respiratoria leve', points: 1 },
+                            { id: '2', text: 'Petequias/exantema', points: 2 },
+                            { id: '3', text: 'Rigidez de nuca/convulsiones', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 2) return { level: 'Bajo riesgo', color: 'green', description: 'Tratamiento ambulatorio - Control en 24-48h' };
+                    if (score <= 5) return { level: 'Riesgo moderado', color: 'yellow', description: 'Valorar analítica - Control estrecho' };
+                    if (score <= 8) return { level: 'Alto riesgo', color: 'orange', description: 'Probable ingreso - Analítica urgente' };
+                    return { level: 'Muy alto riesgo', color: 'red', description: 'Ingreso inmediato - Antibiótico empírico' };
+                }
+            },
+            young_infant: {
+                name: 'Young Infant Observation Scale (YIOS)',
+                description: 'Evaluación de lactantes febriles 1-3 meses',
+                maxScore: 18,
+                categories: {
+                    calidad_llanto: {
+                        name: 'Calidad del Llanto',
+                        items: [
+                            { id: '1', text: 'Fuerte, normal', points: 1 },
+                            { id: '2', text: 'Gemidos o sollozos', points: 2 },
+                            { id: '3', text: 'Débil, agudo o silencioso', points: 3 }
+                        ]
+                    },
+                    reaccion_estimulos: {
+                        name: 'Reacción a Estímulos',
+                        items: [
+                            { id: '1', text: 'Llora inmediatamente', points: 1 },
+                            { id: '2', text: 'Llora después de estimulación prolongada', points: 2 },
+                            { id: '3', text: 'Llora débilmente o no llora', points: 3 }
+                        ]
+                    },
+                    estado_despierto: {
+                        name: 'Estado Despierto',
+                        items: [
+                            { id: '1', text: 'Despierto, se mantiene despierto', points: 1 },
+                            { id: '2', text: 'Ojos abiertos brevemente', points: 2 },
+                            { id: '3', text: 'No se despierta o permanece dormido', points: 3 }
+                        ]
+                    },
+                    sonrisa_social: {
+                        name: 'Sonrisa Social',
+                        items: [
+                            { id: '1', text: 'Sonríe', points: 1 },
+                            { id: '2', text: 'Sonrisa breve', points: 2 },
+                            { id: '3', text: 'No sonríe', points: 3 }
+                        ]
+                    },
+                    alerta: {
+                        name: 'Estado de Alerta',
+                        items: [
+                            { id: '1', text: 'Alerta', points: 1 },
+                            { id: '2', text: 'Alerta brevemente', points: 2 },
+                            { id: '3', text: 'No está alerta', points: 3 }
+                        ]
+                    },
+                    coloracion: {
+                        name: 'Coloración',
+                        items: [
+                            { id: '1', text: 'Rosado', points: 1 },
+                            { id: '2', text: 'Extremidades azules/pálidas', points: 2 },
+                            { id: '3', text: 'Pálido, cianótico, moteado', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 10) return { level: 'Bajo riesgo', color: 'green', description: 'Enfermedad bacteriana grave poco probable' };
+                    if (score <= 16) return { level: 'Riesgo intermedio', color: 'yellow', description: 'Valorar estudios complementarios' };
+                    return { level: 'Alto riesgo', color: 'red', description: 'Alta probabilidad enfermedad bacteriana grave' };
+                }
+            },
+            yale_observation: {
+                name: 'Yale Observation Scale (YOS)',
+                description: 'Evaluación de niños febriles 3-36 meses',
+                maxScore: 18,
+                categories: {
+                    calidad_llanto: {
+                        name: 'Calidad del Llanto',
+                        items: [
+                            { id: '1', text: 'Fuerte con tono normal O contento y no llora', points: 1 },
+                            { id: '2', text: 'Gemidos o sollozos', points: 2 },
+                            { id: '3', text: 'Débil, agudo, continuo O apenas responde', points: 3 }
+                        ]
+                    },
+                    reaccion_padres: {
+                        name: 'Reacción a Estimulación Parental',
+                        items: [
+                            { id: '1', text: 'Llora brevemente, luego para O contento y no llora', points: 1 },
+                            { id: '2', text: 'Llora intermitentemente', points: 2 },
+                            { id: '3', text: 'Llanto continuo O apenas responde', points: 3 }
+                        ]
+                    },
+                    estado_despierto: {
+                        name: 'Estado Despierto',
+                        items: [
+                            { id: '1', text: 'Permanece despierto O se despierta rápidamente', points: 1 },
+                            { id: '2', text: 'Ojos abiertos brevemente O se despierta con estimulación prolongada', points: 2 },
+                            { id: '3', text: 'Se queda dormido O no se despierta', points: 3 }
+                        ]
+                    },
+                    sonrisa_social: {
+                        name: 'Sonrisa Social',
+                        items: [
+                            { id: '1', text: 'Sonríe', points: 1 },
+                            { id: '2', text: 'Sonrisa breve', points: 2 },
+                            { id: '3', text: 'No sonríe', points: 3 }
+                        ]
+                    },
+                    tacto_vocaliza: {
+                        name: 'Tacto/Vocalización',
+                        items: [
+                            { id: '1', text: 'Juega, vocaliza O contento', points: 1 },
+                            { id: '2', text: 'Vocaliza brevemente', points: 2 },
+                            { id: '3', text: 'No vocaliza O gruñe', points: 3 }
+                        ]
+                    },
+                    coloracion: {
+                        name: 'Coloración',
+                        items: [
+                            { id: '1', text: 'Rosado', points: 1 },
+                            { id: '2', text: 'Extremidades azules/pálidas', points: 2 },
+                            { id: '3', text: 'Pálido, cianótico, moteado o gris', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 10) return { level: 'Bajo riesgo', color: 'green', description: 'Infección bacteriana grave poco probable (<3%)' };
+                    if (score <= 16) return { level: 'Riesgo moderado', color: 'yellow', description: 'Riesgo intermedio (3-26%)' };
+                    return { level: 'Alto riesgo', color: 'red', description: 'Alto riesgo de infección bacteriana grave (>92%)' };
+                }
+            },
+            sepsis_pediatrica: {
+                name: 'Escala de Sepsis Pediátrica',
+                description: 'Criterios de sepsis/shock séptico pediátrico',
+                maxScore: 15,
+                categories: {
+                    temperatura: {
+                        name: 'Temperatura',
+                        items: [
+                            { id: '0', text: '36-38.5°C', points: 0 },
+                            { id: '2', text: '>38.5°C o <36°C', points: 2 },
+                            { id: '3', text: '>40°C o <35°C', points: 3 }
+                        ]
+                    },
+                    frecuencia_cardiaca: {
+                        name: 'Frecuencia Cardíaca',
+                        items: [
+                            { id: '0', text: 'Normal para la edad', points: 0 },
+                            { id: '2', text: 'Taquicardia >2 DS para edad', points: 2 },
+                            { id: '3', text: 'Bradicardia <10° percentil para edad', points: 3 }
+                        ]
+                    },
+                    frecuencia_respiratoria: {
+                        name: 'Frecuencia Respiratoria',
+                        items: [
+                            { id: '0', text: 'Normal para la edad', points: 0 },
+                            { id: '2', text: 'Taquipnea >2 DS para edad', points: 2 },
+                            { id: '3', text: 'Ventilación mecánica por proceso agudo', points: 3 }
+                        ]
+                    },
+                    estado_mental: {
+                        name: 'Estado Mental',
+                        items: [
+                            { id: '0', text: 'Normal', points: 0 },
+                            { id: '2', text: 'Irritabilidad, letargo', points: 2 },
+                            { id: '4', text: 'Estupor, coma, delirium', points: 4 }
+                        ]
+                    },
+                    perfusion: {
+                        name: 'Perfusión',
+                        items: [
+                            { id: '0', text: 'Normal', points: 0 },
+                            { id: '1', text: 'Relleno capilar 2-4 seg', points: 1 },
+                            { id: '2', text: 'Relleno capilar >4 seg', points: 2 },
+                            { id: '3', text: 'Hipotensión, oliguria, acidosis', points: 3 }
+                        ]
+                    }
+                },
+                interpretation: (score) => {
+                    if (score <= 3) return { level: 'Bajo riesgo', color: 'green', description: 'Sepsis poco probable' };
+                    if (score <= 7) return { level: 'Riesgo moderado', color: 'yellow', description: 'Posible sepsis - Valorar antibioterapia' };
+                    if (score <= 11) return { level: 'Alto riesgo', color: 'orange', description: 'Sepsis probable - Antibióticos + ingreso' };
+                    return { level: 'Muy alto riesgo', color: 'red', description: 'Shock séptico - Manejo agresivo UCI' };
+                }
+            }
+        };
+
+        // Parental advice
+        const parentalAdvice = {
+            gastroenteritis: {
+                title: "Gastroenteritis - Guía Rápida para Padres",
+                content: `🤢 GASTROENTERITIS EN NIÑOS - GUÍA RÁPIDA
+
+⚠️ CUÁNDO IR AL MÉDICO INMEDIATAMENTE:
+• Sangre en vómitos o caca
+• No hace pis en 8 horas
+• Muy dormido o confuso
+• Fiebre muy alta (>39°C)
+• Dolor de barriga muy fuerte
+
+✅ QUÉ HACER EN CASA:
+1. DAR LÍQUIDOS POCO A POCO
+   • Suero de farmacia (mejor opción)
+   • Agua, caldos suaves
+   • Una cucharita cada 5 minutos
+
+2. COMIDA
+   • No quitar comida si tiene hambre
+   • Arroz, plátano, pollo hervido
+   • Evitar lácteos si empeora
+
+3. MEDICINAS
+   • NO dar medicinas para cortar diarrea
+   • Paracetamol solo si fiebre
+   • NO antibióticos (no sirven)
+
+🏠 CUIDADOS:
+• Lavarse las manos mucho
+• Limpiar con lejía
+• Descanso
+
+📞 LLAMAR AL MÉDICO SI:
+• Diarrea más de 3 días
+• Vómitos que no paran
+• Se ve muy enfermo
+
+¡IMPORTANTE! Los niños se curan solos en 2-3 días con líquidos`
+            },
+            fiebre: {
+                title: "Fiebre - Guía Rápida para Padres",
+                content: `🌡️ FIEBRE EN NIÑOS - GUÍA RÁPIDA
+
+⚠️ IR AL MÉDICO YA SI:
+• Bebé menor de 3 meses con fiebre
+• Dificultad para respirar
+• Manchitas rojas en la piel
+• Muy dormido o raro
+• Convulsiones
+• Rigidez en el cuello
+
+✅ CÓMO TRATAR LA FIEBRE:
+1. MEDICINAS (solo si está molesto)
+   • Paracetamol: cada 6 horas
+   • Ibuprofeno: cada 8 horas (>6 meses)
+   • NO mezclar los dos
+
+2. CUIDADOS
+   • Ropa ligera
+   • Mucha agua
+   • Ambiente fresco
+   • Baño tibio si quiere
+
+❌ NO HACER:
+• Alcohol en la piel
+• Paños fríos
+• Desnudar completamente
+• Alternar medicinas
+
+🏠 LA FIEBRE:
+• Es defensa del cuerpo
+• No causa daño al cerebro
+• Lo importante es cómo se ve el niño
+
+📞 LLAMAR AL MÉDICO SI:
+• Fiebre más de 3 días
+• No mejora con medicina
+• Está muy decaído
+• No bebe líquidos
+
+¡RECUERDA! Si juega y sonríe, no pasa nada grave`
+            },
+            administracion_medicamentos: {
+                title: "Dar Medicinas - Guía Rápida para Padres",
+                content: `💊 CÓMO DAR MEDICINAS A NIÑOS - GUÍA RÁPIDA
+
+⚠️ ANTES DE DAR CUALQUIER MEDICINA:
+• Leer el envase SIEMPRE
+• Comprobar la fecha
+• Ver si es el niño correcto
+• Usar la jeringa del envase
+
+✅ REGLAS DE ORO:
+1. DOSIS POR PESO (no por edad)
+2. USAR JERINGA (no cucharas)
+3. LEER CONCENTRACIÓN
+4. ANOTAR QUÉ DAS Y CUÁNDO
+
+🥄 CÓMO DÁRSELA:
+• Niño sentado
+• Poco a poco
+• En el lado de la boca (bebés)
+• Mezclar con comida favorita si es difícil
+
+🤮 SI VOMITA:
+• Antes de 15 min → Repetir dosis completa
+• Entre 15-30 min → Media dosis
+• Después de 30 min → Esperar siguiente toma
+
+📦 GUARDAR MEDICINAS:
+• Fuera del alcance de niños
+• En sitio fresco y seco
+• Antibióticos líquidos en nevera
+• Tirar lo que sobre
+
+❌ ERRORES QUE NO HACER:
+• Doblar dosis si se olvida
+• Usar cucharas de cocina
+• Partir pastillas de adultos
+• Guardar sobras para otra vez
+• Parar antibióticos antes de tiempo
+
+🚨 EMERGENCIA (DEMASIADA MEDICINA):
+• Llamar: 915 620 420 (Toxicología)
+• Llevar envase al hospital
+• NO provocar vómito
+
+¡IMPORTANTE! En caso de duda, siempre preguntar al médico o farmacéutico`
+            }
+        };
+
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Function to generate alternative pharmaceutical forms based on weight
+        function generateAlternativeForms(medicationKey, weight, doseMg) {
+            let alternatives = '';
+            
+            if (medicationKey === 'paracetamol') {
+                // Todas las presentaciones líquidas
+                alternatives += `
+                    <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Jarabe 120mg/5ml (24mg/ml):</strong> ${(doseMg / 24).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 10) {
+                    // Supositorios
+                    const sup125 = Math.round(doseMg / 125);
+                    const sup250 = Math.round(doseMg / 250 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Supositorios 125mg:</strong> ${sup125} sup.</p>
+                        </div>
+                    `;
+                    if (weight >= 15) {
+                        alternatives += `
+                            <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                                <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Supositorios 250mg:</strong> ${sup250} sup.</p>
+                            </div>
+                        `;
+                    }
+                }
+                if (weight >= 15) {
+                    // Comprimidos bucodispersables 250mg
+                    const comp250 = Math.round(doseMg / 250 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Comp. bucodispersables 250mg:</strong> ${comp250} comp.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 20) {
+                    // Comprimidos 500mg
+                    const comp500 = Math.round(doseMg / 500 * 2) / 2;
+                    const sup500 = Math.round(doseMg / 500 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Comprimidos 500mg:</strong> ${comp500} comp.</p>
+                        </div>
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Supositorios 500mg:</strong> ${sup500} sup.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 25) {
+                    // Sobres efervescentes 650mg y 1g
+                    const sobres650 = Math.round(doseMg / 650 * 2) / 2;
+                    const sobres1000 = Math.round(doseMg / 1000 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Sobres efervescentes 650mg:</strong> ${sobres650} sobres</p>
+                        </div>
+                        <div style="background: #f0f9ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1e40af; margin: 0;"><strong>Sobres efervescentes 1g:</strong> ${sobres1000} sobres</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (medicationKey === 'ibuprofeno') {
+                // Jarabe alternativo
+                alternatives += `
+                    <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Jarabe 40mg/ml:</strong> ${(doseMg / 40).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 8) {
+                    // Supositorios pediátricos
+                    const sup60 = Math.round(doseMg / 60);
+                    const sup125 = Math.round(doseMg / 125);
+                    alternatives += `
+                        <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Supositorios 60mg:</strong> ${sup60} sup.</p>
+                        </div>
+                        <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Supositorios 125mg:</strong> ${sup125} sup.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 15) {
+                    // Comprimidos bucodispersables 200mg
+                    const comp200 = Math.round(doseMg / 200 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Comp. bucodispersables 200mg:</strong> ${comp200} comp.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 20) {
+                    // Comprimidos 400mg
+                    const comp400 = Math.round(doseMg / 400 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Comprimidos 400mg:</strong> ${comp400} comp.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 30) {
+                    // Comprimidos 600mg
+                    const comp600 = Math.round(doseMg / 600 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #eff6ff; border: 1px solid #93c5fd; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #1d4ed8; margin: 0;"><strong>Comprimidos 600mg:</strong> ${comp600} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // ANTIBIÓTICOS - Presentaciones alternativas
+            if (medicationKey === 'amoxicilina') {
+                // Jarabe alternativo
+                alternatives += `
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Jarabe 125mg/5ml (25mg/ml):</strong> ${(doseMg / 25).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 10) {
+                    // Cápsulas para niños mayores
+                    const caps250 = Math.round(doseMg / 250);
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Cápsulas 250mg:</strong> ${caps250} cáps.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 15) {
+                    const comp500 = Math.round(doseMg / 500 * 2) / 2;
+                    const caps500 = Math.round(doseMg / 500 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Comprimidos 500mg:</strong> ${comp500} comp.</p>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Cápsulas 500mg:</strong> ${caps500} cáps.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 25) {
+                    const comp875 = Math.round(doseMg / 875 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Comprimidos 875mg:</strong> ${comp875} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (medicationKey === 'azitromicina') {
+                // Jarabe dilución alternativa
+                alternatives += `
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Jarabe 100mg/5ml (20mg/ml):</strong> ${(doseMg / 20).toFixed(1)} ml</p>
+                    </div>
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Jarabe 200mg/5ml (40mg/ml):</strong> ${(doseMg / 40).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 10) {
+                    const caps250 = Math.round(doseMg / 250);
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Cápsulas 250mg:</strong> ${caps250} cáps.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 15) {
+                    const comp250 = Math.round(doseMg / 250 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Comprimidos 250mg:</strong> ${comp250} comp.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 25) {
+                    const comp500 = Math.round(doseMg / 500 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Comprimidos 500mg:</strong> ${comp500} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (medicationKey === 'cefalexina') {
+                // Jarabe alternativo
+                alternatives += `
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Jarabe 125mg/5ml (25mg/ml):</strong> ${(doseMg / 25).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 10) {
+                    const caps250 = Math.round(doseMg / 250);
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Cápsulas 250mg:</strong> ${caps250} cáps.</p>
+                        </div>
+                    `;
+                }
+                if (weight >= 15) {
+                    const caps500 = Math.round(doseMg / 500 * 2) / 2;
+                    const comp500 = Math.round(doseMg / 500 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Cápsulas 500mg:</strong> ${caps500} cáps.</p>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Comprimidos 500mg:</strong> ${comp500} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            if (medicationKey === 'cetirizina') {
+                // Jarabe alternativo
+                alternatives += `
+                    <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #92400e; margin: 0;"><strong>Jarabe 5mg/5ml (1mg/ml):</strong> ${(doseMg / 1).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 15) {
+                    const comp10 = Math.round(doseMg / 10 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #92400e; margin: 0;"><strong>Comprimidos 10mg:</strong> ${comp10} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            if (medicationKey === 'salbutamol') {
+                // Presentaciones alternativas
+                alternatives += `
+                    <div style="background: #ecfdf5; border: 1px solid #6ee7b7; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #047857; margin: 0;"><strong>Jarabe 1mg/5ml:</strong> ${(doseMg / 0.2).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 15) {
+                    const comp2 = Math.round(doseMg / 2 * 2) / 2;
+                    const comp4 = Math.round(doseMg / 4 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #ecfdf5; border: 1px solid #6ee7b7; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #047857; margin: 0;"><strong>Comprimidos 2mg:</strong> ${comp2} comp.</p>
+                        </div>
+                        <div style="background: #ecfdf5; border: 1px solid #6ee7b7; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #047857; margin: 0;"><strong>Comprimidos 4mg:</strong> ${comp4} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            if (medicationKey === 'prednisolona') {
+                // Presentaciones alternativas
+                alternatives += `
+                    <div style="background: #fdf2f8; border: 1px solid #f9a8d4; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                        <p style="font-size: 12px; color: #be185d; margin: 0;"><strong>Jarabe 5mg/5ml (1mg/ml):</strong> ${(doseMg / 1).toFixed(1)} ml</p>
+                    </div>
+                `;
+                if (weight >= 15) {
+                    const comp5 = Math.round(doseMg / 5 * 2) / 2;
+                    const comp20 = Math.round(doseMg / 20 * 2) / 2;
+                    alternatives += `
+                        <div style="background: #fdf2f8; border: 1px solid #f9a8d4; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #be185d; margin: 0;"><strong>Comprimidos 5mg:</strong> ${comp5} comp.</p>
+                        </div>
+                        <div style="background: #fdf2f8; border: 1px solid #f9a8d4; padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="font-size: 12px; color: #be185d; margin: 0;"><strong>Comprimidos 20mg:</strong> ${comp20} comp.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            return alternatives;
+        }
+
+        // Update calculations
+        function updateCalculations() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const selectedMed = document.getElementById('medication').value;
+            
+            // Update selected medication calculation FIRST
+            if (weight && selectedMed && medications[selectedMed]) {
+                const medication = medications[selectedMed];
+                const result = medication.calculate(weight);
+                
+                document.getElementById('results-card').classList.remove('hidden');
+                document.getElementById('selected-med-name').textContent = medication.name;
+                document.getElementById('calculated-mg').textContent = result.mg + ' mg';
+                document.getElementById('calculated-ml').textContent = result.ml + ' ml';
+                
+                // Update medication details
+                const detailsHTML = `
+                    <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 14px;">
+                        <p><strong>Categoría:</strong> ${medication.category}</p>
+                        <p><strong>Frecuencia:</strong> ${medication.frequency}</p>
+                        <p><strong>Presentación:</strong> ${medication.presentation}</p>
+                        <p><strong>Dosis general:</strong> ${medication.dose}</p>
+                        <p style="grid-column: span 2;"><strong>Dosis máxima:</strong> ${medication.maxDose}</p>
+                    </div>
+                `;
+                document.getElementById('medication-details').innerHTML = detailsHTML;
+                
+                // Update warnings
+                let warningsHTML = '';
+                if (medication.contraindications) {
+                    warningsHTML += `
+                        <div class="warning-card">
+                            <div class="warning-title">⚠️ Contraindicaciones</div>
+                            <div class="warning-text">${medication.contraindications}</div>
+                        </div>
+                    `;
+                }
+                if (medication.warnings) {
+                    warningsHTML += `
+                        <div class="info-card">
+                            <div class="warning-title">ℹ️ Precauciones</div>
+                            <div class="warning-text">${medication.warnings}</div>
+                        </div>
+                    `;
+                }
+                document.getElementById('medication-warnings').innerHTML = warningsHTML;
+            } else {
+                document.getElementById('results-card').classList.add('hidden');
+            }
+
+            // Update analgesics SECOND (complementary)
+            if (weight && weight > 0) {
+                document.getElementById('analgesics-card').classList.remove('hidden');
+                
+                // Paracetamol calculation (15 mg/kg/dosis)
+                const paracetamolDoseMg = weight * 15;
+                
+                // Paracetamol jarabe 160mg/5ml = 32mg/ml
+                const paracetamolJarabeMl = paracetamolDoseMg / 32;
+                document.getElementById('paracetamol-jarabe-ml').textContent = paracetamolJarabeMl.toFixed(1);
+                
+                // Paracetamol gotas 100mg/ml
+                const paracetamolGotasMl = paracetamolDoseMg / 100;
+                document.getElementById('paracetamol-gotas-ml').textContent = paracetamolGotasMl.toFixed(1);
+                
+                // Ibuprofeno calculation (7 mg/kg/dosis)
+                const ibuprofenoDoseMg = weight * 7;
+                
+                // Ibuprofeno jarabe 100mg/5ml = 20mg/ml
+                const ibuprofenoJarabeMl = ibuprofenoDoseMg / 20;
+                document.getElementById('ibuprofeno-jarabe-ml').textContent = ibuprofenoJarabeMl.toFixed(1);
+                
+                // Ibuprofeno concentrado 200mg/ml
+                const ibuprofenoConcentradoMl = ibuprofenoDoseMg / 200;
+                document.getElementById('ibuprofeno-concentrado-ml').textContent = ibuprofenoConcentradoMl.toFixed(1);
+            } else {
+                document.getElementById('analgesics-card').classList.add('hidden');
+            }
+        }
+
+        // Populate medications grid
+        function populateMedications() {
+            const medicationsGrid = document.getElementById('medications-grid');
+            let html = '';
+            
+            Object.entries(medications).forEach(([key, med]) => {
+                html += `
+                    <div class="medication-card">
+                        <div class="medication-header">
+                            <h3 class="medication-name">${med.name}</h3>
+                            <span class="medication-category">${med.category}</span>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 14px; color: #6b7280; line-height: 1.4;">
+                            <p><strong>Dosis:</strong> ${med.dose}</p>
+                            <p><strong>Frecuencia:</strong> ${med.frequency}</p>
+                            <p><strong>Presentación:</strong> ${med.presentation}</p>
+                            <p><strong>Máximo:</strong> ${med.maxDose}</p>
+                        </div>
+
+                        ${med.contraindications ? `
+                            <div style="margin-top: 12px; padding: 8px; background: #fef2f2; border-radius: 4px; font-size: 12px; color: #b91c1c;">
+                                <strong>Contraindicaciones:</strong> ${med.contraindications}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            medicationsGrid.innerHTML = html;
+        }
+
+        // Filter medications
+        function filterMedications() {
+            const searchTerm = document.getElementById('search-medication').value.toLowerCase();
+            const medicationCards = document.querySelectorAll('#medications-grid .medication-card');
+            
+            medicationCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Scale functions
+        function showScale(scaleId) {
+            currentScale = scaleId;
+            document.getElementById('scales-list').classList.add('hidden');
+            document.getElementById('scale-evaluation').classList.remove('hidden');
+            
+            const scale = clinicalScales[scaleId];
+            document.getElementById('max-score').textContent = scale.maxScore;
+            
+            renderScaleCategories(scaleId);
+            updateScaleScore();
+        }
+
+        function backToScales() {
+            document.getElementById('scales-list').classList.remove('hidden');
+            document.getElementById('scale-evaluation').classList.add('hidden');
+            currentScale = '';
+        }
+
+        function renderScaleCategories(scaleId) {
+            const scale = clinicalScales[scaleId];
+            const container = document.getElementById('scale-categories');
+            let html = '';
+            
+            Object.entries(scale.categories).forEach(([categoryId, category]) => {
+                html += `
+                    <div style="border-left: 4px solid #2563eb; padding-left: 16px; margin-bottom: 24px;">
+                        <h5 style="font-weight: 600; color: #374151; margin-bottom: 12px;">${category.name}</h5>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            ${category.items.map(item => `
+                                <label class="scale-item" onclick="handleScaleItemClick('${categoryId}', '${item.id}', ${item.points})">
+                                    <input type="radio" name="${categoryId}" value="${item.id}" style="margin-top: 4px;">
+                                    <div class="scale-content">
+                                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                                            <span class="scale-text">${item.text}</span>
+                                            <span class="scale-points">${item.points} pts</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function handleScaleItemClick(categoryId, itemId, points) {
+            if (!scaleScores[currentScale]) scaleScores[currentScale] = {};
+            scaleScores[currentScale][categoryId] = { [itemId]: points };
+            
+            // Update visual selection
+            const categoryInputs = document.querySelectorAll(`input[name="${categoryId}"]`);
+            categoryInputs.forEach(input => {
+                const label = input.closest('.scale-item');
+                if (input.value === itemId) {
+                    input.checked = true;
+                    label.classList.add('selected');
+                } else {
+                    input.checked = false;
+                    label.classList.remove('selected');
+                }
+            });
+            
+            updateScaleScore();
+        }
+
+        function updateScaleScore() {
+            if (!currentScale) return;
+            
+            const scores = scaleScores[currentScale] || {};
+            let total = 0;
+            
+            Object.values(scores).forEach(categoryScores => {
+                Object.values(categoryScores).forEach(points => {
+                    total += points;
+                });
+            });
+            
+            document.getElementById('current-score').textContent = total;
+            
+            // El botón de copiar siempre está disponible
+            const copyBtn = document.getElementById('copy-report-btn');
+            copyBtn.disabled = false;
+            copyBtn.style.opacity = '1';
+            copyBtn.style.cursor = 'pointer';
+            
+            // Update interpretation
+            if (total > 0) {
+                const scale = clinicalScales[currentScale];
+                const interpretation = scale.interpretation(total);
+                
+                document.getElementById('interpretation-result').innerHTML = `
+                    <div class="interpretation ${interpretation.color}">
+                        <div class="interpretation-level">${interpretation.level}</div>
+                        <div class="interpretation-desc">${interpretation.description}</div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('interpretation-result').innerHTML = '';
+            }
+        }
+
+        function generateScaleReport() {
+            if (!currentScale) return '';
+            
+            const scale = clinicalScales[currentScale];
+            const totalScore = calculateTotalScore();
+            const scores = scaleScores[currentScale] || {};
+            
+            let report = `=== ${scale.name.toUpperCase()} ===\n`;
+            report += `Fecha: ${new Date().toLocaleDateString()}\n`;
+            report += `Hora: ${new Date().toLocaleTimeString()}\n\n`;
+            
+            report += `EVALUACIÓN:\n`;
+            Object.entries(scale.categories).forEach(([categoryId, category]) => {
+                report += `\n${category.name}:\n`;
+                const categoryScores = scores[categoryId] || {};
+                
+                category.items.forEach(item => {
+                    const isSelected = categoryScores[item.id] !== undefined;
+                    report += `${isSelected ? '☑' : '☐'} ${item.text} (${item.points} puntos)\n`;
+                });
+            });
+            
+            report += `\n=== RESULTADO ===\n`;
+            report += `Puntuación Total: ${totalScore}/${scale.maxScore}\n`;
+            
+            if (totalScore > 0) {
+                const interpretation = scale.interpretation(totalScore);
+                report += `Nivel: ${interpretation.level}\n`;
+                report += `Interpretación: ${interpretation.description}\n\n`;
+            } else {
+                report += `Nivel: Pendiente de evaluación\n`;
+                report += `Interpretación: Completar evaluación para obtener resultado\n\n`;
+            }
+            
+            report += `=== OBSERVACIONES ===\n`;
+            report += `_________________________________\n`;
+            report += `_________________________________\n`;
+            report += `_________________________________\n\n`;
+            
+            report += `Evaluado por: ____________________\n`;
+            report += `Firma: ____________________\n`;
+            
+            return report;
+        }
+
+        function calculateTotalScore() {
+            if (!currentScale) return 0;
+            
+            const scores = scaleScores[currentScale] || {};
+            let total = 0;
+            
+            Object.values(scores).forEach(categoryScores => {
+                Object.values(categoryScores).forEach(points => {
+                    total += points;
+                });
+            });
+            
+            return total;
+        }
+
+        async function copyScaleReport() {
+            try {
+                const report = generateScaleReport();
+                await navigator.clipboard.writeText(report);
+                alert('Reporte copiado al portapapeles ✅');
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = generateScaleReport();
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Reporte copiado al portapapeles ✅');
+            }
+        }
+
+        function clearCurrentScale() {
+            if (currentScale) {
+                delete scaleScores[currentScale];
+                renderScaleCategories(currentScale);
+                updateScaleScore();
+            }
+        }
+
+        // Advice functions
+        function showAdvice(adviceId) {
+            currentAdvice = adviceId;
+            document.getElementById('advice-list').classList.add('hidden');
+            document.getElementById('advice-content').classList.remove('hidden');
+            
+            const advice = parentalAdvice[adviceId];
+            document.getElementById('advice-title').textContent = advice.title;
+            document.getElementById('advice-text').textContent = advice.content;
+        }
+
+        function backToAdvice() {
+            document.getElementById('advice-list').classList.remove('hidden');
+            document.getElementById('advice-content').classList.add('hidden');
+            currentAdvice = '';
+        }
+
+        function printAdvice(adviceId) {
+            const advice = parentalAdvice[adviceId];
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${advice.title}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+                            h1 { color: #2563eb; border-bottom: 2px solid #2563eb; }
+                            h2 { color: #1e40af; margin-top: 25px; }
+                            h3 { color: #1d4ed8; }
+                            .warning { background: #fee2e2; border-left: 4px solid #dc2626; padding: 10px; margin: 10px 0; }
+                            .info { background: #dbeafe; border-left: 4px solid #2563eb; padding: 10px; margin: 10px 0; }
+                            ul, ol { margin-left: 20px; }
+                            @media print { body { margin: 20px; } }
+                        </style>
+                    </head>
+                    <body>
+                        <div>${advice.content.replace(/\n/g, '<br>').replace(/### /g, '<h3>').replace(/## /g, '<h2>').replace(/# /g, '<h1>')}</div>
+                        <hr style="margin-top: 40px;">
+                        <p style="text-align: center; color: #666; font-size: 12px;">
+                            Documento generado por Calculadora Pediátrica Avanzada - ${new Date().toLocaleDateString()}
+                        </p>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function printCurrentAdvice() {
+            if (currentAdvice) {
+                printAdvice(currentAdvice);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateMedications();
+        });
+    </script>
+</body>
+</html>
