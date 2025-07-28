@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Pediátrica - UmbraMed.Org</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-button.active {
+            background: #1e40af;
+        }
+
+        .nav-button:hover {
+            background: #1d4ed8;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .input, .select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .button-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .result-card {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .warning-card {
+            background: #fee2e2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .warning-title {
+            color: #991b1b;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .warning-text {
+            color: #7f1d1d;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="../index.html">
+                    <div class="logo-dna">
+                        <!-- SVG del logo -->
+                    </div>
+                    <div>
+                        <div class="brand-text">UMBRAMED</div>
+                        <div class="subtitle">MEDICAL DIVISION</div>
+                    </div>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="../herramientas.html" class="active">Herramientas</a></li>
+                    <li class="nav-item"><a href="../software.html">Software</a></li>
+                    <li class="nav-item"><a href="../infografias.html">Infografías</a></li>
+                    <li class="nav-item admin-only" style="display: none;"><a href="../index.html#admin">Admin</a></li>
+                    <li class="nav-item">
+                        <div id="loginArea">
+                            <button class="login-btn" onclick="showLogin()">LOGIN</button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="section-title">Calculadora Pediátrica</h1>
+            <div class="navigation">
+                <button class="nav-button active" onclick="showTab('calculator')">Calculadora</button>
+                <button class="nav-button" onclick="showTab('medications')">Medicamentos</button>
+                <button class="nav-button" onclick="showTab('scales')">Escalas</button>
+                <button class="nav-button" onclick="showTab('advice')">Consejos</button>
+            </div>
+
+            <div class="content">
+                <div id="calculator" class="tab-content active">
+                    <!-- Contenido existente de la calculadora -->
+                </div>
+                <div id="medications" class="tab-content">
+                    <!-- Contenido existente de medicamentos -->
+                </div>
+                <div id="scales" class="tab-content">
+                    <!-- Contenido existente de escalas -->
+                </div>
+                <div id="advice" class="tab-content">
+                    <!-- Contenido existente de consejos -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
+            </p>
+            <p class="footer-warning">
+                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
+            </p>
+        </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        // Código JavaScript existente de la calculadora
+    </script>
+</body>
+</html>
