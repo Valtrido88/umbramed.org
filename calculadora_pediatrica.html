@@ -599,11 +599,11 @@
                                 <div class="card">
                                     <h4 class="medication-name">Ibuprofeno</h4>
                                     <div style="margin-bottom: 12px;">
-                                        <p style="font-size: 12px; color: #6b7280;">Jarabe 100mg/5ml (20mg/ml):</p>
+                                        <p style="font-size: 12px; color: #6b7280;">Jarabe 2% (20mg/ml):</p>
                                         <p class="result-value" id="ibuprofeno-jarabe-ml" style="color: #2563eb;">0 ml</p>
                                     </div>
                                     <div style="margin-bottom: 12px;">
-                                        <p style="font-size: 12px; color: #6b7280;">Gotas 200mg/ml (CONCENTRADO):</p>
+                                        <p style="font-size: 12px; color: #6b7280;">Jarabe 4% (40mg/ml):</p>
                                         <p class="result-value" id="ibuprofeno-concentrado-ml" style="color: #2563eb;">0 ml</p>
                                     </div>
                                     <p class="result-label">Cada 6-8 horas (>6 meses)</p>
@@ -1004,11 +1004,15 @@
                 maxDose: '75 mg/kg/día',
                 presentation: 'Jarabe 160mg/5ml (32mg/ml) | Gotas 100mg/ml',
                 contraindications: 'Hepatopatía grave',
-                warnings: 'No exceder dosis máxima por riesgo hepático',
+                warnings: 'No exceder dosis máxima por riesgo hepático. VERIFICAR concentración en envase.',
                 calculate: (weight) => {
                     const doseMg = weight * 15;
-                    const jarabeMl = doseMg / 32;
-                    return { mg: doseMg.toFixed(1), ml: jarabeMl.toFixed(1) };
+                    const jarabeMl = doseMg / 32;  // Jarabe 32mg/ml
+                    const gotasMl = doseMg / 100;  // Gotas 100mg/ml
+                    return { 
+                        mg: doseMg.toFixed(1), 
+                        ml: `Jarabe: ${jarabeMl.toFixed(1)}ml | Gotas: ${gotasMl.toFixed(1)}ml`
+                    };
                 }
             },
             ibuprofeno: {
@@ -1017,13 +1021,17 @@
                 dose: '5-10 mg/kg/dosis',
                 frequency: 'cada 6-8 horas',
                 maxDose: '40 mg/kg/día',
-                presentation: 'Jarabe 100mg/5ml (20mg/ml) | Gotas 200mg/ml (CONCENTRADO)',
+                presentation: 'Jarabe 2% (20mg/ml) | Jarabe 4% (40mg/ml)',
                 contraindications: 'Alergia a AINEs, asma inducido por AINEs, <6 meses',
-                warnings: 'No usar en varicela o deshidratación',
+                warnings: 'No usar en varicela o deshidratación. VERIFICAR concentración en envase.',
                 calculate: (weight) => {
                     const doseMg = weight * 7;
-                    const jarabeMl = doseMg / 20;
-                    return { mg: doseMg.toFixed(1), ml: jarabeMl.toFixed(1) };
+                    const jarabe2Ml = doseMg / 20;   // Jarabe 2% (20mg/ml)
+                    const jarabe4Ml = doseMg / 40;   // Jarabe 4% (40mg/ml)
+                    return { 
+                        mg: doseMg.toFixed(1), 
+                        ml: `2%: ${jarabe2Ml.toFixed(1)}ml | 4%: ${jarabe4Ml.toFixed(1)}ml`
+                    };
                 }
             },
             metamizol: {
@@ -1034,11 +1042,15 @@
                 maxDose: '60 mg/kg/día',
                 presentation: 'Gotas 500mg/ml | Amp. 575mg/ml',
                 contraindications: 'Discrasias sanguíneas, porfiria',
-                warnings: 'Risk de agranulocitosis. Uso restrictivo',
+                warnings: 'Risk de agranulocitosis. Uso restrictivo. VERIFICAR concentración en envase.',
                 calculate: (weight) => {
                     const doseMg = weight * 12;
-                    const ml = doseMg / 500;
-                    return { mg: doseMg.toFixed(1), ml: ml.toFixed(2) };
+                    const gotasMl = doseMg / 500;    // Gotas 500mg/ml
+                    const ampollaMl = doseMg / 575;  // Ampollas 575mg/ml
+                    return { 
+                        mg: doseMg.toFixed(1), 
+                        ml: `Gotas: ${gotasMl.toFixed(2)}ml | Amp: ${ampollaMl.toFixed(2)}ml`
+                    };
                 }
             },
             // CORTICOIDES
@@ -1065,11 +1077,15 @@
                 maxDose: '16 mg/día',
                 presentation: 'Jarabe 0.5mg/5ml | Amp. 4mg/ml',
                 contraindications: 'Infecciones no tratadas',
-                warnings: 'Potente corticoide. Usar mínima dosis efectiva',
+                warnings: 'Potente corticoide. Usar mínima dosis efectiva. VERIFICAR concentración.',
                 calculate: (weight) => {
                     const dailyDose = weight * 0.3;
-                    const ml = (dailyDose / 0.5) * 5;
-                    return { mg: dailyDose.toFixed(2), ml: ml.toFixed(1) };
+                    const jarabeMl = (dailyDose / 0.5) * 5;  // Jarabe 0.5mg/5ml
+                    const ampollaMl = dailyDose / 4;         // Ampollas 4mg/ml
+                    return { 
+                        mg: dailyDose.toFixed(2), 
+                        ml: `Jarabe: ${jarabeMl.toFixed(1)}ml | Amp: ${ampollaMl.toFixed(2)}ml`
+                    };
                 }
             },
             hidrocortisona: {
@@ -1189,11 +1205,15 @@
                 maxDose: '32 mg/día',
                 presentation: 'Jarabe 0.8mg/ml | Amp. 2mg/ml',
                 contraindications: 'Hipersensibilidad',
-                warnings: 'Puede causar cefalea y estreñimiento',
+                warnings: 'Puede causar cefalea y estreñimiento. VERIFICAR concentración.',
                 calculate: (weight) => {
                     const perDose = weight * 0.15;
-                    const ml = perDose / 0.8;
-                    return { mg: perDose.toFixed(2), ml: ml.toFixed(1) };
+                    const jarabeMl = perDose / 0.8;   // Jarabe 0.8mg/ml
+                    const ampollaMl = perDose / 2;    // Ampollas 2mg/ml
+                    return { 
+                        mg: perDose.toFixed(2), 
+                        ml: `Jarabe: ${jarabeMl.toFixed(1)}ml | Amp: ${ampollaMl.toFixed(2)}ml`
+                    };
                 }
             },
             metoclopramida: {
@@ -1204,11 +1224,15 @@
                 maxDose: '30 mg/día',
                 presentation: 'Jarabe 1mg/ml | Amp. 5mg/ml',
                 contraindications: 'Obstrucción intestinal, epilepsia',
-                warnings: 'Riesgo de distonías. Uso limitado en pediatría',
+                warnings: 'Riesgo de distonías. Uso limitado en pediatría. VERIFICAR concentración.',
                 calculate: (weight) => {
                     const perDose = weight * 0.15;
-                    const ml = perDose;
-                    return { mg: perDose.toFixed(2), ml: ml.toFixed(1) };
+                    const jarabeMl = perDose / 1;     // Jarabe 1mg/ml
+                    const ampollaMl = perDose / 5;    // Ampollas 5mg/ml
+                    return { 
+                        mg: perDose.toFixed(2), 
+                        ml: `Jarabe: ${jarabeMl.toFixed(1)}ml | Amp: ${ampollaMl.toFixed(2)}ml`
+                    };
                 }
             },
             // MUCOLÍTICOS/EXPECTORANTES
@@ -2348,12 +2372,12 @@
                 // Ibuprofeno calculation (7 mg/kg/dosis)
                 const ibuprofenoDoseMg = weight * 7;
                 
-                // Ibuprofeno jarabe 100mg/5ml = 20mg/ml
+                // Ibuprofeno jarabe 2% = 20mg/ml
                 const ibuprofenoJarabeMl = ibuprofenoDoseMg / 20;
                 document.getElementById('ibuprofeno-jarabe-ml').textContent = ibuprofenoJarabeMl.toFixed(1);
                 
-                // Ibuprofeno concentrado 200mg/ml
-                const ibuprofenoConcentradoMl = ibuprofenoDoseMg / 200;
+                // Ibuprofeno jarabe 4% = 40mg/ml (doble concentración = mitad volumen)
+                const ibuprofenoConcentradoMl = ibuprofenoDoseMg / 40;
                 document.getElementById('ibuprofeno-concentrado-ml').textContent = ibuprofenoConcentradoMl.toFixed(1);
             } else {
                 document.getElementById('analgesics-card').classList.add('hidden');
