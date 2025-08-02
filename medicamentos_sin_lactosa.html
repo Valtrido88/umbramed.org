@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicamentos Sin Lactosa - UMBRAMED Medical Division</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Paleta de colores UMBRAMED */
+        :root {
+            --umbramed-red: #C41E3A;
+            --umbramed-red-dark: #A01729;
+            --umbramed-red-light: #E63946;
+            --umbramed-gray: #F8F9FA;
+            --umbramed-text: #2D3436;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--umbramed-red) 0%, var(--umbramed-red-dark) 100%);
+        }
+        
+        .umbramed-red {
+            color: var(--umbramed-red);
+        }
+        
+        .bg-umbramed-red {
+            background-color: var(--umbramed-red);
+        }
+        
+        .border-umbramed-red {
+            border-color: var(--umbramed-red);
+        }
+        
+        .card-border {
+            border-left: 4px solid var(--umbramed-red);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(196, 30, 58, 0.1);
+        }
+        
+        .medical-input {
+            border: 2px solid #E5E7EB;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .medical-input:focus {
+            outline: none;
+            border-color: var(--umbramed-red);
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+        }
+        
+        .medical-button {
+            background: linear-gradient(135deg, var(--umbramed-red), var(--umbramed-red-dark));
+            transition: all 0.3s ease;
+        }
+        
+        .medical-button:hover {
+            background: linear-gradient(135deg, var(--umbramed-red-dark), #8B1538);
+            transform: translateY(-1px);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #FFF 0%, var(--umbramed-gray) 100%);
+        }
+        
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-out;
+            opacity: 0;
+        }
+        
+        .expanded-content.show {
+            max-height: 300px;
+            opacity: 1;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #FEF7F0 0%, #FED7D7 100%);
+            border: 1px solid #F687B3;
+        }
+        
+        .dna-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f687b3' fill-opacity='0.05'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20v20h20c11.046 0 20-8.954 20-20s-8.954-20-20-20z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white">
+    <!-- Header UMBRAMED Style -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <a href="index.html" class="flex items-center gap-2">
+                            <div class="text-2xl">🧬</div>
+                            <div>
+                                <span class="text-2xl font-bold umbramed-red">UMBRAMED</span>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">Medical Division</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="herramientas.html" class="text-gray-600 hover:text-gray-900 font-medium">HERRAMIENTAS</a>
+                    <a href="software.html" class="text-gray-600 hover:text-gray-900 font-medium">SOFTWARE</a>
+                    <a href="infografias.html" class="text-gray-600 hover:text-gray-900 font-medium">INFOGRAFÍAS</a>
+                    <button class="bg-umbramed-red text-white px-6 py-2 rounded font-medium hover:bg-red-700 transition-colors" onclick="showLogin()">
+                        LOGIN
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="dna-pattern py-16 border-2 border-red-200 rounded-lg mx-4 mt-8">
+        <div class="max-w-6xl mx-auto text-center px-4">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                Base de Datos de Medicamentos Sin Lactosa
+            </h1>
+            <p class="text-xl umbramed-red font-semibold uppercase tracking-wide mb-6">
+                ADVANCED PHARMACEUTICAL DATABASE & CLINICAL TOOLS
+            </p>
+            <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                Accede a una base de datos completa de medicamentos verificados sin lactosa, diseñada para optimizar 
+                la práctica médica moderna y facilitar la prescripción segura en pacientes con intolerancia a la lactosa.
+            </p>
+        </div>
+    </section>
+
+    <!-- Información Educativa sobre Lactosa -->
+    <section class="max-w-6xl mx-auto px-4 py-12">
+        <div class="info-box rounded-2xl p-8 mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold umbramed-red mb-4">
+                    LACTOSA COMO EXCIPIENTE FARMACÉUTICO
+                </h2>
+                <p class="text-lg text-gray-700">Información esencial para profesionales sanitarios</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="text-center">
+                    <div class="bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📊</span>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">15-20%</h3>
+                    <p class="text-gray-600">de los medicamentos comercializados contienen lactosa como excipiente</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">⚠️</span>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Reacciones</h3>
+                    <p class="text-gray-600">Pueden causar síntomas digestivos en pacientes con intolerancia a la lactosa</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🎯</span>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Solución</h3>
+                    <p class="text-gray-600">172 medicamentos verificados sin lactosa disponibles en nuestra base de datos</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 border border-red-200">
+                <h4 class="font-semibold text-lg umbramed-red mb-3">¿Por qué usar lactosa en medicamentos?</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
+                    <div>
+                        <p class="mb-2"><strong>• Excipiente ideal:</strong> Propiedades de flujo excelentes para la fabricación</p>
+                        <p class="mb-2"><strong>• Estabilidad:</strong> Protege el principio activo de la degradación</p>
+                        <p><strong>• Compactación:</strong> Facilita la formación de comprimidos</p>
+                    </div>
+                    <div>
+                        <p class="mb-2"><strong>• Disolución:</strong> Se disuelve rápidamente en el tracto digestivo</p>
+                        <p class="mb-2"><strong>• Coste-efectiva:</strong> Excipiente económico y ampliamente disponible</p>
+                        <p><strong>• Regulatoria:</strong> Aprobada por todas las agencias internacionales</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Sección de herramientas médicas -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold umbramed-red mb-4">HERRAMIENTAS MÉDICAS</h2>
+            <div class="w-24 h-1 bg-umbramed-red mx-auto mb-6"></div>
+        </div>
+
+        <!-- Panel de búsqueda -->
+        <div class="bg-white rounded-2xl shadow-xl mb-8 fade-in">
+            <div class="card-border p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-red-50 p-3 rounded-xl">
+                        <span class="text-2xl text-red-600">🔍</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Búsqueda de Medicamentos Sin Lactosa</h3>
+                        <p class="text-gray-600">Base de datos verificada profesionalmente</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Campo de búsqueda -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                            Nombre del medicamento o principio activo
+                        </label>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Ej: Paracetamol, Ibuprofeno, Amoxicilina..."
+                            class="w-full px-4 py-4 medical-input text-gray-900 text-lg"
+                        />
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                Categoría terapéutica
+                            </label>
+                            <select id="categoryFilter" class="w-full px-4 py-4 medical-input text-gray-900">
+                                <option value="">-- Seleccionar categoría --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                Laboratorio farmacéutico
+                            </label>
+                            <select id="labFilter" class="w-full px-4 py-4 medical-input text-gray-900">
+                                <option value="">-- Seleccionar laboratorio --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex flex-wrap gap-4">
+                        <button id="searchBtn" class="medical-button text-white px-8 py-3 rounded-lg font-semibold">
+                            🔍 Buscar medicamentos
+                        </button>
+                        <button id="clearFilters" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors hidden">
+                            ✨ Limpiar filtros
+                        </button>
+                        <button id="statsToggle" class="bg-red-50 text-red-700 px-6 py-3 rounded-lg font-semibold hover:bg-red-100 transition-colors">
+                            📊 Ver estadísticas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de estadísticas -->
+        <div id="statsPanel" class="bg-white rounded-2xl shadow-xl mb-8 hidden fade-in">
+            <div class="card-border p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-red-50 p-3 rounded-xl">
+                        <span class="text-2xl text-red-600">📊</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Estadísticas de la Base de Datos</h3>
+                        <p class="text-gray-600">Análisis completo de medicamentos verificados</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <div class="stats-card p-6 rounded-xl text-center border border-red-100">
+                        <div class="text-3xl text-red-600 mb-2">💊</div>
+                        <div id="statsMedicamentos" class="text-3xl font-bold text-gray-800">172</div>
+                        <div class="text-sm text-gray-600">Medicamentos</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-xl text-center border border-red-100">
+                        <div class="text-3xl text-red-600 mb-2">📋</div>
+                        <div id="statsCategorias" class="text-3xl font-bold text-gray-800">17</div>
+                        <div class="text-sm text-gray-600">Categorías</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-xl text-center border border-red-100">
+                        <div class="text-3xl text-red-600 mb-2">🏢</div>
+                        <div id="statsLaboratorios" class="text-3xl font-bold text-gray-800">6</div>
+                        <div class="text-sm text-gray-600">Laboratorios</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-xl text-center border border-red-100">
+                        <div class="text-3xl text-red-600 mb-2">🎯</div>
+                        <div id="statsResultados" class="text-3xl font-bold text-gray-800">172</div>
+                        <div class="text-sm text-gray-600">Resultados</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="stats-card p-6 rounded-xl border border-red-100">
+                        <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="text-xl">🏭</span>
+                            Laboratorios Principales
+                        </h4>
+                        <div id="topLaboratorios" class="space-y-3"></div>
+                    </div>
+
+                    <div class="stats-card p-6 rounded-xl border border-red-100">
+                        <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="text-xl">🎯</span>
+                            Categorías Más Representadas
+                        </h4>
+                        <div id="topCategorias" class="space-y-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="bg-white rounded-2xl shadow-xl fade-in">
+            <div class="card-border p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-red-50 p-3 rounded-xl">
+                            <span class="text-2xl text-red-600">🎯</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Resultados de Búsqueda</h3>
+                            <p class="text-gray-600">
+                                Se encontraron <span id="resultCount" class="font-bold umbramed-red">172</span> medicamentos sin lactosa verificados
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="gridView" class="medical-button text-white px-6 py-3 rounded-lg font-semibold">
+                            📱 Tarjetas
+                        </button>
+                        <button id="listView" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200">
+                            📋 Lista
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mensaje sin resultados -->
+                <div id="noResults" class="text-center py-16 hidden">
+                    <div class="text-6xl mb-6">🔍</div>
+                    <h3 class="text-2xl font-bold text-gray-700 mb-3">No se encontraron medicamentos</h3>
+                    <p class="text-gray-500 mb-6 max-w-md mx-auto">
+                        Intenta ajustar los criterios de búsqueda o verifica la ortografía del medicamento
+                    </p>
+                    <button id="clearFiltersFromNoResults" class="medical-button text-white px-8 py-3 rounded-lg font-semibold">
+                        Mostrar todos los medicamentos
+                    </button>
+                </div>
+
+                <!-- Contenedor de resultados -->
+                <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- Disclaimers médicos -->
+        <div class="mt-12 space-y-4 text-center text-sm text-gray-600">
+            <div class="flex items-center justify-center gap-2">
+                <span>⚠️</span>
+                <span>Esta herramienta es de apoyo clínico. Siempre verificar dosis y consultar con profesional sanitario.</span>
+            </div>
+            <div class="flex items-center justify-center gap-2">
+                <span>🔬</span>
+                <span class="font-semibold">VERIFICAR SIEMPRE la composición exacta en el envase del medicamento antes de administrar.</span>
+            </div>
+            <div class="flex items-center justify-center gap-2">
+                <span>📊</span>
+                <span>La información es herramienta de cribado - No sustituyen la evaluación clínica completa.</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-6">
+                Basado en evidencia científica actualizada 2024 • Desarrollado para profesionales de la salud
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos completa de medicamentos sin lactosa verificados
+        const medicamentosData = [
+            // ANALGÉSICOS (19 medicamentos)
+            { id: 1, nombre: "Paracetamol Kern Pharma 1000 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 y 40 comp", principio_activo: "Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 2, nombre: "Paracetamol Cinfa 650 mg", categoria: "Analgésicos", laboratorio: "Cinfa", presentacion: "20 y 40 comp", principio_activo: "Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 3, nombre: "Paracetamol Alter 650 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "20 y 40 comp", principio_activo: "Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 4, nombre: "Paracetamol Stada 650 mg", categoria: "Analgésicos", laboratorio: "Stada", presentacion: "20 y 40 comp", principio_activo: "Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 5, nombre: "Paracetamol Normon 1000 mg", categoria: "Analgésicos", laboratorio: "Normon", presentacion: "20 comp", principio_activo: "Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 6, nombre: "Metamizol Alter 575 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "10 y 20 cápsulas", principio_activo: "Metamizol", icono: "💊", color: "#C41E3A" },
+            { id: 7, nombre: "Metamizol Kern Pharma 575 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 caps", principio_activo: "Metamizol", icono: "💊", color: "#C41E3A" },
+            { id: 8, nombre: "Tramadol Kern Pharma 50 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 y 60 comp", principio_activo: "Tramadol", icono: "💊", color: "#C41E3A" },
+            { id: 9, nombre: "Tramadol Alter 100 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Tramadol", icono: "💊", color: "#C41E3A" },
+            { id: 10, nombre: "Codeína/Paracetamol Kern Pharma", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Codeína + Paracetamol", icono: "💊", color: "#C41E3A" },
+            { id: 11, nombre: "Morfina Retard Kern Pharma 30 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Morfina", icono: "💊", color: "#C41E3A" },
+            { id: 12, nombre: "Fentanilo Matrix Kern Pharma", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "5 parches", principio_activo: "Fentanilo", icono: "💊", color: "#C41E3A" },
+            { id: 13, nombre: "Buprenorfina Alter 35 mcg/h", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "4 parches", principio_activo: "Buprenorfina", icono: "💊", color: "#C41E3A" },
+            { id: 14, nombre: "Tapentadol Kern Pharma 100 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "56 comp", principio_activo: "Tapentadol", icono: "💊", color: "#C41E3A" },
+            { id: 15, nombre: "Oxicodona Alter 10 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Oxicodona", icono: "💊", color: "#C41E3A" },
+            { id: 16, nombre: "Ketorolaco Alter 10 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Ketorolaco", icono: "💊", color: "#C41E3A" },
+            { id: 17, nombre: "Nefopam Alter 30 mg", categoria: "Analgésicos", laboratorio: "Alter", presentacion: "56 comp", principio_activo: "Nefopam", icono: "💊", color: "#C41E3A" },
+            { id: 18, nombre: "Pentazocina Kern Pharma 50 mg", categoria: "Analgésicos", laboratorio: "Kern Pharma", presentacion: "20 caps", principio_activo: "Pentazocina", icono: "💊", color: "#C41E3A" },
+            { id: 19, nombre: "Paracetamol/Tramadol Stada", categoria: "Analgésicos", laboratorio: "Stada", presentacion: "20 comp", principio_activo: "Paracetamol + Tramadol", icono: "💊", color: "#C41E3A" },
+
+            // ANTIINFLAMATORIOS (15 medicamentos)
+            { id: 20, nombre: "Ibuprofeno Kern Pharma 400 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "40 comprimidos", principio_activo: "Ibuprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 21, nombre: "Ibuprofeno Kern Pharma 600 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "40 comprimidos", principio_activo: "Ibuprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 22, nombre: "Ibuprofeno Cinfa 600 mg", categoria: "Antiinflamatorios", laboratorio: "Cinfa", presentacion: "40 comp", principio_activo: "Ibuprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 23, nombre: "Ibuprofeno Alter 400 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Ibuprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 24, nombre: "Dexketoprofeno Alter 25 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Dexketoprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 25, nombre: "Dexketoprofeno Kern Pharma 25 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Dexketoprofeno", icono: "🔥", color: "#DC2626" },
+            { id: 26, nombre: "Diclofenaco Alter 50 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "40 comp", principio_activo: "Diclofenaco", icono: "🔥", color: "#DC2626" },
+            { id: 27, nombre: "Naproxeno Kern Pharma 500 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "40 comp", principio_activo: "Naproxeno", icono: "🔥", color: "#DC2626" },
+            { id: 28, nombre: "Etoricoxib Alter 60 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Etoricoxib", icono: "🔥", color: "#DC2626" },
+            { id: 29, nombre: "Etoricoxib Alter 90 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Etoricoxib", icono: "🔥", color: "#DC2626" },
+            { id: 30, nombre: "Celecoxib Alter 200 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "30 caps", principio_activo: "Celecoxib", icono: "🔥", color: "#DC2626" },
+            { id: 31, nombre: "Meloxicam Alter 15 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Meloxicam", icono: "🔥", color: "#DC2626" },
+            { id: 32, nombre: "Piroxicam Kern Pharma 20 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Piroxicam", icono: "🔥", color: "#DC2626" },
+            { id: 33, nombre: "Aceclofenaco Alter 100 mg", categoria: "Antiinflamatorios", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Aceclofenaco", icono: "🔥", color: "#DC2626" },
+            { id: 34, nombre: "Ketoprofeno Kern Pharma 100 mg", categoria: "Antiinflamatorios", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Ketoprofeno", icono: "🔥", color: "#DC2626" },
+
+            // ANTIBIÓTICOS (22 medicamentos)
+            { id: 35, nombre: "Amoxicilina Alter 500 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "20 y 30 caps", principio_activo: "Amoxicilina", icono: "🦠", color: "#059669" },
+            { id: 36, nombre: "Amoxicilina Kern Pharma 875 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "14 comp", principio_activo: "Amoxicilina", icono: "🦠", color: "#059669" },
+            { id: 37, nombre: "Amoxicilina/Ác. Clavulánico Alter 875/125 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "20 y 30 comp", principio_activo: "Amoxicilina + Ácido clavulánico", icono: "🦠", color: "#059669" },
+            { id: 38, nombre: "Azitromicina Alter 500 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "3 comp", principio_activo: "Azitromicina", icono: "🦠", color: "#059669" },
+            { id: 39, nombre: "Azitromicina Kern Pharma 250 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "6 caps", principio_activo: "Azitromicina", icono: "🦠", color: "#059669" },
+            { id: 40, nombre: "Ciprofloxacino Alter 500 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "14 comp", principio_activo: "Ciprofloxacino", icono: "🦠", color: "#059669" },
+            { id: 41, nombre: "Claritromicina Alter 500 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "14 comp", principio_activo: "Claritromicina", icono: "🦠", color: "#059669" },
+            { id: 42, nombre: "Levofloxacino Kern Pharma 500 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "7 y 14 comp", principio_activo: "Levofloxacino", icono: "🦠", color: "#059669" },
+            { id: 43, nombre: "Cefuroxima Kern Pharma 500 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "10 y 20 comp", principio_activo: "Cefuroxima", icono: "🦠", color: "#059669" },
+            { id: 44, nombre: "Doxiciclina Alter 100 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "30 caps", principio_activo: "Doxiciclina", icono: "🦠", color: "#059669" },
+            { id: 45, nombre: "Eritromicina Kern Pharma 500 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Eritromicina", icono: "🦠", color: "#059669" },
+            { id: 46, nombre: "Cefixima Alter 400 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "6 caps", principio_activo: "Cefixima", icono: "🦠", color: "#059669" },
+            { id: 47, nombre: "Norfloxacino Kern Pharma 400 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "14 comp", principio_activo: "Norfloxacino", icono: "🦠", color: "#059669" },
+            { id: 48, nombre: "Clindamicina Alter 300 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "16 caps", principio_activo: "Clindamicina", icono: "🦠", color: "#059669" },
+            { id: 49, nombre: "Ofloxacino Kern Pharma 200 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "10 comp", principio_activo: "Ofloxacino", icono: "🦠", color: "#059669" },
+            { id: 50, nombre: "Ceftriaxona Alter 1g", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "1 vial", principio_activo: "Ceftriaxona", icono: "🦠", color: "#059669" },
+            { id: 51, nombre: "Moxifloxacino Alter 400 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "7 comp", principio_activo: "Moxifloxacino", icono: "🦠", color: "#059669" },
+            { id: 52, nombre: "Tetraciclina Kern Pharma 250 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "20 caps", principio_activo: "Tetraciclina", icono: "🦠", color: "#059669" },
+            { id: 53, nombre: "Vancomicina Alter 500 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "1 vial", principio_activo: "Vancomicina", icono: "🦠", color: "#059669" },
+            { id: 54, nombre: "Lincomicina Kern Pharma 500 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "20 caps", principio_activo: "Lincomicina", icono: "🦠", color: "#059669" },
+            { id: 55, nombre: "Gentamicina Alter 80 mg", categoria: "Antibióticos", laboratorio: "Alter", presentacion: "6 ampollas", principio_activo: "Gentamicina", icono: "🦠", color: "#059669" },
+            { id: 56, nombre: "Tobramicina Kern Pharma 80 mg", categoria: "Antibióticos", laboratorio: "Kern Pharma", presentacion: "10 viales", principio_activo: "Tobramicina", icono: "🦠", color: "#059669" },
+
+            // PROTECTORES GÁSTRICOS (12 medicamentos)
+            { id: 57, nombre: "Omeprazol Alter 20 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 y 56 comp", principio_activo: "Omeprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 58, nombre: "Omeprazol Kern Pharma 40 mg", categoria: "Protectores gástricos", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Omeprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 59, nombre: "Esomeprazol Alter 20 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Esomeprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 60, nombre: "Esomeprazol Kern Pharma 40 mg", categoria: "Protectores gástricos", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Esomeprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 61, nombre: "Pantoprazol Alter 20 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 y 56 comp", principio_activo: "Pantoprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 62, nombre: "Pantoprazol Kern Pharma 40 mg", categoria: "Protectores gástricos", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Pantoprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 63, nombre: "Lansoprazol Alter 30 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 caps", principio_activo: "Lansoprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 64, nombre: "Rabeprazol Alter 20 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 y 56 comp", principio_activo: "Rabeprazol", icono: "🛡️", color: "#2563EB" },
+            { id: 65, nombre: "Ranitidina Kern Pharma 150 mg", categoria: "Protectores gástricos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Ranitidina", icono: "🛡️", color: "#2563EB" },
+            { id: 66, nombre: "Famotidina Alter 20 mg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Famotidina", icono: "🛡️", color: "#2563EB" },
+            { id: 67, nombre: "Sucralfato Kern Pharma 1g", categoria: "Protectores gástricos", laboratorio: "Kern Pharma", presentacion: "30 sobres", principio_activo: "Sucralfato", icono: "🛡️", color: "#2563EB" },
+            { id: 68, nombre: "Misoprostol Alter 200 mcg", categoria: "Protectores gástricos", laboratorio: "Alter", presentacion: "60 comp", principio_activo: "Misoprostol", icono: "🛡️", color: "#2563EB" },
+
+            // ANTIDEPRESIVOS Y PSIQUIÁTRICOS (18 medicamentos)
+            { id: 69, nombre: "Escitalopram Kern Pharma 10 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Escitalopram", icono: "🧠", color: "#7C3AED" },
+            { id: 70, nombre: "Escitalopram Alter 20 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Escitalopram", icono: "🧠", color: "#7C3AED" },
+            { id: 71, nombre: "Fluoxetina Kern Pharma 20 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "28 y 60 caps", principio_activo: "Fluoxetina", icono: "🧠", color: "#7C3AED" },
+            { id: 72, nombre: "Sertralina Alter 50 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "30 y 60 comp", principio_activo: "Sertralina", icono: "🧠", color: "#7C3AED" },
+            { id: 73, nombre: "Sertralina Kern Pharma 100 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Sertralina", icono: "🧠", color: "#7C3AED" },
+            { id: 74, nombre: "Venlafaxina Kern Pharma 75 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Venlafaxina", icono: "🧠", color: "#7C3AED" },
+            { id: 75, nombre: "Paroxetina Kern Pharma 20 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "28 y 56 comp", principio_activo: "Paroxetina", icono: "🧠", color: "#7C3AED" },
+            { id: 76, nombre: "Citalopram Alter 20 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Citalopram", icono: "🧠", color: "#7C3AED" },
+            { id: 77, nombre: "Duloxetina Kern Pharma 60 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "28 caps", principio_activo: "Duloxetina", icono: "🧠", color: "#7C3AED" },
+            { id: 78, nombre: "Mirtazapina Alter 30 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Mirtazapina", icono: "🧠", color: "#7C3AED" },
+            { id: 79, nombre: "Trazodona Kern Pharma 100 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Trazodona", icono: "🧠", color: "#7C3AED" },
+            { id: 80, nombre: "Bupropión Alter 150 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Bupropión", icono: "🧠", color: "#7C3AED" },
+            { id: 81, nombre: "Amitriptilina Kern Pharma 25 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Amitriptilina", icono: "🧠", color: "#7C3AED" },
+            { id: 82, nombre: "Clomipramina Alter 25 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "60 comp", principio_activo: "Clomipramina", icono: "🧠", color: "#7C3AED" },
+            { id: 83, nombre: "Quetiapina Kern Pharma 100 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Quetiapina", icono: "🧠", color: "#7C3AED" },
+            { id: 84, nombre: "Olanzapina Alter 10 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Olanzapina", icono: "🧠", color: "#7C3AED" },
+            { id: 85, nombre: "Risperidona Kern Pharma 2 mg", categoria: "Antidepresivos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Risperidona", icono: "🧠", color: "#7C3AED" },
+            { id: 86, nombre: "Aripiprazol Alter 15 mg", categoria: "Antidepresivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Aripiprazol", icono: "🧠", color: "#7C3AED" },
+
+            // ANTIDIABÉTICOS (10 medicamentos)
+            { id: 87, nombre: "Metformina Cinfa 850 mg", categoria: "Antidiabéticos", laboratorio: "Cinfa", presentacion: "30 y 50 comp", principio_activo: "Metformina", icono: "📊", color: "#059669" },
+            { id: 88, nombre: "Metformina Kern Pharma 1000 mg", categoria: "Antidiabéticos", laboratorio: "Kern Pharma", presentacion: "30 y 50 comp", principio_activo: "Metformina", icono: "📊", color: "#059669" },
+            { id: 89, nombre: "Sitagliptina Alter 100 mg", categoria: "Antidiabéticos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Sitagliptina", icono: "📊", color: "#059669" },
+            { id: 90, nombre: "Repaglinida Kern Pharma 1 mg", categoria: "Antidiabéticos", laboratorio: "Kern Pharma", presentacion: "90 comp", principio_activo: "Repaglinida", icono: "📊", color: "#059669" },
+            { id: 91, nombre: "Glimepirida Alter 2 mg", categoria: "Antidiabéticos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Glimepirida", icono: "📊", color: "#059669" },
+            { id: 92, nombre: "Gliclazida Kern Pharma 80 mg", categoria: "Antidiabéticos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Gliclazida", icono: "📊", color: "#059669" },
+            { id: 93, nombre: "Pioglitazona Alter 30 mg", categoria: "Antidiabéticos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Pioglitazona", icono: "📊", color: "#059669" },
+            { id: 94, nombre: "Vildagliptina Kern Pharma 50 mg", categoria: "Antidiabéticos", laboratorio: "Kern Pharma", presentacion: "56 comp", principio_activo: "Vildagliptina", icono: "📊", color: "#059669" },
+            { id: 95, nombre: "Empagliflozina Alter 10 mg", categoria: "Antidiabéticos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Empagliflozina", icono: "📊", color: "#059669" },
+            { id: 96, nombre: "Liraglutida Kern Pharma 6mg/ml", categoria: "Antidiabéticos", laboratorio: "Kern Pharma", presentacion: "3 plumas", principio_activo: "Liraglutida", icono: "📊", color: "#059669" },
+
+            // ANTIHISTAMÍNICOS (8 medicamentos)
+            { id: 97, nombre: "Desloratadina Alter 5mg", categoria: "Antihistamínicos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Desloratadina", icono: "🌸", color: "#EA580C" },
+            { id: 98, nombre: "Bilastina Alter 20 mg", categoria: "Antihistamínicos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Bilastina", icono: "🌸", color: "#EA580C" },
+            { id: 99, nombre: "Ebastina Kern Pharma 10 mg", categoria: "Antihistamínicos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Ebastina", icono: "🌸", color: "#EA580C" },
+            { id: 100, nombre: "Cetirizina Alter 10 mg", categoria: "Antihistamínicos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Cetirizina", icono: "🌸", color: "#EA580C" },
+            { id: 101, nombre: "Loratadina Kern Pharma 10 mg", categoria: "Antihistamínicos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Loratadina", icono: "🌸", color: "#EA580C" },
+            { id: 102, nombre: "Fexofenadina Alter 120 mg", categoria: "Antihistamínicos", laboratorio: "Alter", presentacion: "10 comp", principio_activo: "Fexofenadina", icono: "🌸", color: "#EA580C" },
+            { id: 103, nombre: "Levocetirizina Kern Pharma 5 mg", categoria: "Antihistamínicos", laboratorio: "Kern Pharma", presentacion: "20 comp", principio_activo: "Levocetirizina", icono: "🌸", color: "#EA580C" },
+            { id: 104, nombre: "Rupatadina Alter 10 mg", categoria: "Antihistamínicos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Rupatadina", icono: "🌸", color: "#EA580C" },
+
+            // ANTIHIPERTENSIVOS (16 medicamentos)
+            { id: 105, nombre: "Amlodipino Alter 5 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Amlodipino", icono: "❤️", color: "#DC2626" },
+            { id: 106, nombre: "Amlodipino Kern Pharma 10 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Amlodipino", icono: "❤️", color: "#DC2626" },
+            { id: 107, nombre: "Telmisartan Alter 80 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Telmisartan", icono: "❤️", color: "#DC2626" },
+            { id: 108, nombre: "Valsartan Alter 160 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Valsartan", icono: "❤️", color: "#DC2626" },
+            { id: 109, nombre: "Atenolol Alter 50 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Atenolol", icono: "❤️", color: "#DC2626" },
+            { id: 110, nombre: "Enalapril Kern Pharma 10 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Enalapril", icono: "❤️", color: "#DC2626" },
+            { id: 111, nombre: "Lisinopril Alter 10 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Lisinopril", icono: "❤️", color: "#DC2626" },
+            { id: 112, nombre: "Bisoprolol Kern Pharma 5 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Bisoprolol", icono: "❤️", color: "#DC2626" },
+            { id: 113, nombre: "Irbesartan Alter 300 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Irbesartan", icono: "❤️", color: "#DC2626" },
+            { id: 114, nombre: "Losartan Kern Pharma 50 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Losartan", icono: "❤️", color: "#DC2626" },
+            { id: 115, nombre: "Candesartan Alter 16 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Candesartan", icono: "❤️", color: "#DC2626" },
+            { id: 116, nombre: "Metoprolol Kern Pharma 100 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Metoprolol", icono: "❤️", color: "#DC2626" },
+            { id: 117, nombre: "Nifedipino Alter 30 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Nifedipino", icono: "❤️", color: "#DC2626" },
+            { id: 118, nombre: "Captopril Kern Pharma 25 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Captopril", icono: "❤️", color: "#DC2626" },
+            { id: 119, nombre: "Doxazosina Alter 4 mg", categoria: "Antihipertensivos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Doxazosina", icono: "❤️", color: "#DC2626" },
+            { id: 120, nombre: "Hidroclorotiazida Kern Pharma 25 mg", categoria: "Antihipertensivos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Hidroclorotiazida", icono: "❤️", color: "#DC2626" },
+
+            // MUCOLÍTICOS (6 medicamentos)
+            { id: 121, nombre: "Acetilcisteína Normon 200 mg", categoria: "Mucolíticos", laboratorio: "Normon", presentacion: "30 sobres", principio_activo: "Acetilcisteína", icono: "🫁", color: "#0891B2" },
+            { id: 122, nombre: "Acetilcisteína Alter 600 mg", categoria: "Mucolíticos", laboratorio: "Alter", presentacion: "20 comp eferv", principio_activo: "Acetilcisteína", icono: "🫁", color: "#0891B2" },
+            { id: 123, nombre: "Ambroxol Normon jarabe", categoria: "Mucolíticos", laboratorio: "Normon", presentacion: "15 mg/5 ml", principio_activo: "Ambroxol", icono: "🫁", color: "#0891B2" },
+            { id: 124, nombre: "Carbocisteína Kern Pharma 750 mg", categoria: "Mucolíticos", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Carbocisteína", icono: "🫁", color: "#0891B2" },
+            { id: 125, nombre: "Bromhexina Alter 8 mg", categoria: "Mucolíticos", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Bromhexina", icono: "🫁", color: "#0891B2" },
+            { id: 126, nombre: "Erdosteína Kern Pharma 300 mg", categoria: "Mucolíticos", laboratorio: "Kern Pharma", presentacion: "20 caps", principio_activo: "Erdosteína", icono: "🫁", color: "#0891B2" },
+
+            // ANTIEPILÉPTICOS (8 medicamentos)
+            { id: 127, nombre: "Levetiracetam Kern Pharma 500 mg", categoria: "Antiepilépticos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Levetiracetam", icono: "⚡", color: "#A855F7" },
+            { id: 128, nombre: "Pregabalina Alter 150 mg", categoria: "Antiepilépticos", laboratorio: "Alter", presentacion: "56 comp", principio_activo: "Pregabalina", icono: "⚡", color: "#A855F7" },
+            { id: 129, nombre: "Gabapentina Alter 600 mg", categoria: "Antiepilépticos", laboratorio: "Alter", presentacion: "90 comp", principio_activo: "Gabapentina", icono: "⚡", color: "#A855F7" },
+            { id: 130, nombre: "Lamotrigina Kern Pharma 100 mg", categoria: "Antiepilépticos", laboratorio: "Kern Pharma", presentacion: "56 comp dispersable", principio_activo: "Lamotrigina", icono: "⚡", color: "#A855F7" },
+            { id: 131, nombre: "Carbamazepina Alter 200 mg", categoria: "Antiepilépticos", laboratorio: "Alter", presentacion: "50 comp", principio_activo: "Carbamazepina", icono: "⚡", color: "#A855F7" },
+            { id: 132, nombre: "Fenitoína Kern Pharma 100 mg", categoria: "Antiepilépticos", laboratorio: "Kern Pharma", presentacion: "200 caps", principio_activo: "Fenitoína", icono: "⚡", color: "#A855F7" },
+            { id: 133, nombre: "Valproato Alter 500 mg", categoria: "Antiepilépticos", laboratorio: "Alter", presentacion: "50 comp", principio_activo: "Ácido valproico", icono: "⚡", color: "#A855F7" },
+            { id: 134, nombre: "Topiramato Kern Pharma 100 mg", categoria: "Antiepilépticos", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Topiramato", icono: "⚡", color: "#A855F7" },
+
+            // NEUROLOGÍA (6 medicamentos)
+            { id: 135, nombre: "Donepezilo Kern Pharma 10 mg", categoria: "Neurología", laboratorio: "Kern Pharma", presentacion: "28 comp", principio_activo: "Donepezilo", icono: "🧠", color: "#6366F1" },
+            { id: 136, nombre: "Memantina Alter 10 mg", categoria: "Neurología", laboratorio: "Alter", presentacion: "112 comp", principio_activo: "Memantina", icono: "🧠", color: "#6366F1" },
+            { id: 137, nombre: "Rivastigmina Kern Pharma 6 mg", categoria: "Neurología", laboratorio: "Kern Pharma", presentacion: "56 caps", principio_activo: "Rivastigmina", icono: "🧠", color: "#6366F1" },
+            { id: 138, nombre: "Galantamina Alter 8 mg", categoria: "Neurología", laboratorio: "Alter", presentacion: "56 caps", principio_activo: "Galantamina", icono: "🧠", color: "#6366F1" },
+            { id: 139, nombre: "Levodopa/Carbidopa Kern Pharma", categoria: "Neurología", laboratorio: "Kern Pharma", presentacion: "100 comp", principio_activo: "Levodopa + Carbidopa", icono: "🧠", color: "#6366F1" },
+            { id: 140, nombre: "Ropinirol Alter 2 mg", categoria: "Neurología", laboratorio: "Alter", presentacion: "84 comp", principio_activo: "Ropinirol", icono: "🧠", color: "#6366F1" },
+
+            // UROLÓGICOS (5 medicamentos)
+            { id: 141, nombre: "Tamsulosina Kern Pharma 0,4 mg", categoria: "Urológicos", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Tamsulosina", icono: "🔵", color: "#3B82F6" },
+            { id: 142, nombre: "Dutasterida Stada 0,5 mg", categoria: "Urológicos", laboratorio: "Stada", presentacion: "30 cápsulas", principio_activo: "Dutasterida", icono: "🔵", color: "#3B82F6" },
+            { id: 143, nombre: "Finasterida Alter 5 mg", categoria: "Urológicos", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Finasterida", icono: "🔵", color: "#3B82F6" },
+            { id: 144, nombre: "Alfuzosina Kern Pharma 10 mg", categoria: "Urológicos", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Alfuzosina", icono: "🔵", color: "#3B82F6" },
+            { id: 145, nombre: "Silodosina Alter 8 mg", categoria: "Urológicos", laboratorio: "Alter", presentacion: "30 caps", principio_activo: "Silodosina", icono: "🔵", color: "#3B82F6" },
+
+            // RESPIRATORIOS (4 medicamentos)
+            { id: 146, nombre: "Montelukast Alter 10 mg", categoria: "Respiratorios", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Montelukast", icono: "🫁", color: "#10B981" },
+            { id: 147, nombre: "Montelukast Stada 10 mg", categoria: "Respiratorios", laboratorio: "Stada", presentacion: "28 comp", principio_activo: "Montelukast", icono: "🫁", color: "#10B981" },
+            { id: 148, nombre: "Teofilina Kern Pharma 300 mg", categoria: "Respiratorios", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Teofilina", icono: "🫁", color: "#10B981" },
+            { id: 149, nombre: "Bambuterol Alter 20 mg", categoria: "Respiratorios", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Bambuterol", icono: "🫁", color: "#10B981" },
+
+            // ANTICOAGULANTES (6 medicamentos)
+            { id: 150, nombre: "Warfarina Kern Pharma 5 mg", categoria: "Anticoagulantes", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Warfarina", icono: "🩸", color: "#EF4444" },
+            { id: 151, nombre: "Acenocumarol Alter 4 mg", categoria: "Anticoagulantes", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Acenocumarol", icono: "🩸", color: "#EF4444" },
+            { id: 152, nombre: "Dabigatrán Kern Pharma 150 mg", categoria: "Anticoagulantes", laboratorio: "Kern Pharma", presentacion: "60 caps", principio_activo: "Dabigatrán", icono: "🩸", color: "#EF4444" },
+            { id: 153, nombre: "Rivaroxabán Alter 20 mg", categoria: "Anticoagulantes", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Rivaroxabán", icono: "🩸", color: "#EF4444" },
+            { id: 154, nombre: "Apixabán Kern Pharma 5 mg", categoria: "Anticoagulantes", laboratorio: "Kern Pharma", presentacion: "60 comp", principio_activo: "Apixabán", icono: "🩸", color: "#EF4444" },
+            { id: 155, nombre: "Edoxabán Alter 60 mg", categoria: "Anticoagulantes", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Edoxabán", icono: "🩸", color: "#EF4444" },
+
+            // HORMONAS Y ENDOCRINO (8 medicamentos)
+            { id: 156, nombre: "Levotiroxina Kern Pharma 100 mcg", categoria: "Hormonas", laboratorio: "Kern Pharma", presentacion: "50 comp", principio_activo: "Levotiroxina", icono: "⚕️", color: "#8B5CF6" },
+            { id: 157, nombre: "Levotiroxina Alter 75 mcg", categoria: "Hormonas", laboratorio: "Alter", presentacion: "50 comp", principio_activo: "Levotiroxina", icono: "⚕️", color: "#8B5CF6" },
+            { id: 158, nombre: "Metimazol Kern Pharma 5 mg", categoria: "Hormonas", laboratorio: "Kern Pharma", presentacion: "100 comp", principio_activo: "Metimazol", icono: "⚕️", color: "#8B5CF6" },
+            { id: 159, nombre: "Hidrocortisona Alter 20 mg", categoria: "Hormonas", laboratorio: "Alter", presentacion: "30 comp", principio_activo: "Hidrocortisona", icono: "⚕️", color: "#8B5CF6" },
+            { id: 160, nombre: "Prednisona Kern Pharma 30 mg", categoria: "Hormonas", laboratorio: "Kern Pharma", presentacion: "30 comp", principio_activo: "Prednisona", icono: "⚕️", color: "#8B5CF6" },
+            { id: 161, nombre: "Dexametasona Alter 4 mg", categoria: "Hormonas", laboratorio: "Alter", presentacion: "20 comp", principio_activo: "Dexametasona", icono: "⚕️", color: "#8B5CF6" },
+            { id: 162, nombre: "Testosterona Kern Pharma gel", categoria: "Hormonas", laboratorio: "Kern Pharma", presentacion: "30 sobres", principio_activo: "Testosterona", icono: "⚕️", color: "#8B5CF6" },
+            { id: 163, nombre: "Estrógenos Alter 2 mg", categoria: "Hormonas", laboratorio: "Alter", presentacion: "28 comp", principio_activo: "Estradiol", icono: "⚕️", color: "#8B5CF6" },
+
+            // DERMATOLÓGICOS (5 medicamentos)
+            { id: 164, nombre: "Isotretinoína Kern Pharma 20 mg", categoria: "Dermatológicos", laboratorio: "Kern Pharma", presentacion: "30 caps", principio_activo: "Isotretinoína", icono: "🧴", color: "#F59E0B" },
+            { id: 165, nombre: "Adapaleno Alter 0,1% gel", categoria: "Dermatológicos", laboratorio: "Alter", presentacion: "30g tubo", principio_activo: "Adapaleno", icono: "🧴", color: "#F59E0B" },
+            { id: 166, nombre: "Tretinoína Kern Pharma 0,05%", categoria: "Dermatológicos", laboratorio: "Kern Pharma", presentacion: "30g crema", principio_activo: "Tretinoína", icono: "🧴", color: "#F59E0B" },
+            { id: 167, nombre: "Metronidazol Alter gel 0,75%", categoria: "Dermatológicos", laboratorio: "Alter", presentacion: "40g tubo", principio_activo: "Metronidazol", icono: "🧴", color: "#F59E0B" },
+            { id: 168, nombre: "Betametasona Kern Pharma 0,05%", categoria: "Dermatológicos", laboratorio: "Kern Pharma", presentacion: "30g crema", principio_activo: "Betametasona", icono: "🧴", color: "#F59E0B" },
+
+            // OFTALMOLÓGICOS (4 medicamentos)
+            { id: 169, nombre: "Timolol Alter 0,5% colirio", categoria: "Oftalmológicos", laboratorio: "Alter", presentacion: "5ml frasco", principio_activo: "Timolol", icono: "👁️", color: "#6B7280" },
+            { id: 170, nombre: "Brimonidina Kern Pharma 0,2%", categoria: "Oftalmológicos", laboratorio: "Kern Pharma", presentacion: "5ml colirio", principio_activo: "Brimonidina", icono: "👁️", color: "#6B7280" },
+            { id: 171, nombre: "Latanoprost Alter 0,005%", categoria: "Oftalmológicos", laboratorio: "Alter", presentacion: "2,5ml colirio", principio_activo: "Latanoprost", icono: "👁️", color: "#6B7280" },
+            { id: 172, nombre: "Dorzolamida Kern Pharma 2%", categoria: "Oftalmológicos", laboratorio: "Kern Pharma", presentacion: "5ml colirio", principio_activo: "Dorzolamida", icono: "👁️", color: "#6B7280" }
+        ];
+
+        // Variables globales
+        let currentViewMode = 'grid';
+        let expandedCard = null;
+        let filteredData = [...medicamentosData];
+
+        // Elementos del DOM
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const labFilter = document.getElementById('labFilter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const clearFiltersFromNoResultsBtn = document.getElementById('clearFiltersFromNoResults');
+        const statsToggle = document.getElementById('statsToggle');
+        const statsPanel = document.getElementById('statsPanel');
+        const gridViewBtn = document.getElementById('gridView');
+        const listViewBtn = document.getElementById('listView');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const noResults = document.getElementById('noResults');
+        const resultCount = document.getElementById('resultCount');
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            populateFilters();
+            renderMedicamentos();
+            setupEventListeners();
+            updateStats();
+        });
+
+        function populateFilters() {
+            const categories = [...new Set(medicamentosData.map(m => m.categoria))];
+            const categoryCounts = {};
+            categories.forEach(cat => {
+                categoryCounts[cat] = medicamentosData.filter(m => m.categoria === cat).length;
+            });
+
+            categories.sort().forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = `${category} (${categoryCounts[category]})`;
+                categoryFilter.appendChild(option);
+            });
+
+            const labs = [...new Set(medicamentosData.map(m => m.laboratorio))];
+            const labCounts = {};
+            labs.forEach(lab => {
+                labCounts[lab] = medicamentosData.filter(m => m.laboratorio === lab).length;
+            });
+
+            labs.sort().forEach(lab => {
+                const option = document.createElement('option');
+                option.value = lab;
+                option.textContent = `${lab} (${labCounts[lab]})`;
+                labFilter.appendChild(option);
+            });
+        }
+
+        function setupEventListeners() {
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(filterMedicamentos, 300);
+            });
+            
+            categoryFilter.addEventListener('change', filterMedicamentos);
+            labFilter.addEventListener('change', filterMedicamentos);
+            clearFiltersBtn.addEventListener('click', clearAllFilters);
+            clearFiltersFromNoResultsBtn.addEventListener('click', clearAllFilters);
+            statsToggle.addEventListener('click', toggleStats);
+            gridViewBtn.addEventListener('click', () => changeViewMode('grid'));
+            listViewBtn.addEventListener('click', () => changeViewMode('list'));
+        }
+
+        function filterMedicamentos() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+            const selectedLab = labFilter.value;
+
+            filteredData = medicamentosData.filter(med => {
+                const matchesSearch = !searchTerm || 
+                    med.nombre.toLowerCase().includes(searchTerm) ||
+                    med.principio_activo.toLowerCase().includes(searchTerm) ||
+                    med.laboratorio.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !selectedCategory || med.categoria === selectedCategory;
+                const matchesLab = !selectedLab || med.laboratorio === selectedLab;
+                
+                return matchesSearch && matchesCategory && matchesLab;
+            });
+
+            renderMedicamentos();
+            updateResultCount();
+            updateClearButton();
+            updateStats();
+        }
+
+        function clearAllFilters() {
+            searchInput.value = '';
+            categoryFilter.value = '';
+            labFilter.value = '';
+            filterMedicamentos();
+        }
+
+        function updateClearButton() {
+            const hasFilters = searchInput.value || categoryFilter.value || labFilter.value;
+            clearFiltersBtn.classList.toggle('hidden', !hasFilters);
+        }
+
+        function changeViewMode(mode) {
+            currentViewMode = mode;
+            
+            if (mode === 'grid') {
+                gridViewBtn.className = 'medical-button text-white px-6 py-3 rounded-lg font-semibold';
+                listViewBtn.className = 'bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200';
+                resultsContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+            } else {
+                gridViewBtn.className = 'bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200';
+                listViewBtn.className = 'medical-button text-white px-6 py-3 rounded-lg font-semibold';
+                resultsContainer.className = 'space-y-4';
+            }
+            
+            renderMedicamentos();
+        }
+
+        function renderMedicamentos() {
+            if (filteredData.length === 0) {
+                resultsContainer.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            resultsContainer.innerHTML = '';
+
+            filteredData.forEach(med => {
+                const card = createMedicamentoCard(med);
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        function createMedicamentoCard(med) {
+            const isListView = currentViewMode === 'list';
+            const card = document.createElement('div');
+            
+            card.className = `bg-white border-2 border-gray-100 rounded-2xl hover-card transition-all duration-300 ${
+                isListView ? 'p-5' : 'p-6'
+            }`;
+            card.style.borderLeft = `6px solid ${med.color}`;
+
+            card.innerHTML = `
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="text-3xl">${med.icono}</span>
+                            <span class="px-4 py-2 rounded-full text-sm font-bold text-white shadow-lg" style="background-color: ${med.color}">
+                                ${med.categoria}
+                            </span>
+                        </div>
+                        
+                        <h4 class="font-bold text-gray-800 mb-4 leading-tight text-lg">
+                            ${med.nombre}
+                        </h4>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                                <span class="text-lg text-red-600">🧪</span>
+                                <div>
+                                    <span class="font-semibold text-gray-700">P.A.:</span>
+                                    <span class="text-gray-600">${med.principio_activo}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                                <span class="text-lg text-red-600">🏢</span>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Lab.:</span>
+                                    <span class="text-gray-600">${med.laboratorio}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                                <span class="text-lg text-red-600">📦</span>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Pres.:</span>
+                                    <span class="text-gray-600">${med.presentacion}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="expand-btn ml-4 p-3 hover:bg-red-50 rounded-xl transition-all duration-200" data-id="${med.id}">
+                        <span class="text-xl text-red-400">⬇️</span>
+                    </button>
+                </div>
+
+                <div class="expanded-content mt-6 pt-6 border-t-2 border-red-100" data-id="${med.id}">
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 p-6 rounded-2xl">
+                        <div class="flex items-center gap-3 text-green-800 font-bold mb-3">
+                            <span class="text-3xl">✅</span>
+                            <span class="text-lg">Medicamento Verificado Sin Lactosa</span>
+                        </div>
+                        <div class="bg-white bg-opacity-80 rounded-xl p-4">
+                            <div class="text-green-700 space-y-2 text-sm">
+                                <p><strong class="umbramed-red">📋 Fuente:</strong> 1aria.com - Documento profesional verificado</p>
+                                <p><strong class="umbramed-red">📅 Verificado:</strong> Marzo 2023</p>
+                                <p><strong class="umbramed-red">🔍 Estado:</strong> Información actualizada y confiable</p>
+                                <p><strong class="umbramed-red">⚠️ Recordatorio:</strong> Siempre verificar composición en el envase antes de administrar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const expandBtn = card.querySelector('.expand-btn');
+            expandBtn.addEventListener('click', () => toggleExpand(med.id, expandBtn));
+
+            return card;
+        }
+
+        function toggleExpand(medId, button) {
+            const expandedContent = document.querySelector(`.expanded-content[data-id="${medId}"]`);
+            const buttonIcon = button.querySelector('span');
+            
+            if (expandedCard === medId) {
+                expandedContent.classList.remove('show');
+                buttonIcon.textContent = '⬇️';
+                expandedCard = null;
+            } else {
+                if (expandedCard) {
+                    const prevContent = document.querySelector(`.expanded-content[data-id="${expandedCard}"]`);
+                    const prevBtn = document.querySelector(`.expand-btn[data-id="${expandedCard}"] span`);
+                    if (prevContent) prevContent.classList.remove('show');
+                    if (prevBtn) prevBtn.textContent = '⬇️';
+                }
+                
+                expandedContent.classList.add('show');
+                buttonIcon.textContent = '⬆️';
+                expandedCard = medId;
+            }
+        }
+
+        function updateResultCount() {
+            resultCount.textContent = filteredData.length;
+            document.getElementById('statsResultados').textContent = filteredData.length;
+        }
+
+        function toggleStats() {
+            statsPanel.classList.toggle('hidden');
+            if (!statsPanel.classList.contains('hidden')) {
+                renderStats();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('statsResultados').textContent = filteredData.length;
+            const totalCategories = [...new Set(medicamentosData.map(m => m.categoria))].length;
+            const totalLabs = [...new Set(medicamentosData.map(m => m.laboratorio))].length;
+            document.getElementById('statsCategorias').textContent = totalCategories;
+            document.getElementById('statsLaboratorios').textContent = totalLabs;
+        }
+
+        function renderStats() {
+            const labStats = {};
+            medicamentosData.forEach(med => {
+                labStats[med.laboratorio] = (labStats[med.laboratorio] || 0) + 1;
+            });
+            
+            const topLabs = Object.entries(labStats).sort(([,a], [,b]) => b - a).slice(0, 5);
+            document.getElementById('topLaboratorios').innerHTML = topLabs.map(([lab, count]) => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-xl border border-red-100 shadow-sm">
+                    <span class="font-semibold text-gray-700">${lab}</span>
+                    <span class="bg-umbramed-red text-white px-3 py-1 rounded-full text-sm">${count}</span>
+                </div>
+            `).join('');
+
+            const catStats = {};
+            medicamentosData.forEach(med => {
+                catStats[med.categoria] = (catStats[med.categoria] || 0) + 1;
+            });
+            
+            const topCats = Object.entries(catStats).sort(([,a], [,b]) => b - a).slice(0, 5);
+            document.getElementById('topCategorias').innerHTML = topCats.map(([cat, count]) => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-xl border border-red-100 shadow-sm">
+                    <span class="font-semibold text-gray-700">${cat}</span>
+                    <span class="bg-umbramed-red text-white px-3 py-1 rounded-full text-sm">${count}</span>
+                </div>
+            `).join('');
+        }
+    </script>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Función de login placeholder
+        function showLogin() {
+            alert('Funcionalidad de login - Integrada con el sistema UMBRAMED');
+        }
+    </script>
+</body>
+</html>
