@@ -54,6 +54,20 @@ body {
     gap: 1rem;
 }
 
+.logo-dna {
+    animation: slow-spin 15s linear infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes slow-spin {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
 .brand-text {
     font-family: 'Orbitron', monospace;
     font-size: 2.5rem;
