@@ -22,11 +22,10 @@
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <li class="nav-item"><a href="herramientas.html">Herramientas</a></li>
-                    <li class="nav-item"><a href="software.html" class="active">Software</a></li>
-                    <li class="nav-item"><a href="infografias.html">Infografías</a></li>
-                    <li class="nav-item"><a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;">💊 Sin Lactosa</a></li>
-                    <li class="nav-item admin-only" style="display: none;"><a href="index.html#admin">Admin</a></li>
+                    <li class="nav-item"><a href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a href="herramientas.html">HERRAMIENTAS</a></li>
+                    <li class="nav-item"><a href="software.html" class="active">SOFTWARE</a></li>
+                    <li class="nav-item"><a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;">💊 SIN LACTOSA</a></li>
                     <li class="nav-item">
                         <div id="loginArea">
                             <button class="login-btn" onclick="showLogin()">LOGIN</button>
@@ -39,51 +38,52 @@
 
     <main class="main-content">
         <section class="tools-section">
+        <section class="tools-section">
             <h2 class="section-title">SOFTWARE MÉDICO</h2>
-            <div class="tools-grid" id="softwareGrid">
-                <div class="tool-card">
-                    <span class="tool-icon">💊</span>
-                    <h3 class="tool-title">Farmacia Virtual</h3>
+            <div class="tools-grid" style="margin-bottom: 3rem;">
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">💊</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Farmacia Virtual</h3>
                     <p class="tool-description">
                         Software de gestión farmacéutica con base de datos actualizada de medicamentos, 
                         interacciones y contraindicaciones. Control de inventario y recetas electrónicas.
                     </p>
                     <div class="tool-actions">
-                        <button class="tool-button" onclick="location.href='software/farmacia-virtual.html'">VER DETALLES</button>
+                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
                     </div>
                 </div>
 
-                <div class="tool-card">
-                    <span class="tool-icon">📈</span>
-                    <h3 class="tool-title">Análisis Estadístico</h3>
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">📈</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Análisis Estadístico</h3>
                     <p class="tool-description">
                         Herramienta avanzada para análisis estadístico médico. Incluye procesamiento 
                         de datos clínicos, generación de gráficos y reportes personalizados.
                     </p>
                     <div class="tool-actions">
-                        <button class="tool-button" onclick="location.href='software/analisis-estadistico.html'">VER DETALLES</button>
+                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
                     </div>
                 </div>
 
-                <div class="tool-card">
-                    <span class="tool-icon">🔬</span>
-                    <h3 class="tool-title">Laboratorio Digital</h3>
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">🔬</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Laboratorio Digital</h3>
                     <p class="tool-description">
                         Sistema integral para gestión de laboratorio clínico. Control de muestras, 
                         resultados y generación automática de informes.
                     </p>
                     <div class="tool-actions">
-                        <button class="tool-button" onclick="location.href='software/laboratorio-digital.html'">VER DETALLES</button>
+                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-
+            
+            <div style="text-align: center; color: #6C757D; font-style: italic;">
+                <p>💻 El software médico especializado está actualmente en desarrollo.</p>
     <footer class="footer">
         <div class="footer-content">
             <p class="footer-text">
-                UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
+                UMBRAMED Medical Division - Portal de Recursos Médicos Profesionales
             </p>
             <p class="footer-warning">
                 ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
@@ -91,6 +91,49 @@
         </div>
     </footer>
 
+    <script src="js/umbramed.js"></script>
+</body>
+</html>     <button onclick="closeLogin()" style="float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            <h2 style="color: #C41E3A; text-align: center; margin-bottom: 1.5rem;">ACCESO AUTORIZADO</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="username" placeholder="Usuario" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                <input type="password" id="password" placeholder="Contraseña" required style="width: 100%; padding: 0.8rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                <button type="submit" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #C41E3A, #8B0000); color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;">ACCEDER</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'valerio' && password === 'umbramed2025') {
+                alert('✅ Acceso autorizado - Bienvenido Dr. Valerio');
+                closeLogin();
+            } else {
+                alert('❌ Credenciales incorrectas');
+            }
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLogin();
+            }
+        });
+    </script>
+</body>
+</html>
     <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
 </body>

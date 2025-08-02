@@ -702,14 +702,14 @@
 </head>
 <body>
     <!-- Login Modal -->
-    <div id="loginModal" class="login-modal">
-        <div class="login-box">
-            <button class="close-modal" onclick="closeLogin()">×</button>
-            <h2 class="login-title">ACCESO AUTORIZADO</h2>
-            <form class="login-form" onsubmit="handleLogin(event)">
-                <input type="text" id="username" class="login-input" placeholder="Usuario" required>
-                <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
-                <button type="submit" class="login-submit">ACCEDER</button>
+    <div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px; width: 90%;">
+            <button onclick="closeLogin()" style="float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            <h2 style="color: #C41E3A; text-align: center; margin-bottom: 1.5rem;">ACCESO AUTORIZADO</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="username" placeholder="Usuario" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                <input type="password" id="password" placeholder="Contraseña" required style="width: 100%; padding: 0.8rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                <button type="submit" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #C41E3A, #8B0000); color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;">ACCEDER</button>
             </form>
         </div>
     </div>
@@ -762,8 +762,9 @@
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <li class="nav-item"><a href="#herramientas">Herramientas</a></li>
-                    <li class="nav-item"><a href="medicamentos_sin_lactosa.html" style="color: var(--primary-red);">💊 Sin Lactosa</a></li>
+                    <li class="nav-item"><a href="index.html" class="active">INICIO</a></li>
+                    <li class="nav-item"><a href="herramientas.html">HERRAMIENTAS</a></li>
+                    <li class="nav-item"><a href="medicamentos_sin_lactosa.html" style="color: var(--primary-red);">💊 SIN LACTOSA</a></li>
                     <li class="nav-item admin-only" style="display: none;"><a href="#admin">Admin</a></li>
                     <li class="nav-item">
                         <div id="loginArea">
@@ -780,22 +781,9 @@
             <h1 class="hero-title">Tecnología al servicio de la Salud</h1>
             <p class="hero-subtitle">ADVANCED MEDICAL RESOURCES & TOOLS</p>
             <p class="hero-description">
-                Accede a una colección completa de herramientas médicas avanzadas, software especializado 
-                e infografías profesionales diseñadas para optimizar la práctica médica moderna. 
-                Tecnología de vanguardia al servicio de la medicina.
+                Accede a una colección completa de herramientas médicas avanzadas diseñadas para optimizar 
+                la práctica médica moderna. Tecnología de vanguardia al servicio de la medicina profesional.
             </p>
-        </section>
-
-        <!-- Upload Section (Solo visible para admin) -->
-        <section id="uploadSection" class="upload-section">
-            <h2 class="upload-title">📤 SUBIR NUEVOS RECURSOS</h2>
-            <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">Arrastra archivos aquí o haz clic para seleccionar</div>
-                <div class="upload-subtext">Formatos soportados: PDF, ZIP, EXE, DOC, etc.</div>
-            </div>
-            <input type="file" id="fileInput" multiple accept="*/*">
-            <div id="fileList" class="file-list"></div>
         </section>
 
         <section id="herramientas" class="tools-section">
@@ -806,7 +794,7 @@
                     <h3 class="tool-title">Calculadora Pediátrica</h3>
                     <p class="tool-description">
                         Herramienta completa de cálculo de dosificaciones pediátricas con base de datos 
-                        de medicamentos actualizada, escalas de valoración y consejos clínicos.
+                        de medicamentos actualizada, escalas de valoración y consejos clínicos profesionales.
                     </p>
                     <div class="tool-actions">
                         <button class="tool-button" onclick="location.href='calculadora_pediatrica.html'">ACCEDER</button>
@@ -828,32 +816,50 @@
         </section>
 
         <!-- Admin Panel (Solo visible para admin) -->
-        <section id="admin" class="admin-panel">
-            <h2 class="admin-title">⚠️ PANEL DE ADMINISTRACIÓN ⚠️</h2>
-            <form class="add-tool-form" onsubmit="addNewTool(event)">
-                <div class="form-group">
-                    <label class="form-label">Nombre de la Herramienta</label>
-                    <input type="text" class="form-input" id="toolName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Icono (Emoji)</label>
-                    <input type="text" class="form-input" id="toolIcon" placeholder="🔬" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Descripción</label>
-                    <textarea class="form-input form-textarea" id="toolDescription" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Archivo/URL</label>
-                    <input type="text" class="form-input" id="toolFile" placeholder="nombre-archivo.zip o https://..." required>
-                </div>
-                
-                <button type="submit" class="add-button">AÑADIR HERRAMIENTA</button>
-            </form>
-        </section>
+            </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                UMBRAMED Medical Division - Portal de Recursos Médicos Profesionales
+            </p>
+            <p class="footer-warning">
+                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Sistema de autenticación básico
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'valerio' && password === 'umbramed2025') {
+                alert('✅ Acceso autorizado - Bienvenido Dr. Valerio');
+                closeLogin();
+            } else {
+                alert('❌ Credenciales incorrectas');
+            }
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLogin();
+            }
+        });
+    </script>
     </main>
 
     <footer class="footer">
@@ -1006,29 +1012,9 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Funciones de herramientas
+        // Funciones simplificadas
         function downloadTool(toolId) {
-            alert(`Iniciando descarga de: ${toolId}`);
-            
-            const downloadUrls = {
-                'catering-bot': 'files/catering-bot.zip',
-                'dose-calc': 'files/dose-calculator.zip',
-                'diagnostic-ai': 'files/diagnostic-assistant.zip',
-                'history-manager': 'files/history-manager.zip',
-                'pharmacy-manager': 'files/pharmacy-manager.zip',
-                'stats-analyzer': 'files/stats-analyzer.zip',
-                'lab-system': 'files/lab-system.zip',
-                'genetic-atlas': 'files/genetic-atlas.pdf',
-                'pathogen-guide': 'files/pathogen-guide.pdf',
-                'anatomy-atlas': 'files/anatomy-atlas.pdf'
-            };
-            
-            if (downloadUrls[toolId]) {
-                const link = document.createElement('a');
-                link.href = downloadUrls[toolId];
-                link.download = `${toolId}.zip`;
-                link.click();
-            }
+            alert('🔗 Redirigiendo a la herramienta...');
         }
 
         function editTool(button) {
@@ -1131,7 +1117,6 @@
                     card.style.transform = 'translateY(0)';
                 }, index * 100);
             });
-        });
-    </script>
+    <script src="js/umbramed.js"></script>
 </body>
 </html>
