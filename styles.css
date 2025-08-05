@@ -286,3 +286,56 @@ body {
     background: linear-gradient(45deg, var(--blood-red), var(--primary-red));
     transform: scale(1.05);
 }
+
+/* Print Styles for Reports */
+@media print {
+    .header, .footer, .login-btn, .logout-btn {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    #report-display {
+        box-shadow: none !important;
+        border: none !important;
+    }
+    
+    .bg-gradient-to-r {
+        background: #1E40AF !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .bg-blue-50, .bg-yellow-50, .bg-red-50 {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .text-blue-800, .text-red-700, .text-yellow-800 {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    button {
+        display: none !important;
+    }
+    
+    .animate-fade-in {
+        animation: none !important;
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
