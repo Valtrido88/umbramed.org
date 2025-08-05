@@ -1,5 +1,0 @@
-{
-  "name": "Visado SAS - Base de Datos de Medicamentos",
-  "description": "Una aplicación web interactiva para buscar y consultar información sobre medicamentos sujetos a visado en el sistema de salud. Incluye fichas técnicas y calculadoras de dosificación.",
-  "requestFramePermissions": []
-}

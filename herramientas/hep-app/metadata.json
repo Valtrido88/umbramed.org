@@ -1,7 +1,0 @@
-{
-  "name": "Interpretador Serológico de Hepatitis B",
-  "description": "Una aplicación web para que los médicos interpreten los resultados serológicos de la Hepatitis B pegando un informe de laboratorio completo. La aplicación proporciona un análisis detallado y recomendaciones basadas en las últimas guías clínicas.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}
