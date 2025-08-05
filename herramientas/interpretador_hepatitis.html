@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpretador Serológico de Hepatitis B - UMBRAMED</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="bg-gray-100">
+    <header id="main-header"></header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="bg-blue-600 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-6 h-6 text-white" aria-hidden="true"><defs><radialGradient id="hbv-core-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FDE68A"></stop><stop offset="100%" stop-color="#F59E0B"></stop></radialGradient><g id="hbsag-large"><path d="M0 -80 L -8 -95 L 8 -95 Z" fill="#FDBA74"></path></g><g id="hbsag-small"></g></defs><g transform="translate(128, 128)"><use href="#hbsag-large" transform="rotate(0)"></use><use href="#hbsag-large" transform="rotate(45)"></use><use href="#hbsag-large" transform="rotate(90)"></use><use href="#hbsag-large" transform="rotate(135)"></use><use href="#hbsag-large" transform="rotate(180)"></use><use href="#hbsag-large" transform="rotate(225)"></use><use href="#hbsag-large" transform="rotate(270)"></use><use href="#hbsag-large" transform="rotate(315)"></use><use href="#hbsag-small" transform="rotate(22.5)"></use><use href="#hbsag-small" transform="rotate(67.5)"></use><use href="#hbsag-small" transform="rotate(112.5)"></use><use href="#hbsag-small" transform="rotate(157.5)"></use><use href="#hbsag-small" transform="rotate(202.5)"></use><use href="#hbsag-small" transform="rotate(247.5)"></use><use href="#hbsag-small" transform="rotate(292.5)"></use><use href="#hbsag-small" transform="rotate(337.5)"></use></g><circle cx="128" cy="128" r="80" fill="#FECACA"></circle><circle cx="128" cy="128" r="65" fill="url(#hbv-core-grad)" stroke="#FBBF24" stroke-width="3"></circle><g transform="translate(128, 128)" fill="#FBBF24" opacity="0.8"></g><g transform="translate(128, 128)" stroke-linecap="round" stroke-linejoin="round"></g></svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800">Interpretador Serológico VHB</h1>
+                </div>
+                <p class="text-gray-600">
+                    Sube, arrastra un archivo o pega el texto de un informe de laboratorio de Hepatitis B. La IA lo analizará para proporcionar una interpretación serológica y recomendaciones basadas en guías clínicas.
+                </p>
+            </div>
+
+            <div id="api-key-section" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+                <label for="api-key-input" class="block text-lg font-semibold text-gray-700 mb-2">Clave API de Google AI</label>
+                <p class="text-sm text-gray-600 mb-3">
+                    Esta herramienta requiere una clave API de Google AI para funcionar. La clave se guarda únicamente en tu navegador y no se comparte con nadie.
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-600 hover:underline">Obtén tu clave aquí.</a>
+                </p>
+                <div class="flex items-center">
+                    <input type="password" id="api-key-input" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Introduce tu clave API">
+                    <button id="save-api-key" class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">Guardar</button>
+                </div>
+            </div>
+
+            <div id="main-content" class="hidden">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div id="drop-zone" class="border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 border-gray-300">
+                        <input type="file" id="file-input" class="hidden" accept="image/png, image/jpeg, image/webp">
+                        <div id="file-preview" class="hidden flex-col items-center justify-center">
+                            <img id="preview-img" src="" alt="Previsualización" class="max-h-32 rounded-md mb-4 border">
+                            <p id="file-name" class="font-semibold text-gray-700"></p>
+                            <p id="file-size" class="text-sm text-gray-500 mb-4"></p>
+                            <button id="remove-file" class="flex items-center text-sm text-red-600 hover:text-red-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                Quitar archivo
+                            </button>
+                        </div>
+                        <div id="upload-prompt" class="flex flex-col items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 mb-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <p class="mb-2 text-gray-600">
+                                <span id="upload-link" class="font-semibold text-blue-600 cursor-pointer hover:underline">Haga clic para subir</span> o arrastre y suelte
+                            </p>
+                            <p class="text-xs text-gray-500">PNG, JPG o WEBP</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label for="lab-report-text" class="block text-lg font-semibold text-gray-700 mb-3">Añadir texto (Opcional)</label>
+                        <textarea id="lab-report-text" placeholder="Si es necesario, puede pegar aquí texto adicional del informe..." class="w-full h-32 p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out resize-y"></textarea>
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <button id="analyze-button" class="flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            Analizar Informe
+                        </button>
+                    </div>
+                </div>
+
+                <div id="error-display" class="hidden mt-6 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md" role="alert">
+                    <p class="font-bold">Error</p>
+                    <p id="error-message"></p>
+                </div>
+
+                <div id="loading-spinner" class="hidden text-center p-8 my-6 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex justify-center items-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 animate-pulse"><path d="M12 2a10 10 0 1 0 10 10"></path><path d="M12 2a10 10 0 0 0-10 10"></path><path d="M12 2v4"></path><path d="M12 22v-4"></path><path d="M22 12h-4"></path><path d="M4 12H0"></path><path d="m19.071 4.929-2.828 2.828"></path><path d="m7.757 16.243-2.828 2.828"></path><path d="m19.071 19.071-2.828-2.828"></path><path d="m7.757 7.757-2.828-2.828"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-700">Generando informe... por favor espere.</p>
+                    <p class="text-sm text-gray-500 mt-1">El análisis puede tardar unos segundos.</p>
+                </div>
+
+                <div id="report-display" class="hidden mt-8 animate-fade-in"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="main-footer"></footer>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/interpretador-hepatitis.js"></script>
+</body>
+</html>
