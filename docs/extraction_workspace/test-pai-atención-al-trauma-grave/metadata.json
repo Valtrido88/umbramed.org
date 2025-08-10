@@ -1,0 +1,5 @@
+{
+  "name": "Test PAI Atención al Trauma Grave",
+  "description": "Una aplicación de test interactivo para preparar el examen de oposición del SAS, basada en el Proceso Asistencial Integrado de Atención al Trauma Grave (2ª Ed. 2020).",
+  "requestFramePermissions": []
+}

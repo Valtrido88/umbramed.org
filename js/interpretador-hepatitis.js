@@ -3,7 +3,7 @@
 
 // Configuración de la API de Gemini (hardcoded)
 const GEMINI_API_KEY = 'AIzaSyBf9oXtIOBRxkIzMRxaQ9Q_FzD3ZbXv-bA';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
 // Variables globales
 let selectedFile = null;

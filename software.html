@@ -12,7 +12,35 @@
             <div class="logo-container">
                 <a href="index.html">
                     <div class="logo-dna">
-                        <!-- SVG del logo -->
+                        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Doble hélice del ADN -->
+                            <path d="M20 10 Q30 20 20 30 Q10 40 20 50 Q30 60 20 70 Q10 80 20 90 Q30 100 20 110" 
+                                  stroke="currentColor" stroke-width="4" fill="none"/>
+                            <path d="M80 10 Q70 20 80 30 Q90 40 80 50 Q70 60 80 70 Q90 80 80 90 Q70 100 80 110" 
+                                  stroke="currentColor" stroke-width="4" fill="none"/>
+                            <line x1="20" y1="15" x2="80" y2="15" stroke="currentColor" stroke-width="2"/>
+                            <line x1="22" y1="25" x2="78" y2="25" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="2"/>
+                            <line x1="18" y1="45" x2="82" y2="45" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" y1="55" x2="80" y2="55" stroke="currentColor" stroke-width="2"/>
+                            <line x1="22" y1="65" x2="78" y2="65" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" y1="75" x2="80" y2="75" stroke="currentColor" stroke-width="2"/>
+                            <line x1="18" y1="85" x2="82" y2="85" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" y1="95" x2="80" y2="95" stroke="currentColor" stroke-width="2"/>
+                            <line x1="22" y1="105" x2="78" y2="105" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="20" cy="10" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="10" r="3" fill="currentColor"/>
+                            <circle cx="20" cy="30" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="30" r="3" fill="currentColor"/>
+                            <circle cx="20" cy="50" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="50" r="3" fill="currentColor"/>
+                            <circle cx="20" cy="70" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="70" r="3" fill="currentColor"/>
+                            <circle cx="20" cy="90" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="90" r="3" fill="currentColor"/>
+                            <circle cx="20" cy="110" r="3" fill="currentColor"/>
+                            <circle cx="80" cy="110" r="3" fill="currentColor"/>
+                        </svg>
                     </div>
                     <div>
                         <div class="brand-text">UMBRAMED</div>
@@ -25,9 +53,9 @@
                     <li class="nav-item"><a href="index.html">INICIO</a></li>
                     <li class="nav-item"><a href="herramientas.html">HERRAMIENTAS</a></li>
                     <li class="nav-item"><a href="software.html" class="active">SOFTWARE</a></li>
-                    <li class="nav-item"><a href="cuidados_paliativos.html">🕊️ CUIDADOS PALIATIVOS</a></li>
+                    <li class="nav-item"><a href="academia.html" style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a></li>
                     <li class="nav-item"><a href="medicamentos_sin_lactosa.html">💊 SIN LACTOSA</a></li>
-                    <li class="nav-item"><a href="medicamentos_visados.html" style="color: #C41E3A;">� VISADOS SAS</a></li>
+                    <li class="nav-item"><a href="medicamentos_visados.html" style="color: #C41E3A;">🔴 VISADOS SAS</a></li>
                     <li class="nav-item">
                         <div id="loginArea">
                             <button class="login-btn" onclick="showLogin()">LOGIN</button>
@@ -40,103 +68,114 @@
 
     <main class="main-content">
         <section class="tools-section">
-        <section class="tools-section">
             <h2 class="section-title">SOFTWARE MÉDICO</h2>
             <div class="tools-grid" style="margin-bottom: 3rem;">
+                <!-- Software Disponible -->
                 <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
-                    <span class="tool-icon" style="color: #6C757D;">💊</span>
-                    <h3 class="tool-title" style="color: #6C757D;">Farmacia Virtual</h3>
+                    <span class="tool-icon" style="color: #6C757D;">💻</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Historia Clínica Digital</h3>
                     <p class="tool-description">
-                        Software de gestión farmacéutica con base de datos actualizada de medicamentos, 
-                        interacciones y contraindicaciones. Control de inventario y recetas electrónicas.
+                        Sistema integral de gestión de historias clínicas electrónicas 
+                        compatible con estándares HL7 FHIR.
                     </p>
-                    <div class="tool-actions">
-                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
-                    </div>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
                 </div>
 
                 <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
-                    <span class="tool-icon" style="color: #6C757D;">📈</span>
-                    <h3 class="tool-title" style="color: #6C757D;">Análisis Estadístico</h3>
+                    <span class="tool-icon" style="color: #6C757D;">📱</span>
+                    <h3 class="tool-title" style="color: #6C757D;">App Móvil Sanitaria</h3>
                     <p class="tool-description">
-                        Herramienta avanzada para análisis estadístico médico. Incluye procesamiento 
-                        de datos clínicos, generación de gráficos y reportes personalizados.
+                        Aplicación móvil para profesionales sanitarios con acceso a herramientas 
+                        médicas offline y sincronización en la nube.
                     </p>
-                    <div class="tool-actions">
-                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
-                    </div>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
                 </div>
 
                 <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
-                    <span class="tool-icon" style="color: #6C757D;">🔬</span>
-                    <h3 class="tool-title" style="color: #6C757D;">Laboratorio Digital</h3>
+                    <span class="tool-icon" style="color: #6C757D;">🤖</span>
+                    <h3 class="tool-title" style="color: #6C757D;">IA Diagnóstica</h3>
                     <p class="tool-description">
-                        Sistema integral para gestión de laboratorio clínico. Control de muestras, 
-                        resultados y generación automática de informes.
+                        Sistema de inteligencia artificial para apoyo al diagnóstico médico 
+                        basado en machine learning y análisis de patrones.
                     </p>
-                    <div class="tool-actions">
-                        <button class="tool-button" style="background: #6C757D; cursor: not-allowed;" disabled>EN DESARROLLO</button>
-                    </div>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
+                </div>
+
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">🔗</span>
+                    <h3 class="tool-title" style="color: #6C757D;">API Interoperabilidad</h3>
+                    <p class="tool-description">
+                        API REST para integración con sistemas hospitalarios existentes 
+                        y intercambio seguro de datos médicos.
+                    </p>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
+                </div>
+
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">📊</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Dashboard Analítico</h3>
+                    <p class="tool-description">
+                        Panel de control con métricas y análisis en tiempo real 
+                        para gestión hospitalaria y calidad asistencial.
+                    </p>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
+                </div>
+
+                <div class="tool-card" style="opacity: 0.6; border-color: #6C757D;">
+                    <span class="tool-icon" style="color: #6C757D;">🔒</span>
+                    <h3 class="tool-title" style="color: #6C757D;">Seguridad & Compliance</h3>
+                    <p class="tool-description">
+                        Suite de herramientas para cumplimiento RGPD, auditoría de accesos 
+                        y protección de datos sensibles médicos.
+                    </p>
+                    <button class="tool-link" disabled style="background: #6C757D; cursor: not-allowed;">
+                        En Desarrollo
+                    </button>
                 </div>
             </div>
-            
-            <div style="text-align: center; color: #6C757D; font-style: italic;">
-                <p>💻 El software médico especializado está actualmente en desarrollo.</p>
+
+            <div class="info-section">
+                <h3>Próximamente</h3>
+                <p>
+                    Estamos desarrollando una suite completa de software médico que revolucionará 
+                    la forma en que los profesionales sanitarios trabajan con la tecnología. 
+                    Nuestras soluciones estarán diseñadas específicamente para el Sistema Andaluz de Salud.
+                </p>
+                <ul>
+                    <li>✅ Compatibilidad total con protocolos SAS</li>
+                    <li>✅ Cumplimiento normativo RGPD y LOPD</li>
+                    <li>✅ Interfaz intuitiva y optimizada</li>
+                    <li>✅ Integración con sistemas existentes</li>
+                    <li>✅ Soporte técnico especializado</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
     <footer class="footer">
         <div class="footer-content">
-            <p class="footer-text">
-                UMBRAMED Medical Division - Portal de Recursos Médicos Profesionales
-            </p>
-            <p class="footer-warning">
-                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
-            </p>
+            <p>&copy; 2025 UMBRAMED Medical Division. Todos los derechos reservados.</p>
+            <p>Desarrollado para profesionales sanitarios de Andalucía.</p>
         </div>
     </footer>
 
-    <script src="js/umbramed.js"></script>
-</body>
-</html>     <button onclick="closeLogin()" style="float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
-            <h2 style="color: #C41E3A; text-align: center; margin-bottom: 1.5rem;">ACCESO AUTORIZADO</h2>
-            <form onsubmit="handleLogin(event)">
-                <input type="text" id="username" placeholder="Usuario" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
-                <input type="password" id="password" placeholder="Contraseña" required style="width: 100%; padding: 0.8rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                <button type="submit" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #C41E3A, #8B0000); color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;">ACCEDER</button>
-            </form>
-        </div>
-    </div>
-
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
     <script>
+        // Función para mostrar login
         function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
+            window.location.href = 'academia.html';
         }
-
-        function closeLogin() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === 'valerio' && password === 'umbramed2025') {
-                alert('✅ Acceso autorizado - Bienvenido Dr. Valerio');
-                closeLogin();
-            } else {
-                alert('❌ Credenciales incorrectas');
-            }
-        }
-
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLogin();
-            }
-        });
     </script>
-</body>
-</html>
-    <script src="js/auth.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>

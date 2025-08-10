@@ -1,0 +1,5 @@
+{
+  "name": "PAI Deterioro Cognitivo - Test Interactivo",
+  "description": "Una aplicación de test interactivo para preparar el examen de oposición para médico de atención primaria del SAS, basada en el Proceso Asistencial Integrado (PAI) de Deterioro Cognitivo de la Junta de Andalucía.",
+  "requestFramePermissions": []
+}

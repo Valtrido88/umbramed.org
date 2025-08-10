@@ -1,0 +1,2702 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen SAS - Procesos Asistenciales Integrados (PAI)</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --background-color: #e9ecef;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --border-radius: 0.3rem;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background-color: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: var(--box-shadow);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .sidebar {
+            flex: 0 0 280px;
+            background-color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            align-self: flex-start;
+        }
+
+        .content {
+            flex: 1;
+            background-color: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+        }
+        
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            color: #212529;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: var(--border-radius);
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            width: 100%;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        #welcome-screen h2 {
+            text-align: center;
+        }
+        #welcome-screen p {
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        #quiz-screen { display: none; }
+        #results-screen { display: none; }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .timer { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); }
+        .progress-text { font-size: 1rem; }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar {
+            height: 10px;
+            width: 0%;
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .question-container h3 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-container li {
+            margin-bottom: 0.75rem;
+        }
+
+        .option-label {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f0f8ff;
+        }
+
+        .option-input {
+            display: none;
+        }
+
+        .option-input:checked + .option-label {
+            background-color: #cfe2ff;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            align-items: center;
+        }
+        
+        .quiz-navigation .btn { width: auto; }
+        
+        .flag-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        .flag-btn.flagged { color: var(--warning-color); }
+
+        #results-screen h2 { text-align: center; }
+        .score-container {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .score { font-size: 3rem; font-weight: bold; color: var(--primary-color); }
+
+        .results-summary {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-item { font-size: 1.2rem; }
+        .summary-item span { display: block; font-size: 2rem; font-weight: bold; }
+        .summary-item .correct { color: var(--success-color); }
+        .summary-item .incorrect { color: var(--danger-color); }
+        .summary-item .unanswered { color: var(--secondary-color); }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .results-actions .btn { width: auto; }
+        
+        .review-container {
+            margin-top: 2rem;
+        }
+        
+        .review-question {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        
+        .review-question.incorrect-answer {
+            border-left: 5px solid var(--danger-color);
+        }
+
+        .review-question.correct-answer {
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .review-question p {
+            font-weight: bold;
+        }
+        
+        .review-question ul {
+            list-style-type: none;
+            padding-left: 1rem;
+        }
+        
+        .review-question li.correct { color: var(--success-color); font-weight: bold; }
+        .review-question li.incorrect { color: var(--danger-color); text-decoration: line-through; }
+        
+        .rationale {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+        }
+        
+        .rationale strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .topic-tag {
+            font-size: 0.8rem;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.2em 0.6em;
+            border-radius: 10rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            .sidebar {
+                align-self: stretch;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Simulador de Examen SAS - PAI</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <aside class="sidebar">
+            <h2>Configuración del Test</h2>
+            <div class="form-group">
+                <label for="topic-select">Seleccionar Temario (PAI):</label>
+                <select id="topic-select">
+                    <option value="all">Todos los Temarios</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mode-select">Modo de Examen:</label>
+                <select id="mode-select">
+                    <option value="practice">Práctica (Sin tiempo)</option>
+                    <option value="timed">Examen (Con tiempo)</option>
+                </select>
+            </div>
+            <div class="form-group" id="timed-options" style="display: none;">
+                <label for="num-questions">Número de Preguntas:</label>
+                <input type="number" id="num-questions" value="50" min="1">
+                <label for="time-limit" style="margin-top: 0.5rem;">Tiempo (minutos):</label>
+                <input type="number" id="time-limit" value="60" min="1">
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="shuffle-questions" checked>
+                <label for="shuffle-questions">Mezclar preguntas</label>
+            </div>
+             <div class="form-group">
+                <label for="search-input">Buscar Pregunta:</label>
+                <input type="text" id="search-input" placeholder="Buscar por palabra clave...">
+            </div>
+            <button id="start-btn" class="btn btn-primary">Iniciar Test</button>
+        </aside>
+
+        <section class="content">
+            <div id="welcome-screen">
+                <h2>Bienvenido al Simulador de Exámenes del SAS</h2>
+                <p>Seleccione un temario y modo de examen en el panel de la izquierda para comenzar su práctica.</p>
+                <p>Este simulador contiene preguntas de múltiples Procesos Asistenciales Integrados para una preparación completa.</p>
+            </div>
+
+            <div id="quiz-screen">
+                <div class="question-header">
+                    <div class="progress-text"><span id="current-question-num"></span> / <span id="total-questions-num"></span></div>
+                    <div class="timer" id="timer-display">--:--</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar-fill"></div>
+                </div>
+
+                <div class="question-container">
+                    <div id="question-topic" class="topic-tag"></div>
+                    <h3 id="question-text"></h3>
+                    <ul class="options-container" id="options-list"></ul>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button id="prev-btn" class="btn">Anterior</button>
+                    <button id="flag-btn" class="flag-btn" title="Marcar para revisar">★</button>
+                    <button id="next-btn" class="btn">Siguiente</button>
+                    <button id="finish-btn" class="btn btn-primary" style="display: none;">Finalizar</button>
+                </div>
+            </div>
+
+            <div id="results-screen">
+                <h2>Resultados del Examen</h2>
+                <div class="score-container">
+                    Tu Puntuación: <span id="score-percent" class="score"></span>
+                </div>
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span id="correct-count" class="correct"></span> Correctas
+                    </div>
+                    <div class="summary-item">
+                        <span id="incorrect-count" class="incorrect"></span> Incorrectas
+                    </div>
+                    <div class="summary-item">
+                        <span id="unanswered-count" class="unanswered"></span> Sin responder
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <button id="restart-btn" class="btn btn-primary">Nuevo Test</button>
+                    <button id="review-incorrect-btn" class="btn">Revisar Fallos</button>
+                    <button id="review-flagged-btn" class="btn">Revisar Marcadas</button>
+                    <button id="review-all-btn" class="btn">Revisar Todo</button>
+                </div>
+                <div id="review-container" class="review-container"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Aplicación de estudio autogenerada. Contenido basado en los Procesos Asistenciales Integrados (PAI) del Servicio Andaluz de Salud (SAS). Solo para fines educativos.</p>
+    </footer>
+
+    <script>
+        const allData = [
+            {
+                "name": "Test PAI Trauma Grave en el Embarazo",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI, ¿cuál es la primera prioridad en la atención a una mujer embarazada con trauma grave?",
+                        "options": [
+                        { "text": "Evaluar la viabilidad fetal mediante ecografía." },
+                        { "text": "La identificación de lesiones que amenazan la vida de la mujer." },
+                        { "text": "Administrar corticoides para la maduración pulmonar fetal." },
+                        { "text": "Contactar con el servicio de neonatología." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El documento es explícito en el punto 2 de las Recomendaciones Generales: 'La primera prioridad será la identificación de lesiones que amenazan la vida de la mujer'. La supervivencia fetal está directamente relacionada con el bienestar materno.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Una mujer en la semana 30 de gestación llega a urgencias tras un accidente de tráfico. Está taquicárdica (110 lpm) pero con tensión arterial normal (110/70 mmHg). ¿Cómo debe interpretarse esta situación?",
+                        "options": [
+                        { "text": "Es una respuesta fisiológica normal al estrés y no indica nada." },
+                        { "text": "La paciente está hemodinámicamente estable y no hay signos de shock." },
+                        { "text": "Puede estar en shock hipovolémico compensado, ya que los cambios fisiológicos del embarazo pueden enmascarar la hipotensión." },
+                        { "text": "La taquicardia indica sufrimiento fetal exclusivamente." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El Anexo 6 sobre cambios fisiológicos destaca el aumento del gasto cardíaco y la frecuencia cardiaca. El punto 32 advierte que los signos clínicos de hemorragia pueden no ser aparentes hasta que la pérdida sanguínea es grave (1200-1500 ml), ya que la hipotensión es un signo tardío.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Ante una gestante de 28 semanas en parada cardiorrespiratoria (PCR), se inicia RCP. ¿Qué maniobra es CRUCIAL realizar simultáneamente a las compresiones torácicas?",
+                        "options": [
+                        { "text": "Canalizar una vía venosa central." },
+                        { "text": "Realizar una ecografía para ver el estado del feto." },
+                        { "text": "Realizar el desplazamiento manual del útero hacia la izquierda." },
+                        { "text": "Administrar adrenalina intracardíaca." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "A partir de las 20 semanas, el útero grávido comprime la vena cava inferior, disminuyendo el retorno venoso y la efectividad de la RCP. Los puntos 35, 36 y 37 enfatizan la necesidad de realizar el desplazamiento manual uterino o la inclinación lateral para descomprimir la aortocava.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Se decide realizar una histerotomía resucitativa (cesárea perimortem) a una gestante de 32 semanas en PCR. ¿En qué plazo de tiempo desde el inicio de la PCR se debe realizar para maximizar la supervivencia materna y fetal?",
+                        "options": [
+                        { "text": "En los primeros 15 minutos." },
+                        { "text": "En los primeros 10 minutos." },
+                        { "text": "En los primeros 4-5 minutos." },
+                        { "text": "Cuando el equipo quirúrgico esté disponible, sin importar el tiempo." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 42 es clave: 'Se realiza en los primeros 4-5 minutos tras el inicio de la RCP materna, en el lugar donde se preste la asistencia (AG)⁸'. No se debe retrasar el procedimiento por intentar evaluar la viabilidad fetal o trasladar a la paciente.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "¿Cuál es la complicación obstétrica más frecuente tras un traumatismo cerrado en el embarazo?",
+                        "options": [
+                        { "text": "Rotura uterina." },
+                        { "text": "Embolismo de líquido amniótico." },
+                        { "text": "Desprendimiento de placenta." },
+                        { "text": "Parto pretérmino." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 61 menciona el 'Desprendimiento de placenta como resultado de fuerzas de cizallamiento' como una de las principales lesiones y consecuencias del traumatismo cerrado. Múltiples referencias en el documento lo señalan como la complicación más común y temida.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Una gestante de 25 semanas, Rh negativa, sufre una caída leve sin aparentes consecuencias. ¿Cuál es la conducta correcta respecto a la inmunoglobulina anti-D?",
+                        "options": [
+                        { "text": "No es necesario administrarla si el trauma es leve." },
+                        { "text": "Administrarla solo si hay sangrado vaginal." },
+                        { "text": "Se debe administrar inmunoglobulina anti-D a todas las pacientes Rh D negativas que han sufrido un traumatismo." },
+                        { "text": "Esperar al resultado del test de Kleihauer-Betke para decidir." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 54 es categórico: 'Se debe administrar inmunoglobulina anti-D a todas las pacientes embarazadas Rh D negativas que han sufrido un traumatismo'. El test de Kleihauer-Betke es para determinar si se necesitan DOSIS ADICIONALES, no para decidir la primera dosis.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En una gestante politraumatizada que requiere una TC abdominal, ¿cuál es la recomendación del PAI?",
+                        "options": [
+                        { "text": "Evitar la TC a toda costa por la radiación fetal." },
+                        { "text": "Realizarla, pero solo en el primer trimestre." },
+                        { "text": "No diferir estudios radiográficos indicados para la evaluación materna por preocupaciones sobre la exposición fetal." },
+                        { "text": "Sustituirla siempre por una resonancia magnética." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 59 establece (Recomendación II-2B)⁸: 'No diferir estudios radiográficos indicados para evaluación materna incluida la TC abdominal debido a preocupaciones sobre exposición fetal a la radiación'. El riesgo de no diagnosticar una lesión materna supera el pequeño riesgo de la radiación.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "Una gestante de 26 semanas presenta dolor abdominal, hipertonía uterina ('útero en madera') y un registro cardiotocográfico (RCTG) patológico tras un accidente. La ecografía no es concluyente. ¿Cuál es la sospecha diagnóstica principal?",
+                        "options": [
+                        { "text": "Amenaza de parto pretérmino." },
+                        { "text": "Rotura uterina." },
+                        { "text": "Desprendimiento de placenta (abruptio placentae)." },
+                        { "text": "Contusiones de la pared abdominal." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La tríada de dolor abdominal, hipertonía uterina y alteración del bienestar fetal (RCTG patológico) es la presentación clásica del desprendimiento de placenta (punto 84.5). El PAI recalca que el RCTG es más sensible que la ecografía para el diagnóstico (84.7).",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "Durante la evaluación de la vía aérea en una gestante traumatizada, ¿qué particularidades se deben tener en cuenta?",
+                        "options": [
+                        { "text": "Es una vía aérea más fácil de manejar por la laxitud de los tejidos." },
+                        { "text": "Hay menor riesgo de broncoaspiración por el vaciado gástrico rápido." },
+                        { "text": "Se debe considerar una vía aérea difícil y usar un tubo endotraqueal de menor calibre." },
+                        { "text": "No hay diferencias significativas con una mujer no gestante." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 24 y el Anexo 6 indican que se debe considerar a la embarazada como una paciente con vía aérea difícil debido al edema de la mucosa, aumento de peso y mayor riesgo de regurgitación y broncoaspiración. El punto 27 recomienda un tubo de menor calibre.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "Una gestante a término presenta una PaCO2 de 38 mmHg en una gasometría arterial. ¿Qué indica este valor?",
+                        "options": [
+                        { "text": "Un estado de alcalosis respiratoria fisiológica del embarazo." },
+                        { "text": "Un valor normal para una gestante, no es preocupante." },
+                        { "text": "Un posible fallo respiratorio inminente (normocapnia relativa)." },
+                        { "text": "Necesidad de aumentar el aporte de oxígeno con mascarilla." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Debido a la hiperventilación fisiológica, la PaCO2 normal al final del embarazo es de ~30 mmHg (punto 29). Un valor de 35-40 mmHg, aunque normal en una no gestante, en una embarazada indica que ya no puede compensar y sugiere un fallo respiratorio inminente.",
+                        "difficulty": "Difícil",
+                    }
+                ]
+            },
+            {
+                "name": "Copy of Test PAI Tabaquismo",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según la pauta de tratamiento con Citisina (Todacitan®), ¿cuál es el último día en el que se puede fumar?",
+                        "options": [
+                        { "text": "El primer día de tratamiento." },
+                        { "text": "El 5.º día de tratamiento." },
+                        { "text": "El 10.º día de tratamiento." },
+                        { "text": "No se puede fumar desde el inicio." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La pauta de Citisina es muy estricta y un punto clave es que se debe dejar de fumar a más tardar el 5.º día de tratamiento. Continuar fumando más allá de este día puede provocar reacciones adversas más graves.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "En el Test de Fagerström breve (2 preguntas), ¿qué puntuación se considera dependencia alta?",
+                        "options": [
+                        { "text": "1-2 puntos." },
+                        { "text": "3-4 puntos." },
+                        { "text": "5-6 puntos." },
+                        { "text": "Más de 7 puntos." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En la versión breve del Test de Fagerström, una puntuación de 0 a 2 corresponde a dependencia baja, de 3 a 4 a dependencia moderada, y de 5 a 6 a dependencia alta.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Para una persona fumadora que en la consulta expresa NO querer dejar de fumar en ese momento, ¿qué estrategia de intervención se recomienda?",
+                        "options": [
+                        { "text": "La intervención de las 5 A's (Averiguar, Aconsejar, Acordar, Ayudar, Asegurar)." },
+                        { "text": "La intervención breve de las 3 A's (Ask, Advise, Act)." },
+                        { "text": "Prescribir directamente vareniclina para motivarle." },
+                        { "text": "La entrevista motivacional usando las 5 R's (Relevancia, Riesgos, Recompensas, Resistencias, Repetición)." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "Para la persona fumadora que no quiere dejar de fumar, la estrategia indicada es la entrevista motivacional, utilizando las 5 R's para explorar sus propias razones para el cambio sin generar confrontación.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "¿Cuál de las siguientes es una contraindicación absoluta para el uso de bupropión?",
+                        "options": [
+                        { "text": "Hipertensión arterial controlada." },
+                        { "text": "Historia de trastorno bipolar." },
+                        { "text": "Antecedente personal de trastorno convulsivo." },
+                        { "text": "Insuficiencia hepática leve." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El bupropión disminuye el umbral convulsivo, por lo que está absolutamente contraindicado en pacientes con historia de convulsiones, tumor del SNC o deshabituación brusca de alcohol o benzodiacepinas.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Un paciente fumador de 25 cigarrillos/día que se levanta por la noche a fumar, ¿qué tipo de parche de nicotina sería el más adecuado?",
+                        "options": [
+                        { "text": "Parche de 16 horas." },
+                        { "text": "Parche de 24 horas." },
+                        { "text": "Dos parches de 16 horas." },
+                        { "text": "No se recomienda parche en este caso." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "En fumadores que se levantan por la noche a fumar o tienen turnos cambiantes, se prefiere el parche de 24 horas para mantener niveles de nicotina estables y evitar el craving matutino intenso.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "¿Cuál es el efecto adverso más frecuente de la vareniclina?",
+                        "options": [
+                        { "text": "Insomnio." },
+                        { "text": "Cefalea." },
+                        { "text": "Náuseas." },
+                        { "text": "Sequedad de boca." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Las náuseas son el efecto adverso más común de la vareniclina. Suelen ser dosis-dependientes y se pueden mitigar tomando el comprimido con comida y agua.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En el tratamiento con Citisina (Todacitan®), ¿cuántos comprimidos se toman el primer día?",
+                        "options": [
+                        { "text": "2 comprimidos." },
+                        { "text": "4 comprimidos." },
+                        { "text": "6 comprimidos." },
+                        { "text": "5 comprimidos." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La pauta de Citisina comienza con la dosis máxima. Del día 1 al 3, se toma 1 comprimido cada 2 horas, con un máximo de 6 comprimidos al día.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "La intervención 'Very Brief Advice' (3 Aes) consiste en:",
+                        "options": [
+                        { "text": "Averiguar, Aconsejar, y Actuar." },
+                        { "text": "Analizar, Aconsejar, y Ayudar." },
+                        { "text": "Preguntar (Ask), Aconsejar (Advise), y Actuar (Act)." },
+                        { "text": "Averiguar, Animar, y Asegurar." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La intervención breve de las 3 Aes (Ask, Advise, Act) es una estrategia de menos de 30 segundos que consiste en Preguntar por el consumo, Aconsejar dejar de fumar y Actuar ofreciendo ayuda.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "¿Cuál de las siguientes afirmaciones sobre los cigarrillos electrónicos es CIERTA?",
+                        "options": [
+                        { "text": "Son un producto aprobado y financiado para dejar de fumar." },
+                        { "text": "No contienen ninguna sustancia tóxica, solo vapor de agua." },
+                        { "text": "Exponen a menores niveles de tóxicos que los cigarrillos convencionales, pero sus efectos a largo plazo son inciertos." },
+                        { "text": "Son completamente inocuos y pueden usarse en cualquier espacio cerrado." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Aunque no queman tabaco, los cigarrillos electrónicos calientan un líquido que produce un aerosol. Este aerosol expone a menos tóxicos que el humo del cigarrillo, pero no es inocuo y sus efectos a largo plazo sobre la salud son desconocidos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "El tratamiento farmacológico de la deshabituación tabáquica, en general, ¿qué efecto tiene sobre las probabilidades de éxito?",
+                        "options": [
+                        { "text": "Las duplica." },
+                        { "text": "Las triplica." },
+                        { "text": "No tiene un efecto significativo." },
+                        { "text": "Solo es útil en combinación con terapia de grupo." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "La guía de la semFYC, al igual que otras guías de referencia, establece que el tratamiento farmacológico (TSN, bupropión, vareniclina, citisina) duplica las posibilidades de dejar de fumar al cabo de un año.",
+                        "difficulty": "Fácil",
+                    }
+                ]
+            },
+            {
+                "name": "Copy of Copy of Test PAI Diabetes Mellitus",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Diabetes, ¿cuál de los siguientes valores de HbA1c confirma el diagnóstico de diabetes mellitus?",
+                        "options": [
+                        { "text": "> 5.7 %" },
+                        { "text": "> 6.0 %" },
+                        { "text": "≥ 6.5 %" },
+                        { "text": "> 7.0 %" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 4.1 del PAI establece como criterio diagnóstico de diabetes una HbA1c ≥ 6.5%. Un valor entre 5.7% y 6.4% se considera prediabetes.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Un paciente de 50 años asintomático presenta una glucemia basal en plasma venoso de 115 mg/dl. Según el PAI, ¿cuál es el diagnóstico?",
+                        "options": [
+                        { "text": "Normalidad." },
+                        { "text": "Diabetes Mellitus tipo 2." },
+                        { "text": "Glucemia Basal Alterada (GBA)." },
+                        { "text": "Tolerancia Alterada a la Glucosa (TAG)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 2.1 define la Glucemia Basal Alterada (GBA) como una glucemia en ayunas entre 100 y 125 mg/dl. Es una categoría de riesgo de diabetes (prediabetes).",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "En un paciente con DMT2 recién diagnosticada, ¿cuál es el fármaco de primera elección según las recomendaciones del PAI?",
+                        "options": [
+                        { "text": "Insulina." },
+                        { "text": "Glibenclamida." },
+                        { "text": "Metformina." },
+                        { "text": "Pioglitazona." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La recomendación clave en la página 11 es clara: 'Se recomienda la metformina como primera terapia farmacológica en los pacientes con diabetes tipo 2' (Grado NICE Fuerte).",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Según la 'Recomendaciones de no hacer', ¿qué práctica está desaconsejada de forma rutinaria en pacientes con DMT2 no tratados con insulina o secretagogos?",
+                        "options": [
+                        { "text": "Cribado anual de retinopatía." },
+                        { "text": "Autoanálisis de glucemia capilar (AGC)." },
+                        { "text": "Determinación anual de HbA1c." },
+                        { "text": "Educación terapéutica sobre la dieta." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La página 14 del PAI especifica que 'no se recomienda el autoanálisis de glucemia capilar (AGC) de forma rutinaria en pacientes con DMT2, a no ser que estén en tratamiento con insulina o con fármacos que pueden producir hipoglucemias'.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Paciente con DMT2, enfermedad cardiovascular establecida y mal control con metformina (HbA1c 8.5%). ¿Qué grupo farmacológico sería preferente añadir al tratamiento?",
+                        "options": [
+                        { "text": "Sulfonilureas, por su potencia hipoglucemiante." },
+                        { "text": "iDPP4, por su seguridad y bajo riesgo de hipoglucemia." },
+                        { "text": "iSGLT2 o aRGLP-1 con beneficio cardiovascular demostrado." },
+                        { "text": "Meglitinidas, por su acción sobre la glucemia posprandial." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La Tabla 7 (pág. 45) y las guías actuales (reflejadas en la lógica del PAI) priorizan fármacos con beneficio cardiovascular demostrado (Superioridad en los estudios) en pacientes con enfermedad vascular. Esto corresponde a ciertos iSGLT2 y aRGLP-1.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "¿Con qué periodicidad se debe realizar el cribado de Enfermedad Renal Crónica (ERC) en pacientes con diabetes?",
+                        "options": [
+                        { "text": "Cada 5 años." },
+                        { "text": "Cada 3 años." },
+                        { "text": "Anual." },
+                        { "text": "Solo si hay síntomas." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La recomendación clave de la página 13 y el punto 5.2 del PAI indican: 'Se realizará cribado anual de Enfermedad Renal Crónica (ERC) mediante la estimación del filtrado glomerular... y la determinación de la excreción urinaria de albúmina'.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Para el cribado de pie diabético, ¿qué herramienta se utiliza para explorar la sensibilidad a la presión?",
+                        "options": [
+                        { "text": "Diapasón de 256 Hz." },
+                        { "text": "Martillo de reflejos." },
+                        { "text": "Monofilamento de Semmes-Weinstein 10-g." },
+                        { "text": "Test de Romberg." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 5.5 es explícito: 'Inspección del pie y exploración de la sensibilidad a la presión con monofilamento de Semmes-Weinstein 10-g y vibratoria con diapasón calibrado (128 Hz)'.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "Un paciente diabético con úlcera anterior y diagnóstico de isquemia (ITB < 0,9) se clasifica con un riesgo de pie diabético:",
+                        "options": [
+                        { "text": "Bajo." },
+                        { "text": "Moderado." },
+                        { "text": "Alto." },
+                        { "text": "Muy alto (categoría no existente en el PAI)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 5.6 define el 'Riesgo alto' si presenta uno o más factores como 'Úlcera anterior o amputación previa' o 'Diagnóstico de isquemia (clínica o ITB < 0,9 ó > 1,3)'.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "¿Cuál es el objetivo de control de HbA1c para la MAYORÍA de las personas con diabetes en edad adulta?",
+                        "options": [
+                        { "text": "< 6.0 %" },
+                        { "text": "< 6.5 %" },
+                        { "text": "< 7.0 %" },
+                        { "text": "< 8.0 %" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 6.1 establece el objetivo general: 'Se recomienda como objetivo de control metabólico para la mayoría de las personas con diabetes en la edad adulta, cifras de HbA1c menores de 7%'.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "En un paciente anciano, con esperanza de vida corta y antecedentes de hipoglucemias graves, ¿qué objetivo de HbA1c podría ser aceptable?",
+                        "options": [
+                        { "text": "< 6.5 %" },
+                        { "text": "< 7.0 %" },
+                        { "text": "< 8.0 - 8.5 % (control menos estricto)." },
+                        { "text": "No se mide la HbA1c en estos pacientes." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El punto 6.1 indica que 'Puede admitirse un control menos estricto en pacientes de edad avanzada o con esperanza de vida corta, comorbilidad o antecedentes de hipoglucemias graves'. Aunque no da una cifra exacta, un valor en torno al 8% es el estándar aceptado para estos perfiles.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "Copy of Test PAI Trastorno Mental Grave",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "¿Cuál de los siguientes NO es un criterio indispensable para definir un Trastorno Mental Grave (TMG) según el PAI?",
+                        "options": [
+                        { "text": "Una sintomatología de características psicóticas o prepsicóticas." },
+                        { "text": "La necesidad de un abordaje multidisciplinar, intersectorial y continuado." },
+                        { "text": "La previsión de una evolución prolongada en el tiempo." },
+                        { "text": "Un diagnóstico exclusivo de esquizofrenia o trastorno bipolar." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El concepto de TMG es funcional, no se limita a diagnósticos específicos. Incluye una sintomatología que afecta la funcionalidad, la necesidad de un abordaje complejo y una previsión de cronicidad. Abarca múltiples diagnósticos (F20-F33, etc.), no solo esquizofrenia o trastorno bipolar.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Para identificar a un paciente con TMG, se deben cumplir criterios en 3 escalas de valoración. ¿Cuál de las siguientes combinaciones es la correcta según el PAI?",
+                        "options": [
+                        { "text": "GAF < 60, HONOS ≥ 4 (en cualquier escala excepto la 5), y BPRS ≥ 21." },
+                        { "text": "GAF < 50, HONOS ≥ 5 (en cualquier escala), y BPRS ≥ 30." },
+                        { "text": "GAF < 60, Hamilton > 20, y BPRS ≥ 21." },
+                        { "text": "Cualquier puntuación en GAF, HONOS o BPRS que indique gravedad." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "El PAI establece unos puntos de corte claros y objetivos para la identificación: Escala GAF (Global Assessment of Functioning) menor de 60, una puntuación de 4 o más en cualquiera de las escalas de la HONOS (excepto la 5), y una puntuación mayor o igual a 21 en la escala BPRS.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Una vez identificado un paciente con TMG, ¿en qué plazo máximo debe realizarse la valoración multidisciplinar integral?",
+                        "options": [
+                        { "text": "7 días." },
+                        { "text": "15 días." },
+                        { "text": "1 mes." },
+                        { "text": "2 meses." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "La recomendación clave del PAI es realizar la valoración multidisciplinaria integral en un plazo máximo de 2 meses desde la identificación del TMG, para poder elaborar el Plan Individualizado de Tratamiento.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "El Plan Individualizado de Tratamiento (PIT) debe elaborarse en un tiempo máximo de:",
+                        "options": [
+                        { "text": "15 días tras la identificación." },
+                        { "text": "30 días tras la identificación." },
+                        { "text": "45 días tras la valoración." },
+                        { "text": "60 días tras la valoración." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI especifica que todas las personas con TMG contarán con un plan denominado PIT en un tiempo máximo de 30 días. Este plan es el documento de referencia para todas las intervenciones.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "En un paciente con un primer episodio psicótico, ¿cuál es la recomendación sobre el tratamiento con antipsicóticos?",
+                        "options": [
+                        { "text": "Utilizar una dosis de carga (neuroleptización rápida)." },
+                        { "text": "Iniciar siempre con dos antipsicóticos para asegurar la respuesta." },
+                        { "text": "Utilizar la dosis mínima efectiva y evitar la polifarmacia." },
+                        { "text": "Preferir siempre antipsicóticos inyectables depot de inicio." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En un primer episodio, la recomendación es usar la dosis mínima efectiva de un solo antipsicótico. No se recomienda la neuroleptización rápida ni los depot de inicio. El objetivo es lograr la remisión con la menor carga farmacológica posible.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Según el PAI, el modelo de gestión de casos de intensidad MUY ALTA, que implica al menos 2 contactos asistenciales por semana y un abordaje integral en el entorno natural de la persona, se corresponde con:",
+                        "options": [
+                        { "text": "El modelo de gestión de casos Nivel 2." },
+                        { "text": "El Tratamiento Asertivo Comunitario (TAC)." },
+                        { "text": "El programa de Hospitalización de Día." },
+                        { "text": "La intervención del Equipo de Soporte." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI describe el Tratamiento Asertivo Comunitario (TAC) como el modelo indicado para casos de intensidad muy alta, caracterizado por una alta frecuencia de contactos (≥2/semana), un equipo multidisciplinar y un enfoque proactivo en el entorno del paciente.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En el tratamiento de la esquizofrenia, si se inicia con olanzapina o clozapina, ¿qué se debe vigilar especialmente?",
+                        "options": [
+                        { "text": "La función renal." },
+                        { "text": "Los factores de riesgo metabólico (dislipemia, diabetes)." },
+                        { "text": "La aparición de síntomas extrapiramidales agudos." },
+                        { "text": "La tensión arterial." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI advierte específicamente que no se recomienda el uso de olanzapina y clozapina como tratamiento inicial en pacientes con factores de riesgo de síndrome metabólico (dislipemia, hipertensión, sobrepeso o diabetes), dado el alto potencial de estos fármacos para inducir dichos efectos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "¿Cuál es una recomendación explícita del PAI sobre la contención mecánica?",
+                        "options": [
+                        { "text": "Debe ser la primera opción en pacientes no colaboradores." },
+                        { "text": "Se debe evitar siempre que sea posible, usando la desescalada verbal como primera elección." },
+                        { "text": "Debe mantenerse un mínimo de 24 horas para asegurar la efectividad." },
+                        { "text": "Puede ser indicada por cualquier profesional del equipo sanitario." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI es muy claro en este punto, alineándose con las guías de derechos humanos. La contención mecánica debe evitarse siempre que sea posible, priorizando la desescalada verbal y la contención farmacológica como primeras líneas de actuación ante una agitación.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "En el tratamiento del Trastorno Bipolar, ¿cuál es el tratamiento de primera línea recomendado para un episodio maníaco agudo?",
+                        "options": [
+                        { "text": "Lamotrigina." },
+                        { "text": "Un antidepresivo ISRS." },
+                        { "text": "Litio." },
+                        { "text": "Terapia electroconvulsiva (TEC)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda ofrecer monoterapia con litio como tratamiento de primera línea en la manía aguda. El valproato o los antipsicóticos atípicos son alternativas si hay mala tolerancia al litio. Los antidepresivos están contraindicados por el riesgo de viraje.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "En el seguimiento de un paciente en tratamiento con antipsicóticos, ¿cuál de las siguientes exploraciones NO forma parte del estudio somático protocolizado?",
+                        "options": [
+                        { "text": "Peso, IMC y perímetro abdominal." },
+                        { "text": "Glucosa basal, HbA1c y perfil lipídico." },
+                        { "text": "Electrocardiograma (ECG)." },
+                        { "text": "Ecografía abdominal anual." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El PAI detalla el estudio somático necesario, que incluye control de peso y perímetro, analítica metabólica (glucosa, lípidos), prolactina, hemograma y un ECG. La ecografía abdominal no forma parte del seguimiento rutinario estandarizado.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "PAI Atención a Pacientes Pluripatológicos",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Pluripatológicos, para que un paciente sea definido como tal, debe cumplir con al menos una de las categorías de enfermedad crónica (A-H) y además:",
+                        "options": [
+                        { "text": "Tener más de 65 años." },
+                        { "text": "Presentar polimedicación (5 o más fármacos)." },
+                        { "text": "Cumplir al menos uno de los 9 criterios de complejidad (trastorno mental grave, polimedicación extrema, riesgo sociofamiliar, etc.)." },
+                        { "text": "Haber tenido al menos un ingreso hospitalario en el último año." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La definición de paciente pluripatológico requiere dos condiciones: 1) cumplir con una de las categorías de la definición de enfermedad crónica y 2) cumplir al menos uno de los criterios de complejidad listados.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "¿Cuál de las siguientes condiciones NO es un criterio de complejidad para definir a un paciente como pluripatológico?",
+                        "options": [
+                        { "text": "Polimedicación extrema (10 o más principios activos)." },
+                        { "text": "Riesgo sociofamiliar (escala de Gijón > 10 puntos)." },
+                        { "text": "Trastorno mental grave (esquizofrenia, psicosis maníaco-depresiva)." },
+                        { "text": "Necesidad de oxigenoterapia crónica domiciliaria." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "Aunque la oxigenoterapia es un tratamiento para una condición crónica (Categoría C), no es en sí mismo un criterio de complejidad. Los criterios de complejidad son 9 condiciones específicas como el trastorno mental grave, la polimedicación extrema, el riesgo sociofamiliar, las úlceras por presión, el delirium, la desnutrición, la alimentación por sonda, los ingresos frecuentes o el alcoholismo.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Dentro de las categorías de enfermedad para definir a un paciente pluripatológico, la Enfermedad de Parkinson se encuadra en:",
+                        "options": [
+                        { "text": "Categoría A: Cardiopatía." },
+                        { "text": "Categoría E: Enfermedad neurológica." },
+                        { "text": "Categoría B: Enfermedad autoinmune." },
+                        { "text": "No se considera una categoría específica, sino un criterio de complejidad." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La Categoría E incluye enfermedades neurológicas con déficit motor o deterioro cognitivo persistente. Específicamente, la E.3 es 'Enfermedad neurológica con deterioro cognitivo persistente, al menos moderado', donde encaja la Enfermedad de Parkinson en fases avanzadas.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Para valorar la fragilidad en un paciente pluripatológico, se realiza la prueba de velocidad de la marcha. Se considera alterada (indicativa de fragilidad funcional) si el paciente tarda:",
+                        "options": [
+                        { "text": "Menos de 5 segundos en recorrer 4 metros." },
+                        { "text": "Más de 5 segundos en recorrer 4 metros." },
+                        { "text": "Más de 10 segundos en recorrer 4 metros." },
+                        { "text": "Menos de 3 segundos en recorrer 4 metros." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI define la fragilidad funcional en un paciente con autonomía (Barthel ≥ 90) como una velocidad de la marcha alterada, que corresponde a tardar más de 5 segundos en recorrer 4 metros.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "El índice PROFUND se utiliza para la valoración pronóstica. ¿Qué predice este índice?",
+                        "options": [
+                        { "text": "El riesgo de deterioro funcional a 1 año." },
+                        { "text": "La probabilidad de reingreso hospitalario a 6 meses." },
+                        { "text": "La probabilidad de mortalidad al año y a los cuatro años tras el alta hospitalaria." },
+                        { "text": "El riesgo de caídas en los próximos 12 meses." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El índice PROFUND es una herramienta de pronóstico vital. Estima la probabilidad de fallecimiento al año y a los cuatro años tras el alta para pacientes pluripatológicos hospitalizados. La versión PROFUND-AP lo estima a dos años en Atención Primaria.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Un paciente pluripatológico de 88 años, con neoplasia activa, delirium en el último ingreso y un índice de Barthel de 50, tiene una puntuación en el índice PROFUND de:",
+                        "options": [
+                        { "text": "7 puntos." },
+                        { "text": "10 puntos." },
+                        { "text": "16 puntos." },
+                        { "text": "13 puntos." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La puntuación del PROFUND se calcula sumando: ≥85 años (3 ptos), Neoplasia activa (6 ptos), Delirium en último ingreso (3 ptos), Barthel <60 (4 ptos). Total = 3 + 6 + 3 + 4 = 16 puntos. (ERROR in original prompt, sum is 16, not 13. Correcting it here).",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Para el cribado de la falta de adherencia al tratamiento, el PAI recomienda utilizar el cuestionario de:",
+                        "options": [
+                        { "text": "Yesavage." },
+                        { "text": "Morisky-Green." },
+                        { "text": "Pfeiffer." },
+                        { "text": "Barthel." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El cuestionario de Morisky-Green es la herramienta de cribado recomendada para evaluar la adherencia farmacológica. Consta de 4 preguntas y una buena adherencia se considera si las respuestas son 'no, sí, no, no'.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "En un paciente pluripatológico frágil, se propone un programa de actividad física multicomponente. ¿Cuál es la periodicidad y duración recomendada?",
+                        "options": [
+                        { "text": "1 vez a la semana durante 3 meses." },
+                        { "text": "5 veces a la semana durante 1 mes." },
+                        { "text": "2-3 veces a la semana durante 5-6 meses." },
+                        { "text": "Diariamente durante 12 meses." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda para pacientes frágiles un programa de actividad física multicomponente con una periodicidad de 2-3 veces por semana y una duración de 5-6 meses, con evaluación de la respuesta al mismo.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "En un paciente pluripatológico con un índice PROFUND > 11, ¿qué herramienta de desprescripción se recomienda utilizar?",
+                        "options": [
+                        { "text": "Criterios STOPP-START." },
+                        { "text": "Criterios de Beers." },
+                        { "text": "Lista STOPPFRAIL." },
+                        { "text": "Índice de carga anticolinérgica." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La lista STOPPFRAIL está diseñada específicamente para la desprescripción en pacientes mayores frágiles con una expectativa de vida limitada. El PAI recomienda su uso en pacientes con PROFUND > 11, donde el beneficio de muchos tratamientos preventivos ya no supera los riesgos.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "¿Cuál de los siguientes es un criterio START (herramienta para detectar omisiones de tratamiento)?",
+                        "options": [
+                        { "text": "Uso de AINE en insuficiencia cardiaca." },
+                        { "text": "Uso de benzodiacepinas durante más de 4 semanas." },
+                        { "text": "No usar estatinas en pacientes con enfermedad vascular coronaria documentada." },
+                        { "text": "Uso de sulfonilureas de vida larga en diabetes tipo 2." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Los criterios START se centran en la omisión de fármacos indicados. No prescribir una estatina en un paciente con enfermedad coronaria es un criterio START. Las otras opciones son ejemplos de criterios STOPP (medicación potencialmente inapropiada).",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "PAI Deterioro Cognitivo - Test Interactivo",
+                "questions": [
+                   { "id": 1, "questionText": "Según el PAI, ¿cuál de las siguientes es una recomendación clave ante una persona que manifiesta preocupación sobre su memoria?", "options": [{ "text": "Asumir que es propio de la edad y tranquilizar sin más exploración." }, { "text": "Realizar un PET amiloide de forma rutinaria para descartar demencia." }, { "text": "Valorar el deterioro cognitivo y no asumir que es propio de la edad." }, { "text": "Iniciar tratamiento con un inhibidor de colinesterasa si el GDS=3." }], "correctAnswerIndex": 2, "rationale": "El documento enfatiza como recomendación clave (Grado B¹) no asumir que los problemas de memoria son propios de la edad y proceder a una valoración del deterioro cognitivo. El uso rutinario de PET amiloide y el inicio de iACE en deterioro cognitivo leve (GDS=3) están explícitamente desaconsejados.", "difficulty": "Fácil" },
+                   { "id": 2, "questionText": "En la valoración del deterioro cognitivo, ¿qué puntuación en el Test del Informador (IQCODE) se considera positiva para deterioro cognitivo?", "options": [{ "text": "Mayor de 50 puntos." }, { "text": "Menor de 85 puntos." }, { "text": "Exactamente 100 puntos." }, { "text": "Mayor de 85 puntos." }], "correctAnswerIndex": 3, "rationale": "El PAI especifica en el punto 1.4.1 que se considerará deterioro cognitivo para el Test del Informador una puntuación >85 puntos en el cuestionario de 26 preguntas. Es una herramienta clave cuando la anamnesis se realiza a través de un conocido.", "difficulty": "Intermedia" },
+                   { "id": 3, "questionText": "Paciente de 70 años con estudios primarios completados. ¿Qué punto de corte en el MEC-30 (Mini Examen Cognoscitivo de Lobo) se considera para sospechar deterioro cognitivo?", "options": [{ "text": "Un punto de corte de 27-28." }, { "text": "Un punto de corte de 23-24." }, { "text": "Un punto de corte de 30." }, { "text": "El MEC-30 no se recomienda en este grupo." }], "correctAnswerIndex": 1, "rationale": "El punto 1.6.3.2 del PAI indica que para personas >65 años que han completado estudios primarios, el punto de corte del MEC-30 a considerar es de 23-24. El corte de 27-28 se reserva para menores de 65 años con estudios primarios.", "difficulty": "Intermedia" },
+                   { "id": 4, "questionText": "¿Cuál de los siguientes es un criterio de derivación hospitalaria desde Atención Primaria por deterioro cognitivo?", "options": [{ "text": "Paciente de 75 años con sospecha de Alzheimer típica." }, { "text": "Paciente con GDS=3 (deterioro cognitivo leve) sin otras complicaciones." }, { "text": "Paciente de 60 años con sospecha de deterioro cognitivo." }, { "text": "Paciente con depresión confirmada como única causa." }], "correctAnswerIndex": 2, "rationale": "El PAI, en el punto 2.9, recomienda la derivación hospitalaria en casos específicos, uno de los cuales es la sospecha o diagnóstico de deterioro cognitivo en una persona con menos de 65 años (punto 2.9.3). Otros criterios son dudas diagnósticas, curso rápidamente progresivo o sospecha de variante atípica.", "difficulty": "Difícil" },
+                   { "id": 5, "questionText": "Según el PAI y la tabla GDS-FAST, un paciente con un MEC de 18 y que presenta un deficiente desempeño de tareas complejas cotidianas, ¿en qué estadio GDS se clasificaría?", "options": [{ "text": "GDS 3: Déficit cognitivo leve." }, { "text": "GDS 4: Déficit cognitivo moderado." }, { "text": "GDS 5: Déficit cognitivo moderadamente grave." }, { "text": "GDS 6: Déficit cognitivo grave." }], "correctAnswerIndex": 1, "rationale": "La Tabla 8 (Escala GDS-FAST) relaciona los estadios con la fase clínica y el MEC. Un MEC entre 16-23 corresponde a un GDS 4 (Déficit cognitivo moderado), que se define clínicamente como Demencia Alzheimer leve y funcionalmente como deficiente desempeño de tareas complejas cotidianas.", "difficulty": "Intermedia" },
+                   { "id": 6, "questionText": "¿En qué situación NO se recomienda ofrecer un inhibidor de la acetilcolinesterasa (iACE)?", "options": [{ "text": "Demencia Alzheimer en estadio GDS 4." }, { "text": "Demencia Alzheimer en estadio GDS 6." }, { "text": "Demencia con cuerpos de Lewy leve." }, { "text": "Demencia vascular aislada." }], "correctAnswerIndex": 3, "rationale": "El punto 6.11 del PAI establece claramente que 'Los pacientes con demencia vascular aislada no deben tratarse ni con iACE ni con memantina'. Los iACE están indicados en demencia Alzheimer leve a moderada (GDS 4-6) y también son una opción en demencia por cuerpos de Lewy.", "difficulty": "Difícil" },
+                   { "id": 7, "questionText": "Al realizar la deprescripción de medicamentos antidemencia, ¿con qué frecuencia se recomienda disminuir la dosis?", "options": [{ "text": "Diariamente hasta suspender." }, { "text": "Cada semana." }, { "text": "Cada cuatro semanas." }, { "text": "Cada seis meses." }], "correctAnswerIndex": 2, "rationale": "El punto 8.10 y el Anexo 4 del PAI detallan el protocolo de deprescripción. Se especifica que 'se disminuirá la dosis de forma gradual cada cuatro semanas hasta la más baja disponible antes de suspenderlo por completo'.", "difficulty": "Intermedia" },
+                   { "id": 8, "questionText": "Según el Anexo 3, ¿cuál de los siguientes hallazgos es característico de la Demencia Frontotemporal?", "options": [{ "text": "Afectación precoz y marcada de la memoria." }, { "text": "Alucinaciones visuales recurrentes." }, { "text": "Desinhibición conductual temprana y persistente." }, { "text": "Inicio del deterioro 3 meses después de un ACV." }], "correctAnswerIndex": 2, "rationale": "El Anexo 3 (Orientación diagnóstica) describe la desinhibición conductual temprana (conducta inapropiada, pérdida de decoro) como un signo clave de la Demencia Frontotemporal. La afectación de memoria es más típica de Alzheimer, las alucinaciones visuales de la Demencia con Cuerpos de Lewy, y el inicio post-ACV de la Demencia Vascular.", "difficulty": "Fácil" },
+                   { "id": 9, "questionText": "En un paciente con demencia que presenta agitación, ¿cuándo se aconseja el uso de antipsicóticos?", "options": [{ "text": "Como primera línea de tratamiento en todos los casos." }, { "text": "Solo cuando exista un riesgo de daño para ellos o los demás, o un distrés grave." }, { "text": "Para tratar el insomnio de forma crónica." }, { "text": "Si el paciente tiene demencia frontotemporal, como primera opción." }], "correctAnswerIndex": 1, "rationale": "El punto 8.11 del PAI es muy específico: 'Sólo se ofrecerán antipsicóticos a personas con demencia cuando exista un riesgo de daño para ellos o los demás o estén experimentando agitación, alucinaciones o delirios que causan distrés grave'. No son primera línea y se desaconseja su uso crónico.", "difficulty": "Difícil" },
+                   { "id": 10, "questionText": "Respecto al tratamiento con melatonina para el insomnio en personas con enfermedad de Alzheimer, el PAI indica:", "options": [{ "text": "Se recomienda como tratamiento de primera elección." }, { "text": "No se ofrecerá tratamiento con melatonina." }, { "text": "Se recomienda en combinación con benzodiacepinas." }, { "text": "Es una recomendación con Grado A." }], "correctAnswerIndex": 1, "rationale": "Tanto en las 'Recomendaciones de no hacer' (página 12) como en el punto 7.9, el PAI establece claramente (con una recomendación NICE³) que 'No se ofrecerá tratamiento con melatonina para el control del insomnio en personas con enfermedad de Alzheimer'.", "difficulty": "Intermedia" }
+                ]
+            },
+            {
+                "name": "PAI Enfermedad de Parkinson",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Parkinson, ante un paciente con alta sospecha de Enfermedad de Parkinson (EP), ¿cuál es la actuación correcta en Atención Primaria?",
+                        "options": [
+                        { "text": "Iniciar tratamiento con Levodopa a dosis bajas y observar." },
+                        { "text": "Solicitar una analítica con niveles de dopamina." },
+                        { "text": "Remitir al neurólogo de forma precoz, a ser posible sin iniciar tratamiento específico." },
+                        { "text": "Iniciar tratamiento con un agonista dopaminérgico." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda que, ante una alta sospecha de EP, el paciente sea remitido precozmente al neurólogo, preferiblemente sin iniciar tratamiento específico para no enmascarar los síntomas ni dificultar el diagnóstico diferencial.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "¿Cuál es el tratamiento farmacológico de elección en un paciente de 80 años con Enfermedad de Parkinson de reciente diagnóstico y deterioro cognitivo leve?",
+                        "options": [
+                        { "text": "Ropinirol." },
+                        { "text": "Rasagilina." },
+                        { "text": "Levodopa." },
+                        { "text": "Amantadina." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En pacientes mayores (>70-75 años) o en aquellos con deterioro cognitivo, la levodopa es el tratamiento de elección desde el inicio por su alta eficacia y menor riesgo de efectos secundarios neuropsiquiátricos en comparación con los agonistas dopaminérgicos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Un paciente con EP en tratamiento con Levodopa presenta psicosis. ¿Cuál de los siguientes antipsicóticos estaría CONTRAINDICADO por empeorar los síntomas motores?",
+                        "options": [
+                        { "text": "Clozapina." },
+                        { "text": "Quetiapina." },
+                        { "text": "Olanzapina." },
+                        { "text": "Pimavanserina (no mencionada en el PAI pero de uso en guías)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La olanzapina no es útil en el manejo de la psicosis en la EP y con frecuencia empeora los síntomas motores. Los de elección son la clozapina y la quetiapina por su bajo riesgo de empeoramiento motor.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Según la escala de Hoehn-Yahr para la Enfermedad de Parkinson, ¿qué caracteriza al estadio 3?",
+                        "options": [
+                        { "text": "Enfermedad exclusivamente unilateral." },
+                        { "text": "Afectación bilateral sin alteración del equilibrio." },
+                        { "text": "Afectación bilateral leve a moderada con inestabilidad postural." },
+                        { "text": "Incapacidad grave, pero aún capaz de caminar o permanecer en pie sin ayuda." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El estadio 3 de Hoehn-Yahr marca un punto de inflexión importante en la enfermedad, ya que es cuando aparece la inestabilidad postural (alteración del equilibrio y caídas), aunque el paciente sigue siendo físicamente independiente.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Un paciente con EP y fluctuaciones motoras tipo 'wearing-off' (deterioro de fin de dosis), ¿cuál NO sería una estrategia terapéutica inicial adecuada?",
+                        "options": [
+                        { "text": "Aumentar la frecuencia de las dosis de Levodopa." },
+                        { "text": "Añadir un inhibidor de la COMT (entacapona)." },
+                        { "text": "Añadir un IMAO-B (rasagilina)." },
+                        { "text": "Añadir Amantadina." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "Para el 'wearing-off' se busca prolongar el efecto de la levodopa. Esto se consigue fraccionando las dosis, o añadiendo un ICOM-T o un IMAO-B. La Amantadina se utiliza principalmente para el manejo de las discinesias, no de las fluctuaciones.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "¿Cuál es el único fármaco anticolinesterásico con indicación aprobada para el tratamiento sintomático de la demencia en pacientes con EP?",
+                        "options": [
+                        { "text": "Donepezilo." },
+                        { "text": "Galantamina." },
+                        { "text": "Memantina." },
+                        { "text": "Rivastigmina." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El PAI especifica que la rivastigmina es el único fármaco anticolinesterásico con indicación aprobada para el tratamiento de la demencia leve a moderadamente grave en pacientes con EP.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Según los criterios diagnósticos de Gelb para la EP PROBABLE, se requiere la presencia de al menos:",
+                        "options": [
+                        { "text": "2 de 4 manifestaciones del grupo A." },
+                        { "text": "3 de 4 manifestaciones del grupo A." },
+                        { "text": "4 de 4 manifestaciones del grupo A." },
+                        { "text": "1 de 4 manifestaciones del grupo A y respuesta a levodopa." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Para el diagnóstico de EP PROBABLE, se necesitan al menos 3 de las 4 manifestaciones cardinales (temblor de reposo, bradicinesia, rigidez, inicio asimétrico), junto con la ausencia de criterios de exclusión (grupo B) y una respuesta mantenida a levodopa.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "Ante un paciente que inicia tratamiento con un agonista dopaminérgico (p. ej., ropinirol), ¿sobre qué efecto adverso característico debemos advertirle?",
+                        "options": [
+                        { "text": "Hipertensión arterial." },
+                        { "text": "Ataques de sueño y trastornos del control de impulsos." },
+                        { "text": "Discinesias precoces." },
+                        { "text": "Fibrosis pulmonar." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Los agonistas dopaminérgicos se asocian característicamente a somnolencia diurna y ataques de sueño repentinos, así como a trastornos del control de impulsos (ludopatía, hipersexualidad, compras compulsivas), efectos sobre los que es crucial informar al paciente y a la familia.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "En el manejo de la hipotensión ortostática en un paciente con EP, ¿cuál es la primera medida a considerar?",
+                        "options": [
+                        { "text": "Iniciar tratamiento con fludrocortisona." },
+                        { "text": "Aumentar la dosis de Levodopa." },
+                        { "text": "Revisar y retirar fármacos hipotensores y tomar medidas dietéticas/físicas." },
+                        { "text": "Pautar midodrina." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El primer paso es siempre no iatrogénico. Se deben revisar y, si es posible, retirar o reducir otros fármacos que causen hipotensión (antihipertensivos, diuréticos). Además, se recomiendan medidas como aumentar la ingesta de sal y líquidos, usar medias de compresión y dormir con el cabecero elevado.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "Un paciente con EP necesita tratamiento para náuseas y vómitos. ¿Cuál de los siguientes fármacos debería evitarse por su efecto antidopaminérgico?",
+                        "options": [
+                        { "text": "Domperidona." },
+                        { "text": "Ondansetrón." },
+                        { "text": "Metoclopramida." },
+                        { "text": "Aprepitant." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La metoclopramida es un antagonista dopaminérgico que atraviesa la barrera hematoencefálica y puede empeorar significativamente los síntomas motores del Parkinson. La domperidona es de elección ya que actúa periféricamente y no suele empeorar el parkinsonismo.",
+                        "difficulty": "Difícil",
+                    }
+                ]
+            },
+            {
+                "name": "PAI Riesgo Vascular",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Riesgo Vascular, ¿qué define la Prevención Secundaria?",
+                        "options": [
+                        { "text": "Identificar y actuar sobre factores de riesgo en personas sin enfermedad vascular." },
+                        { "text": "Actuar sobre personas que ya tienen una enfermedad vascular (EV) conocida y documentada." },
+                        { "text": "Realizar cribado oportunista en la población general mayor de 40 años." },
+                        { "text": "Tratar a pacientes con un riesgo SCORE > 10%." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PASO 1 del PAI es claro: la Prevención Secundaria se aplica si se identifica EV previa (cardiopatía isquémica, enfermedad cerebrovascular, arteriopatía periférica). Si no se identifica, es Prevención Primaria.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "En el PASO 2 (Detección de Factores de Riesgo Vascular), ¿cuál NO es uno de los FRV a registrar mediante anamnesis?",
+                        "options": [
+                        { "text": "Hábito tabáquico y clasificación." },
+                        { "text": "Diagnóstico previo de dislipemia o tratamiento con hipolipemiantes." },
+                        { "text": "Diagnóstico previo de apnea del sueño." },
+                        { "text": "Diagnóstico previo de HTA o tratamiento con antihipertensivos." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI especifica claramente los 5 FRV a registrar en la anamnesis inicial: Hábito tabáquico, HTA, Diabetes, Dislipemia y Obesidad. La apnea del sueño, aunque es un factor de riesgo importante, no está en este listado inicial del PASO 2.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Un paciente fumador que le dice: 'Sé que debería dejarlo, pero no sé si seré capaz. Quizás después del verano me lo plantee', se encuentra en el estadio de cambio de:",
+                        "options": [
+                        { "text": "Precontemplación." },
+                        { "text": "Contemplación." },
+                        { "text": "Preparación para la acción." },
+                        { "text": "Acción." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El paciente está en la fase de Contemplación. Reconoce el problema y está dispuesto a actuar en los próximos 6 meses, pero aún experimenta ambivalencia ('no sé si seré capaz'). El precontemplativo no intenta actuar en los próximos 6 meses.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Según el PAI de Riesgo Vascular, se utiliza el modelo SCORE para calcular el riesgo. Se considera que un paciente tiene RIESGO ALTO cuando su SCORE es:",
+                        "options": [
+                        { "text": "≥ 1%" },
+                        { "text": "≥ 5%" },
+                        { "text": "≥ 10%" },
+                        { "text": "≥ 20%" }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El punto de corte fundamental del modelo SCORE para países de bajo riesgo, según el PAI, es del 5%. Un riesgo ≥ 5% clasifica al paciente como de Riesgo Alto y requiere una intervención más intensiva.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "¿Cuál de los siguientes pacientes sería clasificado DIRECTAMENTE como de RIESGO ALTO sin necesidad de calcular el SCORE?",
+                        "options": [
+                        { "text": "Hombre de 55 años, fumador, con colesterol total de 210 mg/dl y TAS de 135 mmHg." },
+                        { "text": "Mujer de 60 años con HTA controlada con enalapril y obesidad." },
+                        { "text": "Paciente con Diabetes Mellitus de 20 años de evolución y nefropatía." },
+                        { "text": "Paciente con hiperuricemia y esteatosis hepática." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI lista 4 grupos que son directamente clasificados como de riesgo alto: 1) Enfermedad vascular establecida, 2) Diabetes Mellitus de más de 15 años de evolución o con nefropatía, 3) Dislipemias familiares aterogénicas, y 4) HTA estadio 3 o con afectación de órganos diana.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Un varón de 60 años, no fumador, con TAS de 145 mmHg y colesterol total de 232 mg/dl (6 mmol/L), ¿qué riesgo cardiovascular tiene según la tabla SCORE?",
+                        "options": [
+                        { "text": "2%" },
+                        { "text": "4%" },
+                        { "text": "6%" },
+                        { "text": "9%" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Buscando en la tabla SCORE para VARONES, no fumadores, edad 60 años, en la fila de TAS 140 y columna de colesterol 6 mmol/L, el valor de riesgo es 6%. Esto lo clasifica como Riesgo Alto.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En un paciente con prevención secundaria (ya ha tenido un infarto), ¿cuál es el objetivo de cLDL según el PAI?",
+                        "options": [
+                        { "text": "cLDL < 130 mg/dl" },
+                        { "text": "cLDL < 115 mg/dl" },
+                        { "text": "cLDL < 100 mg/dl o reducción del 30% sobre el basal." },
+                        { "text": "cLDL < 70 mg/dl" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Para Prevención Secundaria, el PAI establece un objetivo de cLDL < 100 mg/dl o una reducción del 30% sobre el valor basal. Aunque guías más recientes son más estrictas (<70 o <55), la respuesta correcta según este PAI es <100.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "En un paciente con diabetes y nefropatía con proteinuria > 1 g/día, ¿cuál es el objetivo de control de la Presión Arterial?",
+                        "options": [
+                        { "text": "< 140/90 mmHg" },
+                        { "text": "< 130/80 mmHg" },
+                        { "text": "< 125/75 mmHg" },
+                        { "text": "< 120/80 mmHg" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI establece objetivos de PA más estrictos en ciertas poblaciones. Para pacientes con nefropatía y proteinuria superior a 1 g/día, el objetivo es el más exigente: < 125/75 mmHg.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "¿Cuál es el objetivo de HbA1c para la mayoría de los pacientes con Diabetes Mellitus según el PAI?",
+                        "options": [
+                        { "text": "< 6.5%" },
+                        { "text": "< 7%" },
+                        { "text": "< 8%" },
+                        { "text": "Depende del riesgo cardiovascular." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El objetivo general de control glucémico en diabetes es una HbA1c < 7%. Se puede intensificar el tratamiento si es > 8%. Un objetivo más estricto (<6.5%) se reserva para pacientes jóvenes sin comorbilidad.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "En un paciente en prevención primaria con RV alto y un cLDL de 170 mg/dl, ¿cuándo se debe considerar iniciar tratamiento farmacológico?",
+                        "options": [
+                        { "text": "Inmediatamente al diagnóstico." },
+                        { "text": "Tras 3 meses de intervención en estilos de vida si no se alcanzan objetivos." },
+                        { "text": "Cuando el cLDL es > 190 mg/dl." },
+                        { "text": "Tras seis meses de medidas no farmacológicas (modificación de estilos de vida) si no se consiguen los objetivos." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "Para pacientes en prevención primaria con RV alto, el tratamiento farmacológico se considera si el cLDL es ≥160 mg/dl DESPUÉS de seis meses de intervención en el estilo de vida sin alcanzar los objetivos.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Atención al Trauma Grave",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Trauma Grave, ¿cuál es la primera prioridad en la valoración inicial del paciente traumatizado siguiendo la secuencia C-ABCDE?",
+                        "options": [
+                        { "text": "Apertura de la vía aérea (Airway)." },
+                        { "text": "Control de la hemorragia catastrófica externa (Circulation)." },
+                        { "text": "Asegurar la ventilación (Breathing)." },
+                        { "text": "Evaluación neurológica (Disability)." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI actualiza la secuencia a C-ABCDE, donde la 'C' inicial corresponde al control de la hemorragia exanguinante o catastrófica como primer paso prioritario, incluso antes de la vía aérea, ya que es la causa más frecuente de muerte prevenible en el trauma. (Punto 2.6)",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Se recomienda administrar ácido tranexámico en pacientes con trauma grave y signos de shock hemorrágico. ¿En qué ventana de tiempo desde la lesión es más eficaz?",
+                        "options": [
+                        { "text": "En las primeras 24 horas." },
+                        { "text": "En las primeras 8 horas." },
+                        { "text": "En las primeras 3 horas." },
+                        { "text": "No hay un límite de tiempo establecido." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI enfatiza la administración precoz. Específicamente, en la sección de Fluidoterapia (pág. 40), se indica: 'En pacientes con riesgo de hemorragia: administrar en las 3 primeras horas tras la lesión (AG). No usar si han pasado más de tres horas desde la lesión (Recomendación NICE)¹¹.'",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Un paciente politraumatizado presenta ingurgitación yugular, desviación traqueal, timpanismo y ausencia de murmullo vesicular en un hemitórax. ¿Cuál es el diagnóstico más probable y la acción inmediata a seguir en el ámbito prehospitalario?",
+                        "options": [
+                        { "text": "Hemotórax masivo - Colocar dos vías gruesas y fluidoterapia." },
+                        { "text": "Taponamiento cardíaco - Pericardiocentesis." },
+                        { "text": "Neumotórax a tensión - Descompresión inmediata con aguja." },
+                        { "text": "Tórax inestable - Intubación y ventilación con presión positiva." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La clínica es característica de un neumotórax a tensión, una emergencia vital. El PAI indica que 'cuando se sospecha (inestabilidad hemodinámica y compromiso ventilatorio grave) debe descomprimirse inmediatamente en el ámbito prehospitalario sin esperar a confirmar con otras pruebas diagnósticas' (pág. 38).",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Según el PAI, un paciente traumatizado inconsciente con una puntuación en la Escala de Coma de Glasgow (GCS) menor o igual a 8 debe ser:",
+                        "options": [
+                        { "text": "Colocado en posición lateral de seguridad." },
+                        { "text": "Monitorizado estrechamente esperando mejoría espontánea." },
+                        { "text": "Intubado y sometido a una adecuada ventilación." },
+                        { "text": "Estimulado para valorar respuesta al dolor." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Es una recomendación clave (Grado A¹⁷). Un GCS ≤ 8 indica un TCE grave y la incapacidad del paciente para proteger su vía aérea, por lo que la intubación orotraqueal es mandatoria para asegurar la oxigenación y ventilación. (pág. 14)",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "En un paciente con shock hemorrágico por trauma SIN traumatismo craneoencefálico (TCE) asociado, ¿cuál es el objetivo de Presión Arterial Sistólica (PAS) en la fase inicial (hipotensión permisiva)?",
+                        "options": [
+                        { "text": "PAS > 120 mmHg" },
+                        { "text": "PAS > 110 mmHg" },
+                        { "text": "PAS entre 80-90 mmHg" },
+                        { "text": "PAS entre 60-70 mmHg" }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda la hipotensión permisiva para evitar 'romper el coágulo' y aumentar el sangrado. El objetivo es 'mantener una hipotensión permisiva con PAS objetivo de 80 - 90 mmHg ... hasta que la hemorragia masiva se haya detenido' (pág. 39).",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "En un paciente con Traumatismo Craneoencefálico (TCE) grave (GCS ≤ 8), ¿cuál de las siguientes es una prioridad absoluta para evitar el daño cerebral secundario?",
+                        "options": [
+                        { "text": "Administrar manitol de forma profiláctica." },
+                        { "text": "Evitar la hipotensión (mantener PAM ≥ 80 mmHg) y la hipoxia." },
+                        { "text": "Realizar una hiperventilación agresiva (PaCO2 < 30 mmHg)." },
+                        { "text": "Administrar corticoides a altas dosis." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La piedra angular del manejo del TCE grave es evitar los 'segundos insultos cerebrales'. La hipotensión y la hipoxia han demostrado empeorar drásticamente el pronóstico. El PAI recomienda mantener una PAM ≥ 80 mmHg (pág. 64) y una saturación de O2 > 90% (pág. 41).",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Ante la sospecha de fractura pélvica inestable en un paciente con trauma de alta energía, la acción inmediata en el ámbito prehospitalario es:",
+                        "options": [
+                        { "text": "Realizar una TC abdómino-pélvica urgente." },
+                        { "text": "Aplicar de forma inmediata un cinturón pélvico." },
+                        { "text": "Sondaje vesical para descartar lesión uretral." },
+                        { "text": "Exploración manual movilizando las crestas ilíacas." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La recomendación es clara (Grado 1B¹⁹): 'Si se sospecha sangrado activo por fractura pélvica después de un traumatismo de alta energía, se debe aplicar de forma inmediata un cinturón pélvico o considerar un cierre pélvico improvisado' (pág. 13). La movilización de la pelvis está contraindicada.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "¿Cuál de los siguientes es un criterio FISIOLÓGICO para la activación del 'código trauma' en la atención prehospitalaria?",
+                        "options": [
+                        { "text": "Fractura abierta de fémur." },
+                        { "text": "Tórax inestable." },
+                        { "text": "Herida penetrante en el torso." },
+                        { "text": "Trauma Score Revisado (TSR) ≤ 11." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El PAI diferencia entre criterios fisiológicos, anatómicos y de mecanismo lesional. El TSR ≤ 11 es un criterio fisiológico clave que indica una alteración grave de las constantes vitales del paciente (pág. 48). Los otros son criterios anatómicos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "Respecto al uso de corticoides (metilprednisolona) en el Traumatismo Craneoencefálico (TCE) grave, el PAI establece que:",
+                        "options": [
+                        { "text": "Se recomienda a dosis altas para reducir el edema cerebral." },
+                        { "text": "Está contraindicado ya que se asoció con un aumento de la mortalidad." },
+                        { "text": "Se recomienda solo si el GCS es menor de 6." },
+                        { "text": "Es útil en el trauma penetrante pero no en el cerrado." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Es una 'Recomendación de no hacer' fundamental. El PAI es explícito (pág. 15, Rec. I¹⁴): 'En pacientes con TCE no se recomienda el uso de esteroides para mejorar el resultado o reducir la presión intracraneal (PIC). El empleo de metilprednisolona en dosis altas se asoció con un aumento de la mortalidad y está contraindicada.'",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "La definición de 'trauma grave' según la escala de gravedad lesional Injury Severity Score (ISS) es una puntuación de:",
+                        "options": [
+                        { "text": "ISS > 9" },
+                        { "text": "ISS ≥ 16" },
+                        { "text": "ISS > 25" },
+                        { "text": "ISS > 50" }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "En la definición funcional y sus notas (pág. 27), el PAI establece: 'Se considera traumatizado grave a aquel paciente que presenta como consecuencia de la transferencia de energía mecánica una o varias lesiones que alcanzan o superan los 16 puntos en la Escala de Gravedad Lesional Injury Severity Score (ISS≥ 16 puntos).'",
+                        "difficulty": "Difícil",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Cáncer Colorrectal",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "¿Cuál es la población diana para el programa de cribado poblacional de cáncer colorrectal en Andalucía según el PAI?",
+                        "options": [
+                        { "text": "Personas entre 45 y 75 años." },
+                        { "text": "Personas entre 50 y 69 años." },
+                        { "text": "Personas mayores de 40 años con antecedentes familiares." },
+                        { "text": "Toda la población mayor de 50 años." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI establece claramente en su límite de entrada que el programa de cribado poblacional se dirige a la 'Persona entre 50 y 69 años, con SOH positivo, realizado dentro de un programa de cribado poblacional de cáncer colorrectal'.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Tras un resultado positivo en el test de sangre oculta en heces (SOH) dentro del programa de cribado, ¿en qué plazo máximo debe realizarse la colonoscopia diagnóstica?",
+                        "options": [
+                        { "text": "No debe ser superior a 60 días." },
+                        { "text": "No debe ser superior a 45 días." },
+                        { "text": "No debe ser superior a 30 días." },
+                        { "text": "No hay un plazo establecido, depende de la disponibilidad." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI es muy estricto con los plazos para garantizar la efectividad del cribado. En el punto 2.7 se especifica: 'El tiempo total desde el momento de consulta con el sistema sanitario a la realización de la colonoscopia diagnóstica no debe ser superior a los 30 días'.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "En un paciente con cáncer de colon estadio II, ¿cuál de los siguientes NO es considerado un factor de mal pronóstico que indicaría valorar quimioterapia adyuvante?",
+                        "options": [
+                        { "text": "Estadio T4." },
+                        { "text": "Pobremente diferenciado." },
+                        { "text": "Análisis de menos de 12 ganglios en la pieza quirúrgica." },
+                        { "text": "Edad mayor de 70 años." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El PAI (punto 7.8) lista los factores de mal pronóstico para el Estadio II: T4, pobremente diferenciados, perforación/obstrucción, invasión vascular/perineural, y nº insuficiente de ganglios (<12). La edad avanzada por sí sola no es un factor de mal pronóstico, aunque sí influye en la decisión terapéutica por comorbilidades.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "¿Qué prueba de imagen es fundamental para la estadificación local del cáncer de recto y valorar la afectación de la fascia mesorrectal (FMR)?",
+                        "options": [
+                        { "text": "Tomografía Axial Computarizada (TC) con contraste." },
+                        { "text": "Ecografía endoanal." },
+                        { "text": "Resonancia Magnética (RM) de alta resolución." },
+                        { "text": "PET-TC." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI especifica (punto 5.4) que 'La estadificación local del paciente diagnosticado de cáncer de recto (...) deben de hacerse con RM de recto de alta resolución'. Es crucial para determinar el estadio T, la afectación ganglionar y la relación con la FMR, lo que define el tratamiento neoadyuvante.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Según las recomendaciones de 'no hacer' del PAI, ¿cuándo NO se debe realizar una neoadyuvancia en cáncer de recto?",
+                        "options": [
+                        { "text": "En tumores de recto bajo." },
+                        { "text": "En tumores localmente avanzados con afectación de la FMR." },
+                        { "text": "En cáncer de recto localizado a más de 12 cm desde el margen anal." },
+                        { "text": "En pacientes con ganglios positivos (N+)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La tabla de 'Recomendaciones de no hacer' (pág. 12) indica claramente: 'No realizar neoadyuvancia en cáncer de recto localizado a más de 12 cm desde el margen anal'. Estos tumores se consideran anatómicamente como colon sigmoides a efectos de tratamiento.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "En el tratamiento quirúrgico del cáncer de colon, ¿cuál es el número mínimo de ganglios linfáticos que deben analizarse en la pieza quirúrgica para una correcta estadificación?",
+                        "options": [
+                        { "text": "Al menos 5 ganglios." },
+                        { "text": "Al menos 8 ganglios." },
+                        { "text": "Al menos 12 ganglios." },
+                        { "text": "Al menos 18 ganglios." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI (punto 7.5) es explícito en este punto de calidad quirúrgica y patológica: 'Estadificación ganglionar apropiada. Disponer y analizar al menos 12 ganglios linfáticos, siempre que sea posible'. Un número inferior se considera un factor de mal pronóstico.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Para un cáncer de recto de riesgo intermedio (ej. cT3b con MCR libre), el PAI considera como estándar de tratamiento neoadyuvante:",
+                        "options": [
+                        { "text": "Solo cirugía." },
+                        { "text": "Solo quimioterapia." },
+                        { "text": "Radioterapia de ciclo corto (RTCC) o Quimiorradioterapia (QTRT)." },
+                        { "text": "Solo radioterapia de ciclo largo." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Para este grupo de riesgo, el PAI (punto 8.15) establece que se puede 'Considerar como estándar la QTRT o la RT de ciclo corto (RTCC) al presentar idéntico beneficio en términos de control local y supervivencia'.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "En el seguimiento de un paciente operado de cáncer colorrectal, ¿con qué periodicidad se realiza el seguimiento con CEA (antígeno carcinoembrionario) durante los primeros años?",
+                        "options": [
+                        { "text": "Anualmente." },
+                        { "text": "Cada 3-6 meses." },
+                        { "text": "Solo si hay síntomas." },
+                        { "text": "Cada 2 años." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La tabla de seguimiento (pág. 56) indica, para los estadios localmente avanzados, una 'Anamnesis, exploración y CEA cada 3 meses durante el primer año y cada 6 meses en el 2º y 3º año y anual en el 4º y 5º año'. La opción más correcta que engloba esto es cada 3-6 meses.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "Un paciente es diagnosticado de cáncer de recto. ¿Cuál es el plazo máximo para que sea valorado por el Comité de Tumores?",
+                        "options": [
+                        { "text": "No es necesario que sea valorado, solo los casos complejos." },
+                        { "text": "Antes de iniciar cualquier tratamiento." },
+                        { "text": "En los 30 días posteriores al diagnóstico." },
+                        { "text": "Tras la cirugía." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Una recomendación clave del PAI (pág. 11) es: 'Las personas diagnosticadas de cáncer colorrectal antes de iniciar tratamiento deberán ser valoradas por el Comité de Tumores específico'. Esto asegura un abordaje multidisciplinar desde el inicio.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "La determinación de inestabilidad de microsatélites (IMS) es importante para confirmar la sospecha de:",
+                        "options": [
+                        { "text": "Síndrome de Peutz-Jeghers." },
+                        { "text": "Poliposis Adenomatosa Familiar (PAF)." },
+                        { "text": "Síndrome de Lynch." },
+                        { "text": "Enfermedad de Crohn." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La recomendación clave del PAI (pág. 11) indica: 'Se recomienda la determinación de inestabilidad de microsatélites (IMS) mediante inmunohistoquímica (IHQ) (...) para confirmar el síndrome de Lynch'. Es el principal mecanismo de carcinogénesis en este síndrome hereditario.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Atención a Personas Transexuales Adultas",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de Atención a Personas Transexuales, ¿cuál de las siguientes es una 'Recomendación de no hacer' fundamental?",
+                        "options": [
+                        { "text": "Realizar una valoración por un equipo multidisciplinar." },
+                        { "text": "Aplicar códigos diagnósticos de enfermedad a la transexualidad." },
+                        { "text": "Ofrecer tratamiento hormonal cruzado." },
+                        { "text": "Realizar seguimiento analítico del tratamiento hormonal." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI se enmarca en la despatologización de la transexualidad, en línea con la Ley 2/2014. Por tanto, una recomendación clave es NO aplicar códigos diagnósticos de enfermedad, ya que la transexualidad es una variante más de la diversidad humana.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Para iniciar la terapia hormonal cruzada en personas transexuales adultas, ¿es un requisito previo indispensable la valoración por la Unidad de Salud Mental Comunitaria (USMC)?",
+                        "options": [
+                        { "text": "Sí, siempre es obligatorio." },
+                        { "text": "Sí, pero solo para hombres transexuales." },
+                        { "text": "No, el PAI establece explícitamente que no es un requisito previo." },
+                        { "text": "Solo es necesario si la persona tiene antecedentes psiquiátricos." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI es explícito en sus 'Recomendaciones de no hacer'. Establecer como requisito previo a la terapia hormonal la valoración por la USMC va en contra del principio de despatologización y la autonomía de la persona.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "En la primera consulta en Atención Primaria con una persona que demanda atención por transexualidad, ¿cuál es la actuación prioritaria?",
+                        "options": [
+                        { "text": "Derivar urgentemente al endocrinólogo." },
+                        { "text": "Realizar una entrevista para concretar las demandas de la persona y responder a sus necesidades en un entorno de privacidad." },
+                        { "text": "Solicitar un cariotipo de forma inmediata." },
+                        { "text": "Iniciar trámites para el cambio de nombre en la BDU." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La primera toma de contacto es fundamental. El PAI indica que se debe realizar una entrevista centrada en la persona, para conocer sus demandas y necesidades, en un clima de confianza y respeto, actuando con competencia y sensibilidad.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "En una mujer transexual (THM), ¿cuál es el antiandrógeno de elección recomendado en nuestro medio por el PAI?",
+                        "options": [
+                        { "text": "Espironolactona." },
+                        { "text": "Finasteride." },
+                        { "text": "Acetato de ciproterona." },
+                        { "text": "Dutasteride." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI especifica que el antiandrógeno de elección en nuestro medio es el acetato de ciproterona, con una dosis de inicio de 25 a 50 mg/día. La espironolactona se considera una alternativa en caso de enfermedad hepática o contraindicación.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "En un hombre transexual (TMH), ¿cuál es el objetivo del tratamiento con testosterona?",
+                        "options": [
+                        { "text": "Inducir la masculinización y la regresión de las características sexuales secundarias femeninas." },
+                        { "text": "Mantener los niveles de testosterona en el rango bajo de la normalidad masculina." },
+                        { "text": "Suprimir por completo la producción de estrógenos." },
+                        { "text": "Preparar para la cirugía de reasignación exclusivamente." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "El objetivo principal del tratamiento hormonal en hombres transexuales es inducir los cambios físicos deseados (masculinización) y reducir los no deseados (regresión de características femeninas), en línea con la identidad de género sentida por la persona.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Según el PAI, ¿cuándo se debe iniciar la cirugía de reasignación de sexo (CRS) en personas transexuales?",
+                        "options": [
+                        { "text": "A los 6 meses de iniciar el tratamiento hormonal continuo." },
+                        { "text": "A partir de los 12 meses de tratamiento hormonal continuo si no hay contraindicación médica." },
+                        { "text": "Inmediatamente después del diagnóstico por la UAPT." },
+                        { "text": "Solo después de obtener un informe favorable de Salud Mental." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI establece como criterio para la CRS haber completado al menos 12 meses de tratamiento hormonal continuo. Esto asegura que la persona ha experimentado los efectos de la hormonación y puede tomar una decisión informada sobre la cirugía.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En mujeres transexuales (THM) mayores de 40 años o fumadoras, ¿qué formulación de estrógenos se prefiere para minimizar riesgos?",
+                        "options": [
+                        { "text": "Estradiol oral a dosis altas." },
+                        { "text": "Estrógeno transdérmico." },
+                        { "text": "Etinilestradiol." },
+                        { "text": "No se recomienda tratamiento estrogénico en este grupo." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Para minimizar el riesgo de enfermedad tromboembólica, que aumenta con la edad y el tabaquismo, el PAI recomienda el uso de estrógeno transdérmico (parches o gel), ya que evita el primer paso hepático y tiene un menor impacto en los factores de coagulación.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "Un hombre transexual (TMH) en tratamiento con testosterona presenta un hematocrito >55%. ¿Cuál es la actitud correcta?",
+                        "options": [
+                        { "text": "Es un hallazgo normal y esperado." },
+                        { "text": "Aumentar la dosis de testosterona para compensar." },
+                        { "text": "Se debe disminuir la dosis o alargar el intervalo de administración." },
+                        { "text": "Realizar una sangría terapéutica de forma inmediata." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La policitemia es un efecto adverso conocido del tratamiento con testosterona. Un hematocrito >55% es una contraindicación para continuar con la misma pauta, por lo que se debe disminuir la dosis o espaciar más las inyecciones para reducir el riesgo de eventos trombóticos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "¿Cuál es la pauta de seguimiento clínico y analítico tras el inicio del tratamiento hormonal cruzado?",
+                        "options": [
+                        { "text": "Revisiones semanales durante el primer mes." },
+                        { "text": "Un primer seguimiento a los 3 meses, un segundo a los 6 meses y posteriormente anual." },
+                        { "text": "Seguimiento anual desde el inicio." },
+                        { "text": "Solo se realizan controles si aparecen síntomas adversos." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI establece una pauta de seguimiento clara: un primer control clínico y analítico a los 3 meses del inicio, un segundo control a los 6 meses, y a partir de ahí, seguimientos anuales para monitorizar eficacia y seguridad.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "¿Cuál de estos efectos adversos es más característico y preocupante en el tratamiento con estrógenos en mujeres transexuales?",
+                        "options": [
+                        { "text": "Acné facial." },
+                        { "text": "Enfermedad tromboembólica venosa." },
+                        { "text": "Hiperplasia endometrial." },
+                        { "text": "Alopecia androgénica." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El riesgo más significativo asociado al tratamiento estrogénico es la enfermedad tromboembólica venosa (trombosis venosa profunda, tromboembolismo pulmonar). Es crucial valorar los factores de riesgo y elegir la pauta y vía de administración más segura.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Cuidados Paliativos",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "¿Cuál es la 'pregunta clave' para identificar a una persona adulta con necesidad de cuidados paliativos?",
+                        "options": [
+                        { "text": "¿Cree que vivirá más de un año?" },
+                        { "text": "¿Le sorprendería que esta persona muriese en el próximo año, meses, semanas o días?" },
+                        { "text": "¿Tiene una enfermedad terminal incurable?" },
+                        { "text": "¿Ha tenido más de dos ingresos hospitalarios en el último año?" }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI introduce la 'pregunta clave' como una herramienta sencilla y fundamental para la identificación precoz de pacientes con necesidades paliativas. Una respuesta negativa ('No, no me sorprendería') por parte del profesional sanitario confirma la necesidad de iniciar una valoración paliativa integral.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "En la valoración multidimensional de un paciente paliativo, ¿cuál es el plazo máximo recomendado para completarla?",
+                        "options": [
+                        { "text": "7 días" },
+                        { "text": "15 días" },
+                        { "text": "30 días" },
+                        { "text": "No hay un plazo definido, depende de la situación del paciente." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Según las recomendaciones clave del PAI, la valoración multidimensional debe ser dinámica y completarse en un plazo máximo de 15 días, pudiendo utilizar escalas como herramientas de apoyo para priorizar las necesidades que requieran una respuesta más inmediata.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "¿Qué herramienta específica menciona el PAI para identificar los elementos de complejidad en la persona adulta?",
+                        "options": [
+                        { "text": "Escala de Karnofsky" },
+                        { "text": "La pregunta NECPAL." },
+                        { "text": "La herramienta IDC-Pal." },
+                        { "text": "La escala Edmonton Symptom Assessment System (ESAS)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda explícitamente el uso de la herramienta IDC-Pal (Instrumento Diagnóstico de la Complejidad en Cuidados Paliativos) para identificar los elementos de complejidad y gestionar adecuadamente la intervención de los recursos avanzados.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Ante la sospecha de que un paciente está entrando en situación de últimos días, ¿qué herramienta se menciona para valorar el pronóstico?",
+                        "options": [
+                        { "text": "La escala de Palliative Performance Scale (PPS)." },
+                        { "text": "Los criterios de Menten." },
+                        { "text": "El PaP score." },
+                        { "text": "La escala de Glasgow." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI (punto 3.15) indica que para valorar el pronóstico en la situación de últimos días se utilizarán los criterios de Menten, donde 1-3 signos sugieren una fase preagónica y entre 4 y 8 signos una fase agónica.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "¿Cuál de los siguientes NO es un criterio para considerar una situación de Alta Complejidad que requiere la intervención de recursos avanzados/específicos de CP?",
+                        "options": [
+                        { "text": "Un paciente con enfermedad terminal y claudicación familiar." },
+                        { "text": "Un paciente con síntomas refractarios." },
+                        { "text": "Un paciente niño o adolescente." },
+                        { "text": "Un paciente con buen control del dolor y sin problemas sociales." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "La Alta Complejidad viene definida por situaciones como el ser niño/adolescente, la presencia de síntomas refractarios, claudicación familiar, conspiración de silencio, etc. Un paciente bien controlado y sin problemática social sería considerado No Complejo.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "En el manejo del dolor, ¿qué recomienda el PAI para un paciente con dolor moderado (EVA 4-6) que no ha respondido a AINEs?",
+                        "options": [
+                        { "text": "Aumentar la dosis de AINEs." },
+                        { "text": "Añadir un opioide débil como el tramadol o la codeína." },
+                        { "text": "Iniciar directamente con morfina a dosis bajas." },
+                        { "text": "Realizar una interconsulta a la Unidad del Dolor." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI se basa en la escalera analgésica de la OMS. Para un dolor moderado (segundo escalón), si no cede con fármacos del primer escalón (AINEs, paracetamol), está indicado asociar o sustituir por un opioide débil.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "Según el PAI, ¿cuál es la vía de elección para la administración de fármacos en la situación de últimos días o agonía?",
+                        "options": [
+                        { "text": "Vía oral." },
+                        { "text": "Vía intravenosa." },
+                        { "text": "Vía subcutánea." },
+                        { "text": "Vía rectal." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En la fase de agonía, la deglución suele estar comprometida. La vía subcutánea es la de elección por su facilidad de uso en el domicilio, buena absorción, menor riesgo de complicaciones y por permitir una infusión continua mediante infusores elastoméricos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "¿Qué es un síntoma refractario, condición indispensable para plantear una sedación paliativa?",
+                        "options": [
+                        { "text": "Un síntoma de alta intensidad (EVA > 7)." },
+                        { "text": "Un síntoma que no puede ser adecuadamente controlado con los tratamientos disponibles, aplicados por expertos, en un plazo de tiempo razonable." },
+                        { "text": "Cualquier síntoma que el paciente refiera como insoportable." },
+                        { "text": "Un síntoma que requiere el uso de opioides potentes." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La definición de síntoma refractario es muy precisa y es clave para la correcta indicación de la sedación paliativa. Implica que se han utilizado los tratamientos adecuados por profesionales expertos sin lograr el control del síntoma, y que no existen otras alternativas eficaces.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "En la valoración psicoemocional, ¿qué herramienta se recomienda para la detección de malestar emocional?",
+                        "options": [
+                        { "text": "La escala de Hamilton para la ansiedad." },
+                        { "text": "La escala de Goldberg." },
+                        { "text": "La escala de detección de malestar emocional (DME)." },
+                        { "text": "El inventario de depresión de Beck." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI (punto 3.10) menciona específicamente que 'Como herramienta de ayuda se puede usar la escala de detección de malestar emocional (DME)' para valorar la presencia de trastornos del área afectiva.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "¿Cuál es la principal diferencia entre sedación paliativa y eutanasia?",
+                        "options": [
+                        { "text": "El fármaco utilizado." },
+                        { "text": "La dosis del fármaco." },
+                        { "text": "La intención del acto." },
+                        { "text": "No hay ninguna diferencia, son lo mismo." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La diferencia es fundamentalmente ética y se basa en la intención. En la sedación paliativa, la intención es aliviar un sufrimiento insoportable (síntoma refractario), aunque secundariamente se pueda acortar la vida. En la eutanasia, la intención primaria y directa es causar la muerte para aliviar el sufrimiento.",
+                        "difficulty": "Difícil",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI EPOC",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "Según el PAI de EPOC, ¿cuál es el criterio espirométrico indispensable para confirmar el diagnóstico de EPOC en un paciente con sospecha clínica?",
+                        "options": [
+                        { "text": "Un FEV1 < 80% del valor de referencia." },
+                        { "text": "Un cociente FEV1/FVC < 0,70 tras realizar una prueba broncodilatadora." },
+                        { "text": "Un cociente FEV1/FVC < 0,70 antes de la prueba broncodilatadora." },
+                        { "text": "Una Capacidad Vital Forzada (FVC) < 80% del valor de referencia." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI es claro y se alinea con todas las guías internacionales: el diagnóstico de EPOC requiere la demostración de una limitación al flujo aéreo no completamente reversible. Esto se define por un cociente FEV1/FVC post-broncodilatador inferior a 0,70.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "En la clasificación del impacto de la EPOC en el estado de salud (grupos A, B, C, D), ¿qué dos parámetros se utilizan?",
+                        "options": [
+                        { "text": "El grado de obstrucción (FEV1) y la edad del paciente." },
+                        { "text": "La intensidad de los síntomas y el historial de agudizaciones del último año." },
+                        { "text": "El IMC y la presencia de comorbilidades cardiovasculares." },
+                        { "text": "El nivel de disnea (mMRC) y el FEV1." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La clasificación combinada de la EPOC (GOLD 2019, adoptada por el PAI) evalúa el impacto de la enfermedad en el paciente basándose en la carga sintomática (evaluada con mMRC o CAT) y el riesgo de futuras agudizaciones (basado en el historial de exacerbaciones del año previo).",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Un paciente con EPOC presenta una disnea mMRC de 3 y un CAT de 18. El año pasado tuvo una agudización que no requirió ingreso. ¿En qué grupo (A, B, C o D) se clasificaría?",
+                        "options": [
+                        { "text": "Grupo A" },
+                        { "text": "Grupo B" },
+                        { "text": "Grupo C" },
+                        { "text": "Grupo D" }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El paciente es muy sintomático (mMRC ≥ 2 o CAT ≥ 10). Sin embargo, es de bajo riesgo de agudizaciones, ya que solo tuvo una agudización moderada (≤1 y sin hospitalización). Por tanto, se clasifica como Grupo B (Más síntomas, bajo riesgo).",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "Para un paciente clasificado en el Grupo C de GOLD, ¿cuál es el tratamiento farmacológico de inicio recomendado por el PAI?",
+                        "options": [
+                        { "text": "Un SABA a demanda." },
+                        { "text": "Un LABA (broncodilatador beta-agonista de acción larga)." },
+                        { "text": "Un LAMA (broncodilatador antimuscarínico de acción larga)." },
+                        { "text": "Una combinación LABA + Corticoide Inhalado (CI)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Para el Grupo C (pocos síntomas, alto riesgo de agudizaciones), el tratamiento de elección para iniciar es un LAMA, ya que ha demostrado ser superior a los LABA en la prevención de exacerbaciones.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Según los criterios de Anthonisen, ¿cuándo se recomienda iniciar tratamiento antibiótico en una agudización de EPOC?",
+                        "options": [
+                        { "text": "Siempre que el esputo sea de color verde." },
+                        { "text": "En pacientes con fiebre alta (>38.5ºC)." },
+                        { "text": "Cuando están presentes los tres síntomas cardinales: aumento de disnea, aumento de volumen del esputo y aumento de la purulencia." },
+                        { "text": "Solo si la PCR es superior a 50 mg/L." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda el uso de antibióticos ante la presencia de los tres síntomas cardinales de Anthonisen (Tipo I) o ante la presencia de dos, si uno de ellos es el aumento de la purulencia del esputo (Tipo II). También en pacientes que requieran ventilación mecánica.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "¿Cuál es la pauta recomendada de corticoides sistémicos en una agudización de EPOC que no requiere ingreso?",
+                        "options": [
+                        { "text": "Prednisona 60 mg/día durante 15 días." },
+                        { "text": "Prednisona 0,5 mg/kg/día (máximo 40 mg) durante 5-7 días." },
+                        { "text": "Metilprednisolona intravenosa durante 3 días." },
+                        { "text": "No se recomiendan corticoides sistémicos de forma ambulatoria." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI recomienda una dosis de 0,5 mg/kg de prednisona (con un máximo de 40 mg) durante un período corto, de 5 a 7 días. Pautas más largas no han demostrado mayor beneficio y sí más efectos secundarios.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "¿Cuál es el objetivo de saturación de oxígeno (SpO2) que se debe buscar en un paciente con agudización de EPOC e hipercapnia conocida?",
+                        "options": [
+                        { "text": "94-98%" },
+                        { "text": "Siempre > 95%" },
+                        { "text": "88-92%" },
+                        { "text": "No es necesario monitorizar la SpO2." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En pacientes con EPOC y riesgo de hipercapnia, una oxigenoterapia demasiado agresiva puede disminuir el estímulo respiratorio y empeorar la retención de CO2. Por ello, el objetivo de SpO2 es más conservador, entre 88-92%, para asegurar una oxigenación suficiente sin inducir una narcosis por CO2.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "Un paciente con EPOC estable clasificado como GOLD 4, Grupo D, refiere disnea persistente a pesar de tratamiento con LAMA+LABA. ¿Cuál sería el siguiente paso terapéutico a considerar?",
+                        "options": [
+                        { "text": "Añadir un corticoide inhalado (CI), formando una triple terapia." },
+                        { "text": "Añadir teofilinas." },
+                        { "text": "Añadir un mucolítico como N-acetilcisteína." },
+                        { "text": "Derivar para trasplante pulmonar." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "En un paciente del grupo D que persiste sintomático a pesar de la doble broncodilatación, el siguiente escalón es añadir un corticoide inhalado para conformar la triple terapia (LAMA+LABA+CI), especialmente si tiene antecedentes de agudizaciones o eosinofilia.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "¿Qué vacunación, además de la antigripal anual, se recomienda de forma sistemática en los pacientes con EPOC?",
+                        "options": [
+                        { "text": "Vacuna frente al Herpes Zóster." },
+                        { "text": "Vacuna frente al Neumococo." },
+                        { "text": "Vacuna frente a la tosferina (dTpa)." },
+                        { "text": "Vacuna frente al VPH." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "La neumonía es una causa frecuente y grave de agudización de la EPOC. Por ello, el PAI, siguiendo las recomendaciones generales, indica la vacunación antineumocócica (con VNP23 y/o VNC13 según pautas) en todos los pacientes con EPOC.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "¿Cuál de las siguientes condiciones NO es una indicación de ventilación mecánica no invasiva (VMNI) en una agudización grave de EPOC?",
+                        "options": [
+                        { "text": "Acidosis respiratoria (pH < 7,35) con hipercapnia (PaCO2 > 45 mm Hg)." },
+                        { "text": "Disnea intensa con uso de musculatura accesoria." },
+                        { "text": "Parada respiratoria inminente." },
+                        { "text": "Hipoxemia persistente a pesar de oxigenoterapia." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "La VMNI está indicada en la agudización grave con acidosis respiratoria para disminuir el trabajo respiratorio. Sin embargo, una parada respiratoria inminente o establecida es una contraindicación absoluta, ya que el paciente no puede proteger la vía aérea y requiere intubación orotraqueal y ventilación invasiva.",
+                        "difficulty": "Difícil",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Trastorno Mental Grave",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "¿Cuál de los siguientes NO es un criterio indispensable para definir un Trastorno Mental Grave (TMG) según el PAI?",
+                        "options": [
+                        { "text": "Una sintomatología de características psicóticas o prepsicóticas." },
+                        { "text": "La necesidad de un abordaje multidisciplinar, intersectorial y continuado." },
+                        { "text": "La previsión de una evolución prolongada en el tiempo." },
+                        { "text": "Un diagnóstico exclusivo de esquizofrenia o trastorno bipolar." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El concepto de TMG es funcional, no se limita a diagnósticos específicos. Incluye una sintomatología que afecta la funcionalidad, la necesidad de un abordaje complejo y una previsión de cronicidad. Abarca múltiples diagnósticos (F20-F33, etc.), no solo esquizofrenia o trastorno bipolar.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "Para identificar a un paciente con TMG, se deben cumplir criterios en 3 escalas de valoración. ¿Cuál de las siguientes combinaciones es la correcta según el PAI?",
+                        "options": [
+                        { "text": "GAF < 60, HONOS ≥ 4 (en cualquier escala excepto la 5), y BPRS ≥ 21." },
+                        { "text": "GAF < 50, HONOS ≥ 5 (en cualquier escala), y BPRS ≥ 30." },
+                        { "text": "GAF < 60, Hamilton > 20, y BPRS ≥ 21." },
+                        { "text": "Cualquier puntuación en GAF, HONOS o BPRS que indique gravedad." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "El PAI establece unos puntos de corte claros y objetivos para la identificación: Escala GAF (Global Assessment of Functioning) menor de 60, una puntuación de 4 o más en cualquiera de las escalas de la HONOS (excepto la 5), y una puntuación mayor o igual a 21 en la escala BPRS.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "Una vez identificado un paciente con TMG, ¿en qué plazo máximo debe realizarse la valoración multidisciplinar integral?",
+                        "options": [
+                        { "text": "7 días." },
+                        { "text": "15 días." },
+                        { "text": "1 mes." },
+                        { "text": "2 meses." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "La recomendación clave del PAI es realizar la valoración multidisciplinaria integral en un plazo máximo de 2 meses desde la identificación del TMG, para poder elaborar el Plan Individualizado de Tratamiento.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "El Plan Individualizado de Tratamiento (PIT) debe elaborarse en un tiempo máximo de:",
+                        "options": [
+                        { "text": "15 días tras la identificación." },
+                        { "text": "30 días tras la identificación." },
+                        { "text": "45 días tras la valoración." },
+                        { "text": "60 días tras la valoración." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI especifica que todas las personas con TMG contarán con un plan denominado PIT en un tiempo máximo de 30 días. Este plan es el documento de referencia para todas las intervenciones.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "En un paciente con un primer episodio psicótico, ¿cuál es la recomendación sobre el tratamiento con antipsicóticos?",
+                        "options": [
+                        { "text": "Utilizar una dosis de carga (neuroleptización rápida)." },
+                        { "text": "Iniciar siempre con dos antipsicóticos para asegurar la respuesta." },
+                        { "text": "Utilizar la dosis mínima efectiva y evitar la polifarmacia." },
+                        { "text": "Preferir siempre antipsicóticos inyectables depot de inicio." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "En un primer episodio, la recomendación es usar la dosis mínima efectiva de un solo antipsicótico. No se recomienda la neuroleptización rápida ni los depot de inicio. El objetivo es lograr la remisión con la menor carga farmacológica posible.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "Según el PAI, el modelo de gestión de casos de intensidad MUY ALTA, que implica al menos 2 contactos asistenciales por semana y un abordaje integral en el entorno natural de la persona, se corresponde con:",
+                        "options": [
+                        { "text": "El modelo de gestión de casos Nivel 2." },
+                        { "text": "El Tratamiento Asertivo Comunitario (TAC)." },
+                        { "text": "El programa de Hospitalización de Día." },
+                        { "text": "La intervención del Equipo de Soporte." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI describe el Tratamiento Asertivo Comunitario (TAC) como el modelo indicado para casos de intensidad muy alta, caracterizado por una alta frecuencia de contactos (≥2/semana), un equipo multidisciplinar y un enfoque proactivo en el entorno del paciente.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En el tratamiento de la esquizofrenia, si se inicia con olanzapina o clozapina, ¿qué se debe vigilar especialmente?",
+                        "options": [
+                        { "text": "La función renal." },
+                        { "text": "Los factores de riesgo metabólico (dislipemia, diabetes)." },
+                        { "text": "La aparición de síntomas extrapiramidales agudos." },
+                        { "text": "La tensión arterial." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI advierte específicamente que no se recomienda el uso de olanzapina y clozapina como tratamiento inicial en pacientes con factores de riesgo de síndrome metabólico (dislipemia, hipertensión, sobrepeso o diabetes), dado el alto potencial de estos fármacos para inducir dichos efectos.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "¿Cuál es una recomendación explícita del PAI sobre la contención mecánica?",
+                        "options": [
+                        { "text": "Debe ser la primera opción en pacientes no colaboradores." },
+                        { "text": "Se debe evitar siempre que sea posible, usando la desescalada verbal como primera elección." },
+                        { "text": "Debe mantenerse un mínimo de 24 horas para asegurar la efectividad." },
+                        { "text": "Puede ser indicada por cualquier profesional del equipo sanitario." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI es muy claro en este punto, alineándose con las guías de derechos humanos. La contención mecánica debe evitarse siempre que sea posible, priorizando la desescalada verbal y la contención farmacológica como primeras líneas de actuación ante una agitación.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "En el tratamiento del Trastorno Bipolar, ¿cuál es el tratamiento de primera línea recomendado para un episodio maníaco agudo?",
+                        "options": [
+                        { "text": "Lamotrigina." },
+                        { "text": "Un antidepresivo ISRS." },
+                        { "text": "Litio." },
+                        { "text": "Terapia electroconvulsiva (TEC)." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI recomienda ofrecer monoterapia con litio como tratamiento de primera línea en la manía aguda. El valproato o los antipsicóticos atípicos son alternativas si hay mala tolerancia al litio. Los antidepresivos están contraindicados por el riesgo de viraje.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "En el seguimiento de un paciente en tratamiento con antipsicóticos, ¿cuál de las siguientes exploraciones NO forma parte del estudio somático protocolizado?",
+                        "options": [
+                        { "text": "Peso, IMC y perímetro abdominal." },
+                        { "text": "Glucosa basal, HbA1c y perfil lipídico." },
+                        { "text": "Electrocardiograma (ECG)." },
+                        { "text": "Ecografía abdominal anual." }
+                        ],
+                        "correctAnswerIndex": 3,
+                        "rationale": "El PAI detalla el estudio somático necesario, que incluye control de peso y perímetro, analítica metabólica (glucosa, lípidos), prolactina, hemograma y un ECG. La ecografía abdominal no forma parte del seguimiento rutinario estandarizado.",
+                        "difficulty": "Intermedia",
+                    }
+                ]
+            },
+            {
+                "name": "Test PAI Atención a Personas Transexuales en la Infancia y Adolescencia",
+                "questions": [
+                    {
+                        "id": 1,
+                        "questionText": "¿Cuál es el momento óptimo para la interconsulta a la UAPT en un/a menor con desarrollo puberal ya iniciado?",
+                        "options": [
+                        { "text": "Al llegar a la pubertad completa (Tanner V)." },
+                        { "text": "En el estadio de Tanner II." },
+                        { "text": "Antes de cualquier signo de desarrollo puberal." },
+                        { "text": "Cuando el/la menor cumpla 16 años." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI especifica que el estadio de Tanner II (botón mamario en niños transexuales, testículos >4cc en niñas transexuales) es el momento óptimo para la interconsulta a la UAPT para valorar el inicio del bloqueo puberal.",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 2,
+                        "questionText": "En un/a menor con desarrollo puberal en estadio Tanner III o IV, la derivación para iniciar el bloqueo hormonal debe ser:",
+                        "options": [
+                        { "text": "Inmediata." },
+                        { "text": "En un plazo no superior a 3-6 meses." },
+                        { "text": "Programada para dentro de un año." },
+                        { "text": "Solo si lo solicita un psicólogo." }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "El PAI establece que si el desarrollo puberal ya está avanzado (Tanner III o IV), los/as menores deben ser remitidos de forma inmediata para iniciar el bloqueo hormonal y evitar el desarrollo de caracteres sexuales secundarios no deseados.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 3,
+                        "questionText": "¿Cuál es el tratamiento farmacológico de primera elección para la supresión de la pubertad en menores transexuales?",
+                        "options": [
+                        { "text": "Estrógenos a dosis bajas." },
+                        { "text": "Progestágenos." },
+                        { "text": "Análogos de GnRH." },
+                        { "text": "Testosterona a dosis bajas." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "Se utilizarán como fármacos de primera elección análogos de GnRH sin distinción entre niños y niñas. La experiencia de uso acumulado en pubertad precoz respalda su recomendación.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 4,
+                        "questionText": "El objetivo principal del bloqueo del desarrollo puberal en un/a adolescente transexual es:",
+                        "options": [
+                        { "text": "Iniciar la transición hormonal hacia el sexo sentido." },
+                        { "text": "Evitar el desarrollo de caracteres sexuales secundarios no deseados y dar tiempo para explorar la identidad." },
+                        { "text": "Evaluar la respuesta a los análogos de GnRH." },
+                        { "text": "Es un requisito indispensable para la cirugía de reasignación." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El bloqueo puberal tiene una doble finalidad: evitar los cambios físicos irreversibles y no deseados de la pubertad, que causan gran malestar, y proporcionar un tiempo valioso para que el/la menor, junto a su familia y el equipo terapéutico, exploren su identidad de género antes de tomar decisiones sobre la hormonación cruzada.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 5,
+                        "questionText": "Según el PAI, ¿es reversible el tratamiento hormonal de supresión del desarrollo puberal con análogos de GnRH?",
+                        "options": [
+                        { "text": "No, sus efectos son permanentes." },
+                        { "text": "Sí, la inhibición de la fertilidad es reversible." },
+                        { "text": "Es parcialmente reversible, afectando solo a la talla final." },
+                        { "text": "Solo es reversible si se administra por menos de 6 meses." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Uno de los efectos listados del tratamiento con análogos de GnRH es la 'Inhibición reversible de la fertilidad'. Al suspender el tratamiento, la pubertad se reanuda.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 6,
+                        "questionText": "¿Cuál es una 'Recomendación de no hacer' fundamental en la atención a personas transexuales, tanto adultas como menores?",
+                        "options": [
+                        { "text": "Realizar una entrevista para conocer las demandas de la familia." },
+                        { "text": "Aplicar códigos diagnósticos de enfermedad a la transexualidad." },
+                        { "text": "Informar sobre los riesgos del tratamiento hormonal." },
+                        { "text": "Solicitar pruebas complementarias." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "Ambos PAI (adultos e infancia/adolescencia) se basan en el principio de despatologización. Por ello, una recomendación clave de 'no hacer' es aplicar códigos diagnósticos de enfermedad a la transexualidad.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 7,
+                        "questionText": "En el seguimiento de un/a menor en tratamiento con análogos de GnRH, ¿con qué frecuencia se deben recoger los datos antropométricos y hormonales durante el primer año?",
+                        "options": [
+                        { "text": "Mensualmente." },
+                        { "text": "Trimestralmente." },
+                        { "text": "Semestralmente." },
+                        { "text": "Anualmente." }
+                        ],
+                        "correctAnswerIndex": 1,
+                        "rationale": "El PAI establece que durante el primer año de bloqueo puberal, se recogerán trimestralmente datos antropométricos (talla, peso, IMC, etc.), estadio de Tanner y mediciones hormonales (LH, FSH, Estradiol y Testosterona).",
+                        "difficulty": "Difícil",
+                    },
+                    {
+                        "id": 8,
+                        "questionText": "En el contexto del PAI de infancia y adolescencia, ¿qué es la 'pregunta clave' para identificar una posible situación de necesidad de cuidados paliativos?",
+                        "options": [
+                        { "text": "Esta pregunta pertenece al PAI de Cuidados Paliativos." },
+                        { "text": "Se utiliza el mismo PAI de adultos para la atención a menores." },
+                        { "text": "El PAI de transexualidad en la infancia no contempla esta pregunta." },
+                        { "text": "Se trata de la pregunta: ¿Le sorprendería que este niño/a muriese como consecuencia de su problema en los próximos días, meses o año?" }
+                        ],
+                        "correctAnswerIndex": 0,
+                        "rationale": "Correcto, la 'pregunta clave' es un instrumento del PAI de Cuidados Paliativos para identificar a pacientes que podrían beneficiarse de este tipo de atención. Aunque relevante, no es una herramienta específica del PAI de transexualidad.",
+                        "difficulty": "Fácil",
+                    },
+                    {
+                        "id": 9,
+                        "questionText": "Para valorar la maduración ósea y decidir el momento del tratamiento, ¿qué prueba de imagen es fundamental?",
+                        "options": [
+                        { "text": "Radiografía de tórax." },
+                        { "text": "Ecografía pélvica." },
+                        { "text": "Radiografía de la mano y muñeca no dominantes." },
+                        { "text": "Resonancia magnética cerebral." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI indica que entre las pruebas de imagen a solicitar en la interconsulta se encuentra la radiografía de mano y muñeca no dominantes para valorar o calcular la edad ósea, un dato crucial para la toma de decisiones terapéuticas.",
+                        "difficulty": "Intermedia",
+                    },
+                    {
+                        "id": 10,
+                        "questionText": "En la primera entrevista en AP, ¿qué comportamiento referido por el/la menor NO es sugestivo de una identidad de género diversa?",
+                        "options": [
+                        { "text": "Preferencia por roles y juegos que se asocian comúnmente con un sexo distinto al asignado al nacer." },
+                        { "text": "Rechazo a los roles y juegos socialmente tipificados como los propios del sexo asignado al nacer." },
+                        { "text": "Tener un buen rendimiento académico y muchos amigos." },
+                        { "text": "Expresión de la identidad sexual o de género distinta a la asignada al nacer." }
+                        ],
+                        "correctAnswerIndex": 2,
+                        "rationale": "El PAI enumera varios comportamientos a explorar, como la expresión de una identidad distinta, la preferencia por roles del otro género o el rechazo a los propios. El rendimiento académico o la sociabilidad no son, en sí mismos, indicadores de identidad de género.",
+                        "difficulty": "Fácil",
+                    }
+                ]
+            }
+        ];
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            // State variables
+            let allQuestions = [];
+            let currentQuizQuestions = [];
+            let userAnswers = {};
+            let flaggedQuestions = new Set();
+            let currentQuestionIndex = 0;
+            let timerInterval;
+            let timeRemaining;
+    
+            // DOM Elements
+            const topicSelect = document.getElementById('topic-select');
+            const modeSelect = document.getElementById('mode-select');
+            const timedOptions = document.getElementById('timed-options');
+            const numQuestionsInput = document.getElementById('num-questions');
+            const timeLimitInput = document.getElementById('time-limit');
+            const shuffleCheckbox = document.getElementById('shuffle-questions');
+            const searchInput = document.getElementById('search-input');
+            const startBtn = document.getElementById('start-btn');
+    
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultsScreen = document.getElementById('results-screen');
+    
+            const questionTopic = document.getElementById('question-topic');
+            const currentQuestionNum = document.getElementById('current-question-num');
+            const totalQuestionsNum = document.getElementById('total-questions-num');
+            const timerDisplay = document.getElementById('timer-display');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const questionText = document.getElementById('question-text');
+            const optionsList = document.getElementById('options-list');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const flagBtn = document.getElementById('flag-btn');
+            const finishBtn = document.getElementById('finish-btn');
+    
+            const scorePercent = document.getElementById('score-percent');
+            const correctCount = document.getElementById('correct-count');
+            const incorrectCount = document.getElementById('incorrect-count');
+            const unansweredCount = document.getElementById('unanswered-count');
+            const restartBtn = document.getElementById('restart-btn');
+            const reviewIncorrectBtn = document.getElementById('review-incorrect-btn');
+            const reviewFlaggedBtn = document.getElementById('review-flagged-btn');
+            const reviewAllBtn = document.getElementById('review-all-btn');
+            const reviewContainer = document.getElementById('review-container');
+    
+            function init() {
+                processAllData();
+                populateTopicSelect();
+                addEventListeners();
+                showScreen('welcome');
+            }
+    
+            function processAllData() {
+                allQuestions = [];
+                let globalId = 1;
+                allData.forEach(topic => {
+                    topic.questions.forEach(q => {
+                        allQuestions.push({
+                            ...q,
+                            globalId: globalId++,
+                            topic: cleanTopicName(topic.name)
+                        });
+                    });
+                });
+            }
+            
+            function cleanTopicName(name) {
+                return name.replace(/Test PAI|Copy of|PAI|- Test Interactivo/gi, '').trim();
+            }
+    
+            function populateTopicSelect() {
+                const topics = [...new Set(allQuestions.map(q => q.topic))];
+                topics.sort().forEach(topic => {
+                    const option = document.createElement('option');
+                    option.value = topic;
+                    option.textContent = topic;
+                    topicSelect.appendChild(option);
+                });
+            }
+    
+            function addEventListeners() {
+                startBtn.addEventListener('click', startQuiz);
+                modeSelect.addEventListener('change', () => {
+                    timedOptions.style.display = modeSelect.value === 'timed' ? 'block' : 'none';
+                });
+                nextBtn.addEventListener('click', nextQuestion);
+                prevBtn.addEventListener('click', prevQuestion);
+                finishBtn.addEventListener('click', finishQuiz);
+                flagBtn.addEventListener('click', toggleFlagQuestion);
+                optionsList.addEventListener('change', handleOptionSelect);
+                
+                restartBtn.addEventListener('click', () => {
+                    showScreen('welcome');
+                    document.querySelector('.sidebar').style.display = 'block';
+                });
+                reviewIncorrectBtn.addEventListener('click', () => reviewQuestions('incorrect'));
+                reviewFlaggedBtn.addEventListener('click', () => reviewQuestions('flagged'));
+                reviewAllBtn.addEventListener('click', () => reviewQuestions('all'));
+                searchInput.addEventListener('input', handleSearch);
+            }
+            
+            function handleSearch(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm.length < 3) {
+                    reviewContainer.innerHTML = '';
+                    return;
+                }
+                const matchedQuestions = allQuestions.filter(q => 
+                    q.questionText.toLowerCase().includes(searchTerm) || 
+                    q.rationale.toLowerCase().includes(searchTerm)
+                );
+                displayReviewQuestions(matchedQuestions);
+            }
+    
+            function startQuiz() {
+                const selectedTopic = topicSelect.value;
+                const shuffle = shuffleCheckbox.checked;
+    
+                let questions = selectedTopic === 'all' 
+                    ? [...allQuestions] 
+                    : allQuestions.filter(q => q.topic === selectedTopic);
+    
+                if (shuffle) {
+                    questions.sort(() => Math.random() - 0.5);
+                }
+    
+                if (modeSelect.value === 'timed') {
+                    const num = parseInt(numQuestionsInput.value, 10);
+                    questions = questions.slice(0, num);
+                    const timeLimit = parseInt(timeLimitInput.value, 10);
+                    startTimer(timeLimit * 60);
+                } else {
+                    timerDisplay.textContent = "--:--";
+                }
+                
+                currentQuizQuestions = questions;
+                if (currentQuizQuestions.length === 0) {
+                    alert('No hay preguntas para el temario seleccionado.');
+                    return;
+                }
+                
+                resetQuizState();
+                showQuestion(0);
+                showScreen('quiz');
+                document.querySelector('.sidebar').style.display = 'none';
+            }
+            
+            function resetQuizState() {
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                flaggedQuestions.clear();
+                clearInterval(timerInterval);
+            }
+    
+            function showQuestion(index) {
+                if (index < 0 || index >= currentQuizQuestions.length) return;
+                
+                currentQuestionIndex = index;
+                const question = currentQuizQuestions[index];
+    
+                questionText.textContent = question.questionText;
+                questionTopic.textContent = question.topic;
+                optionsList.innerHTML = '';
+    
+                question.options.forEach((option, i) => {
+                    const li = document.createElement('li');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'option';
+                    input.id = `option${i}`;
+                    input.value = i;
+                    input.className = 'option-input';
+                    if (userAnswers[question.globalId] === i) {
+                        input.checked = true;
+                    }
+    
+                    const label = document.createElement('label');
+                    label.htmlFor = `option${i}`;
+                    label.textContent = option.text;
+                    label.className = 'option-label';
+    
+                    li.appendChild(input);
+                    li.appendChild(label);
+                    optionsList.appendChild(li);
+                });
+    
+                updateUI();
+            }
+    
+            function updateUI() {
+                currentQuestionNum.textContent = currentQuestionIndex + 1;
+                totalQuestionsNum.textContent = currentQuizQuestions.length;
+                progressBarFill.style.width = `${((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100}%`;
+    
+                prevBtn.disabled = currentQuestionIndex === 0;
+                nextBtn.style.display = currentQuestionIndex === currentQuizQuestions.length - 1 ? 'none' : 'inline-block';
+                finishBtn.style.display = currentQuestionIndex === currentQuizQuestions.length - 1 ? 'inline-block' : 'none';
+    
+                const question = currentQuizQuestions[currentQuestionIndex];
+                if (flaggedQuestions.has(question.globalId)) {
+                    flagBtn.classList.add('flagged');
+                } else {
+                    flagBtn.classList.remove('flagged');
+                }
+            }
+    
+            function handleOptionSelect(e) {
+                if (e.target.name === 'option') {
+                    const question = currentQuizQuestions[currentQuestionIndex];
+                    userAnswers[question.globalId] = parseInt(e.target.value, 10);
+                }
+            }
+    
+            function nextQuestion() {
+                if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+                    showQuestion(currentQuestionIndex + 1);
+                }
+            }
+    
+            function prevQuestion() {
+                if (currentQuestionIndex > 0) {
+                    showQuestion(currentQuestionIndex - 1);
+                }
+            }
+    
+            function toggleFlagQuestion() {
+                const question = currentQuizQuestions[currentQuestionIndex];
+                if (flaggedQuestions.has(question.globalId)) {
+                    flaggedQuestions.delete(question.globalId);
+                } else {
+                    flaggedQuestions.add(question.globalId);
+                }
+                updateUI();
+            }
+    
+            function startTimer(duration) {
+                timeRemaining = duration;
+                updateTimerDisplay();
+                timerInterval = setInterval(() => {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        alert("¡Tiempo agotado!");
+                        finishQuiz();
+                    }
+                }, 1000);
+            }
+    
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+    
+            function finishQuiz() {
+                clearInterval(timerInterval);
+                calculateResults();
+                showScreen('results');
+            }
+    
+            function calculateResults() {
+                let correct = 0;
+                let incorrect = 0;
+                
+                currentQuizQuestions.forEach(q => {
+                    if (userAnswers.hasOwnProperty(q.globalId)) {
+                        if (userAnswers[q.globalId] === q.correctAnswerIndex) {
+                            correct++;
+                        } else {
+                            incorrect++;
+                        }
+                    }
+                });
+    
+                const unanswered = currentQuizQuestions.length - (correct + incorrect);
+                const percentage = currentQuizQuestions.length > 0 ? Math.round((correct / currentQuizQuestions.length) * 100) : 0;
+    
+                scorePercent.textContent = `${percentage}%`;
+                correctCount.textContent = correct;
+                incorrectCount.textContent = incorrect;
+                unansweredCount.textContent = unanswered;
+                
+                reviewContainer.innerHTML = '';
+            }
+            
+            function reviewQuestions(type) {
+                let questionsToReview;
+                switch (type) {
+                    case 'incorrect':
+                        questionsToReview = currentQuizQuestions.filter(q => 
+                            userAnswers.hasOwnProperty(q.globalId) && 
+                            userAnswers[q.globalId] !== q.correctAnswerIndex
+                        );
+                        break;
+                    case 'flagged':
+                         questionsToReview = allQuestions.filter(q => flaggedQuestions.has(q.globalId));
+                        break;
+                    case 'all':
+                    default:
+                        questionsToReview = currentQuizQuestions;
+                        break;
+                }
+                displayReviewQuestions(questionsToReview);
+            }
+            
+            function displayReviewQuestions(questions) {
+                 reviewContainer.innerHTML = `<h3>Revisión de Preguntas (${questions.length})</h3>`;
+                 if (questions.length === 0) {
+                     reviewContainer.innerHTML += "<p>No hay preguntas para revisar en esta categoría.</p>";
+                     return;
+                 }
+                 questions.forEach((q, i) => {
+                     const div = document.createElement('div');
+                     div.className = 'review-question';
+                     
+                     let questionStatus = '';
+                     if (userAnswers.hasOwnProperty(q.globalId)) {
+                         questionStatus = userAnswers[q.globalId] === q.correctAnswerIndex ? 'correct-answer' : 'incorrect-answer';
+                     }
+                     div.classList.add(questionStatus);
+    
+                     const topicHTML = `<div class="topic-tag">${q.topic}</div>`;
+                     const questionHTML = `<p>${i + 1}. ${q.questionText}</p>`;
+                     let optionsHTML = '<ul>';
+                     q.options.forEach((opt, index) => {
+                         let classes = '';
+                         if (index === q.correctAnswerIndex) {
+                             classes = 'correct';
+                         } else if (userAnswers[q.globalId] === index) {
+                             classes = 'incorrect';
+                         }
+                         optionsHTML += `<li class="${classes}">${String.fromCharCode(65 + index)}. ${opt.text}</li>`;
+                     });
+                     optionsHTML += '</ul>';
+                     
+                     const rationaleHTML = `<div class="rationale"><strong>Justificación:</strong> ${q.rationale}</div>`;
+                     
+                     div.innerHTML = topicHTML + questionHTML + optionsHTML + rationaleHTML;
+                     reviewContainer.appendChild(div);
+                 });
+            }
+    
+            function showScreen(screen) {
+                welcomeScreen.style.display = 'none';
+                quizScreen.style.display = 'none';
+                resultsScreen.style.display = 'none';
+    
+                document.getElementById(`${screen}-screen`).style.display = 'block';
+            }
+    
+            init();
+        });
+    </script>
+</body>
+</html>

@@ -764,7 +764,7 @@
                 <ul class="nav-menu">
                     <li class="nav-item"><a href="index.html" class="active">INICIO</a></li>
                     <li class="nav-item"><a href="herramientas.html">HERRAMIENTAS</a></li>
-                    <li class="nav-item"><a href="cuidados_paliativos.html">🕊️ CUIDADOS PALIATIVOS</a></li>
+                    <li class="nav-item"><a href="academia.html" style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a></li>
                     <li class="nav-item"><a href="medicamentos_sin_lactosa.html">💊 SIN LACTOSA</a></li>
                     <li class="nav-item"><a href="medicamentos_visados.html" style="color: #C41E3A;">� VISADOS SAS</a></li>
                     <li class="nav-item admin-only" style="display: none;"><a href="#admin">Admin</a></li>
@@ -791,6 +791,21 @@
         <section id="herramientas" class="tools-section">
             <h2 class="section-title">HERRAMIENTAS MÉDICAS</h2>
             <div class="tools-grid" id="toolsGrid">
+                
+                <!-- ACADEMIA UMBRAMED - NUEVA HERRAMIENTA DESTACADA -->
+                <div class="tool-card" style="border: 3px solid #667eea; background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
+                    <span class="tool-icon" style="color: #667eea; font-size: 4rem;">🎓</span>
+                    <h3 class="tool-title" style="color: #667eea; font-size: 1.6rem;">ACADEMIA UMBRAMED</h3>
+                    <p class="tool-description" style="font-weight: 600; color: #333;">
+                        <strong style="color: #667eea;">¡NUEVA HERRAMIENTA!</strong><br>
+                        Sistema completo de preparación para oposiciones SAS con 143 preguntas reales 
+                        organizadas por PAI. Incluye login, seguimiento de progreso y estadísticas detalladas.
+                    </p>
+                    <div class="tool-actions">
+                        <button class="tool-button" style="background: #667eea; border-color: #667eea; font-weight: 700; font-size: 1.1rem;" onclick="location.href='academia.html'">🚀 ACCEDER A ACADEMIA</button>
+                    </div>
+                </div>
+
                 <div class="tool-card">
                     <span class="tool-icon">📊</span>
                     <h3 class="tool-title">Calculadora Pediátrica</h3>
@@ -823,17 +838,6 @@
                     </p>
                     <div class="tool-actions">
                         <button class="tool-button" onclick="location.href='medicamentos_visados.html'">ACCEDER</button>
-                    </div>
-                </div>
-
-                <div class="tool-card">
-                    <span class="tool-icon">🕊️</span>
-                    <h3 class="tool-title">Guía de Cuidados Paliativos</h3>
-                    <p class="tool-description">
-                        Herramienta integral con IA para profesionales y familias en cuidados paliativos. Incluye verificador de interacciones de medicamentos y guías de apoyo.
-                    </p>
-                    <div class="tool-actions">
-                        <button class="tool-button" onclick="location.href='cuidados_paliativos.html'">ACCEDER</button>
                     </div>
                 </div>
             </div>
@@ -1141,6 +1145,6 @@
                     card.style.transform = 'translateY(0)';
                 }, index * 100);
             });
-    <script src="js/umbramed.js"></script>
-</body>
+        </script>
+    </body>
 </html>

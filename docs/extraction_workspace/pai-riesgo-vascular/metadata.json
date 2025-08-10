@@ -1,0 +1,6 @@
+
+{
+  "name": "PAI Riesgo Vascular",
+  "description": "Una aplicación de test interactivo para preparar el examen de oposición del SAS, basada en la Guía Rápida del Proceso Asistencial Integrado de Riesgo Vascular.",
+  "requestFramePermissions": []
+}

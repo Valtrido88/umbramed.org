@@ -51,7 +51,7 @@ class UmbramedComponents {
                             <a href="herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
                         </li>
                         <li class="nav-item">
-                            <a href="cuidados_paliativos.html" ${activePage === 'cuidados' ? 'class="active"' : ''}>🕊️ Cuidados Paliativos</a>
+                            <a href="academia.html" ${activePage === 'academia' ? 'class="active"' : ''} style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a>
                         </li>
                         <li class="nav-item">
                             <a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;" ${activePage === 'medicamentos' ? 'class="active"' : ''}>💊 Sin Lactosa</a>
@@ -76,18 +76,14 @@ class UmbramedComponents {
         return `
         <footer class="footer">
             <div class="footer-content">
-                <p class="footer-text">
-                    UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
-                </p>
-                <p class="footer-warning">
-                    ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
-                </p>
+                <p>&copy; 2025 UMBRAMED Medical Division. Todos los derechos reservados.</p>
+                <p>Desarrollado para profesionales sanitarios de Andalucía.</p>
             </div>
         </footer>
         `;
     }
     
-    // Inicializa los componentes en una página
+    // Inicializa los componentes
     static init(activePage = '') {
         // Inyectar header si no existe
         if (!document.querySelector('.header')) {
@@ -105,18 +101,18 @@ class UmbramedComponents {
             authScript.src = 'js/auth.js';
             document.head.appendChild(authScript);
         }
+    }
+}
+
 // Auto-inicializar en páginas que usen este script
 document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname.includes('medicamentos_sin_lactosa') ? 'medicamentos' :
                        window.location.pathname.includes('herramientas') ? 'herramientas' :
-                       window.location.pathname.includes('cuidados_paliativos') ? 'cuidados' :
+                       window.location.pathname.includes('academia') ? 'academia' :
                        window.location.pathname.includes('calculadora') ? 'herramientas' : '';
     
     // Solo auto-inicializar si no está ya presente
     if (!document.querySelector('.header')) {
-        UmbramedComponents.init(currentPage);
-    }
-}); if (!document.querySelector('.header')) {
         UmbramedComponents.init(currentPage);
     }
 });
