@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Cuidados Paliativos - UMBRAMED Medical Division</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin-top: 100px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .palliative-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .role-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(196, 30, 58, 0.1);
+            border: 2px solid var(--lighter-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(196, 30, 58, 0.2);
+            border-color: var(--primary-red);
+        }
+        
+        .role-card .icon {
+            color: var(--primary-red);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .role-card h3 {
+            color: var(--accent-black);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .role-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .view-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(196, 30, 58, 0.1);
+            border: 2px solid var(--lighter-bg);
+        }
+        
+        .back-button {
+            background: transparent;
+            border: none;
+            color: var(--primary-red);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .back-button:hover {
+            color: var(--dark-red);
+        }
+        
+        .primary-button {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .primary-button:hover {
+            background: var(--dark-red);
+            transform: translateY(-1px);
+        }
+        
+        .primary-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .secondary-button {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--lighter-bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-button:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+        
+        .drug-list-item {
+            background: var(--lighter-bg);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .remove-drug {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: color 0.3s ease;
+        }
+        
+        .remove-drug:hover {
+            color: var(--warning-red);
+        }
+        
+        .warning-alert {
+            background: #fef3cd;
+            border: 1px solid #fecf03;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-alert .warning-title {
+            color: #b45309;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .warning-alert .warning-text {
+            color: #92400e;
+        }
+        
+        .protocol-output {
+            background: var(--lighter-bg);
+            border: 2px solid var(--grid-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .protocol-output h3 {
+            color: var(--accent-black);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .loading-spinner {
+            border: 3px solid var(--lighter-bg);
+            border-top: 3px solid var(--primary-red);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        .loading-spinner.small {
+            width: 20px;
+            height: 20px;
+            border-width: 2px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .form-select, .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--lighter-bg);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+        
+        .add-drug-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .add-drug-container .form-select {
+            flex: 1;
+        }
+        
+        .icon-button {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon-button:hover {
+            background: var(--dark-red);
+        }
+        
+        .icon-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .letter-content {
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+        
+        .letter-content h1 {
+            color: var(--accent-black);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .letter-content h2 {
+            color: var(--primary-red);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+        
+        .letter-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .letter-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .letter-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .palliative-container {
+                padding: 0 1rem;
+            }
+            
+            .role-cards-grid {
+                flex-direction: column;
+            }
+            
+            .role-card {
+                margin-bottom: 1rem;
+            }
+            
+            .add-drug-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- El contenido se generará dinámicamente con JavaScript -->
+    </div>
+    
+    <script src="js/common.js"></script>
+    <script src="js/cuidados-config.js"></script>
+    <script src="js/cuidados-paliativos.js"></script>
+    <script>
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            UmbramedComponents.init('cuidados');
+            CuidadosPaliativos.init();
+        });
+    </script>
+</body>
+</html>

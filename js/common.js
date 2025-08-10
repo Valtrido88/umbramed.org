@@ -51,6 +51,9 @@ class UmbramedComponents {
                             <a href="herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
                         </li>
                         <li class="nav-item">
+                            <a href="cuidados_paliativos.html" ${activePage === 'cuidados' ? 'class="active"' : ''}>🕊️ Cuidados Paliativos</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;" ${activePage === 'medicamentos' ? 'class="active"' : ''}>💊 Sin Lactosa</a>
                         </li>
                         <li class="nav-item admin-only" style="display: none;">
@@ -102,17 +105,18 @@ class UmbramedComponents {
             authScript.src = 'js/auth.js';
             document.head.appendChild(authScript);
         }
-    }
-}
-
 // Auto-inicializar en páginas que usen este script
 document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname.includes('medicamentos_sin_lactosa') ? 'medicamentos' :
                        window.location.pathname.includes('herramientas') ? 'herramientas' :
+                       window.location.pathname.includes('cuidados_paliativos') ? 'cuidados' :
                        window.location.pathname.includes('calculadora') ? 'herramientas' : '';
     
     // Solo auto-inicializar si no está ya presente
     if (!document.querySelector('.header')) {
+        UmbramedComponents.init(currentPage);
+    }
+}); if (!document.querySelector('.header')) {
         UmbramedComponents.init(currentPage);
     }
 });
