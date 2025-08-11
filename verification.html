@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 UMBRAMED - Verificador de Cambios (Anti-Caché)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .status-box {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+        .success { background: #d4edda; border-color: #28a745; }
+        .error { background: #f8d7da; border-color: #dc3545; }
+        .info { background: #d1ecf1; border-color: #17a2b8; }
+        .timestamp {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        .test-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .test-link {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .test-link:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        .force-refresh {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 UMBRAMED - Verificador de Cambios</h1>
+        <p><strong>Fecha de cambios:</strong> 10 Agosto 2025 - 20:30</p>
+        
+        <div class="timestamp">
+            <strong>Última verificación:</strong> <span id="currentTime"></span><br>
+            <strong>Cache-Buster:</strong> <span id="cacheBuster"></span>
+        </div>
+
+        <div class="status-box info">
+            <h3>📋 CAMBIOS REALIZADOS CONFIRMADOS:</h3>
+            <ul>
+                <li>❌ <strong>Eliminado:</strong> cuidados_paliativos.html</li>
+                <li>✅ <strong>Agregado:</strong> Tarjeta Academia UMBRAMED en index.html</li>
+                <li>✅ <strong>Agregado:</strong> Tarjeta Academia UMBRAMED en herramientas.html</li>
+                <li>✅ <strong>Guardado en Git:</strong> Commit 89fd064</li>
+            </ul>
+        </div>
+
+        <div class="status-box success">
+            <h3>🎯 VERIFICACIONES AUTOMÁTICAS:</h3>
+            <div id="autoChecks">
+                <div>🔄 Ejecutando verificaciones...</div>
+            </div>
+        </div>
+
+        <h3>🚀 TESTS DIRECTOS (Anti-Caché):</h3>
+        <div class="test-links">
+            <a href="index.html?v=20250810-2030" class="test-link" target="_blank">
+                🏠 Página Principal<br>
+                <small>Ver tarjeta Academia</small>
+            </a>
+            <a href="herramientas.html?v=20250810-2030" class="test-link" target="_blank">
+                🛠️ Herramientas<br>
+                <small>Ver tarjeta Academia</small>
+            </a>
+            <a href="academia.html?v=20250810-2030" class="test-link" target="_blank">
+                🎓 Academia UMBRAMED<br>
+                <small>Login: demo/demo</small>
+            </a>
+        </div>
+
+        <div style="margin: 30px 0; text-align: center;">
+            <h3>⚡ FORZAR ACTUALIZACIÓN DE CACHÉ:</h3>
+            <button class="force-refresh" onclick="hardRefresh()">🔄 Refrescar Sin Caché</button>
+            <button class="force-refresh" onclick="clearLocalStorage()">🗑️ Limpiar Datos Locales</button>
+            <button class="force-refresh" onclick="runFullTest()">🧪 Test Completo</button>
+        </div>
+
+        <div class="status-box info">
+            <h4>📝 INSTRUCCIONES PARA MAÑANA:</h4>
+            <ol>
+                <li>Abre esta página primero: <code>verification.html</code></li>
+                <li>Haz clic en "Refrescar Sin Caché"</li>
+                <li>Prueba los enlaces directos con timestamps</li>
+                <li>Verifica que NO aparezca "Cuidados Paliativos"</li>
+                <li>Verifica que SÍ aparezca "ACADEMIA UMBRAMED" destacada</li>
+            </ol>
+        </div>
+
+        <div class="status-box success" id="resultados" style="display: none;">
+            <h4>✅ RESULTADOS DE VERIFICACIÓN:</h4>
+            <div id="resultadosContenido"></div>
+        </div>
+    </div>
+
+    <script>
+        // Actualizar timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('es-ES');
+            document.getElementById('cacheBuster').textContent = now.getTime();
+        }
+
+        // Forzar refresh sin caché
+        function hardRefresh() {
+            window.location.reload(true);
+        }
+
+        // Limpiar localStorage
+        function clearLocalStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            alert('✅ Datos locales limpiados. Ahora refresca la página.');
+        }
+
+        // Test completo
+        function runFullTest() {
+            const resultados = document.getElementById('resultados');
+            const contenido = document.getElementById('resultadosContenido');
+            
+            resultados.style.display = 'block';
+            contenido.innerHTML = '🔄 Ejecutando verificaciones...';
+            
+            const tests = [
+                {
+                    name: 'Archivo cuidados_paliativos.html',
+                    test: () => {
+                        return fetch('cuidados_paliativos.html?v=' + Date.now())
+                            .then(response => !response.ok)
+                            .catch(() => true);
+                    },
+                    expected: true,
+                    message: 'NO debe existir'
+                },
+                {
+                    name: 'Archivo academia.html',
+                    test: () => {
+                        return fetch('academia.html?v=' + Date.now())
+                            .then(response => response.ok)
+                            .catch(() => false);
+                    },
+                    expected: true,
+                    message: 'DEBE existir'
+                },
+                {
+                    name: 'Contenido index.html con Academia',
+                    test: () => {
+                        return fetch('index.html?v=' + Date.now())
+                            .then(response => response.text())
+                            .then(html => html.includes('ACADEMIA UMBRAMED'))
+                            .catch(() => false);
+                    },
+                    expected: true,
+                    message: 'DEBE contener Academia'
+                },
+                {
+                    name: 'Contenido herramientas.html con Academia',
+                    test: () => {
+                        return fetch('herramientas.html?v=' + Date.now())
+                            .then(response => response.text())
+                            .then(html => html.includes('ACADEMIA UMBRAMED'))
+                            .catch(() => false);
+                    },
+                    expected: true,
+                    message: 'DEBE contener Academia'
+                }
+            ];
+
+            Promise.all(tests.map(test => test.test())).then(results => {
+                let html = '<ul>';
+                tests.forEach((test, index) => {
+                    const passed = results[index] === test.expected;
+                    html += `<li>${passed ? '✅' : '❌'} ${test.name}: ${test.message} ${passed ? 'CORRECTO' : 'ERROR'}</li>`;
+                });
+                html += '</ul>';
+                
+                const allPassed = results.every((result, index) => result === tests[index].expected);
+                html += `<br><strong>${allPassed ? '🎉 TODOS LOS TESTS PASADOS' : '⚠️ ALGUNOS TESTS FALLARON'}</strong>`;
+                
+                contenido.innerHTML = html;
+            });
+        }
+
+        // Auto-verificaciones
+        function autoChecks() {
+            const checksDiv = document.getElementById('autoChecks');
+            const timestamp = new Date().toISOString();
+            
+            checksDiv.innerHTML = `
+                <div>✅ Timestamp actual: ${timestamp}</div>
+                <div>✅ Cache-buster generado: ${Date.now()}</div>
+                <div>✅ localStorage disponible: ${typeof(Storage) !== "undefined"}</div>
+                <div>✅ Página cargada correctamente</div>
+                <div><strong>🎯 Estado: LISTO PARA VERIFICACIÓN</strong></div>
+            `;
+        }
+
+        // Inicializar
+        updateTimestamp();
+        autoChecks();
+        setInterval(updateTimestamp, 1000);
+
+        // Ejecutar test automático después de 2 segundos
+        setTimeout(runFullTest, 2000);
+    </script>
+</body>
+</html>
