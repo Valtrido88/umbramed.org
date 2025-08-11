@@ -1,0 +1,158 @@
+{
+  "pai-questions": [
+    {
+      "id": "pai_004",
+      "question": "En el PAI de Cuidados Paliativos, ¿cuál es el fármaco de primera elección para el control del dolor oncológico moderado-severo?",
+      "options": [
+        "Tramadol",
+        "Morfina oral",
+        "Fentanilo transdérmico", 
+        "Oxicodona"
+      ],
+      "correct": 1,
+      "explanation": "La morfina oral es el opioide de primera elección en dolor oncológico moderado-severo según la escalera analgésica de la OMS y el PAI de Cuidados Paliativos.",
+      "category": "Cuidados Paliativos",
+      "difficulty": "Intermedio",
+      "tags": ["cuidados-paliativos", "dolor-oncologico", "opioides", "morfina"]
+    },
+    {
+      "id": "pai_005", 
+      "question": "Según el PAI de Tabaquismo, ¿cuál es la duración mínima recomendada del tratamiento con vareniclina?",
+      "options": [
+        "4 semanas",
+        "8 semanas",
+        "12 semanas",
+        "24 semanas"
+      ],
+      "correct": 2,
+      "explanation": "El tratamiento con vareniclina debe mantenerse durante al menos 12 semanas, pudiendo extenderse hasta 24 semanas en casos seleccionados.",
+      "category": "Tabaquismo",
+      "difficulty": "Intermedio",
+      "tags": ["tabaquismo", "vareniclina", "deshabituacion-tabaquica", "farmacoterapia"]
+    },
+    {
+      "id": "pai_006",
+      "question": "En el PAI de Deterioro Cognitivo, ¿cuál es la prueba de cribado cognitivo más recomendada en atención primaria?",
+      "options": [
+        "Mini Mental State Examination (MMSE)",
+        "Montreal Cognitive Assessment (MoCA)",
+        "Test del Reloj",
+        "Pfeiffer"
+      ],
+      "correct": 0,
+      "explanation": "El MMSE sigue siendo la prueba de cribado cognitivo más utilizada y recomendada en atención primaria por su validez y facilidad de aplicación.",
+      "category": "Deterioro Cognitivo",
+      "difficulty": "Básico",
+      "tags": ["deterioro-cognitivo", "cribado", "mmse", "atencion-primaria"]
+    },
+    {
+      "id": "pai_007",
+      "question": "Según el PAI de Pacientes Pluripatológicos, ¿cuántas categorías clínicas definen a un paciente como pluripatológico?",
+      "options": [
+        "Al menos 1 categoría",
+        "Al menos 2 categorías",
+        "Al menos 3 categorías",
+        "Al menos 4 categorías"
+      ],
+      "correct": 1,
+      "explanation": "Un paciente se considera pluripatológico cuando presenta al menos 2 categorías clínicas de las 8 definidas en el PAI.",
+      "category": "Pluripatológicos",
+      "difficulty": "Básico",
+      "tags": ["pluripatologicos", "categorias-clinicas", "definicion", "criterios"]
+    }
+  ],
+  "historical-exams": [
+    {
+      "id": "hist_003",
+      "question": "OPE 2021: ¿Cuál es la vacuna recomendada para adultos mayores de 65 años frente a la neumonía?",
+      "options": [
+        "Neumocócica 13-valente (VNC13) únicamente",
+        "Neumocócica 23-valente (VNP23) únicamente", 
+        "Secuencia VNC13 seguida de VNP23",
+        "No se recomienda vacunación"
+      ],
+      "correct": 2,
+      "explanation": "Se recomienda la secuencia VNC13 seguida de VNP23 al menos 8 semanas después en adultos ≥65 años.",
+      "category": "OPE 2021",
+      "difficulty": "Real",
+      "tags": ["ope-2021", "vacunacion", "neumococo", "adultos-mayores"]
+    },
+    {
+      "id": "hist_004",
+      "question": "OPE 2020: En el seguimiento de un paciente con anticoagulación oral con warfarina, ¿cuál es el rango terapéutico óptimo de INR para fibrilación auricular?",
+      "options": [
+        "1.5-2.0",
+        "2.0-3.0",
+        "2.5-3.5",
+        "3.0-4.0"
+      ],
+      "correct": 1,
+      "explanation": "Para fibrilación auricular, el rango terapéutico óptimo de INR con warfarina es 2.0-3.0.",
+      "category": "OPE 2020",
+      "difficulty": "Real",
+      "tags": ["ope-2020", "anticoagulacion", "warfarina", "inr", "fibrilacion-auricular"]
+    },
+    {
+      "id": "hist_005",
+      "question": "OPE 2023: ¿Cuál es la edad mínima para realizar el cribado de cáncer colorrectal en población de riesgo medio?",
+      "options": [
+        "45 años",
+        "50 años",
+        "55 años",
+        "60 años"
+      ],
+      "correct": 1,
+      "explanation": "El cribado de cáncer colorrectal se inicia a los 50 años en población de riesgo medio, según las guías actuales.",
+      "category": "OPE 2023",
+      "difficulty": "Real",
+      "tags": ["ope-2023", "cribado", "cancer-colorrectal", "prevencion"]
+    }
+  ],
+  "simulacros": [
+    {
+      "id": "sim_002",
+      "question": "SIMULACRO 2: Mujer de 45 años con amenorrea de 6 meses, sofocos y sudoración nocturna. FSH: 45 mUI/ml. ¿Cuál es el diagnóstico más probable?",
+      "options": [
+        "Embarazo",
+        "Síndrome de ovarios poliquísticos",
+        "Menopausia precoz",
+        "Hipotiroidismo"
+      ],
+      "correct": 2,
+      "explanation": "FSH >40 mUI/ml junto con amenorrea y síntomas vasomotores en mujer <50 años sugiere menopausia precoz.",
+      "category": "Simulacro Completo 2",
+      "difficulty": "Simulación Real", 
+      "tags": ["simulacro", "menopausia-precoz", "fsh", "ginecologia", "amenorrea"]
+    },
+    {
+      "id": "sim_003",
+      "question": "SIMULACRO CRONOMETRADO: Paciente diabético tipo 2 con HbA1c 8.5% a pesar de metformina a dosis máxima. ¿Cuál sería el siguiente paso terapéutico?",
+      "options": [
+        "Añadir sulfonilurea",
+        "Añadir inhibidor DPP-4",
+        "Cambiar a insulina",
+        "Añadir agonista GLP-1"
+      ],
+      "correct": 3,
+      "explanation": "Con HbA1c >8% se recomienda añadir agonista GLP-1 por su eficacia en reducción de HbA1c y beneficio cardiovascular.",
+      "category": "Simulacro Cronometrado",
+      "difficulty": "Simulación Real",
+      "tags": ["simulacro", "diabetes", "hba1c", "glp1", "tratamiento-intensificacion"]
+    },
+    {
+      "id": "sim_004",
+      "question": "SIMULACRO POR BLOQUES: En un paciente con sospecha de TEP, ¿cuál es la escala de riesgo clínico más utilizada?",
+      "options": [
+        "Escala de Wells",
+        "Escala de Geneva",
+        "Escala PERC",
+        "Escala PESI"
+      ],
+      "correct": 0,
+      "explanation": "La escala de Wells es la más utilizada para estratificar el riesgo clínico de TEP en urgencias y atención primaria.",
+      "category": "Simulacro por Bloques",
+      "difficulty": "Simulación Real",
+      "tags": ["simulacro", "tep", "wells", "escalas-riesgo", "urgencias"]
+    }
+  ]
+}

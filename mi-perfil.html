@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👤 Mi Perfil - Academia UMBRAMED</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .profile-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+        .profile-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        .stat-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .achievement {
+            display: inline-block;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+        .achievement.locked {
+            background: #6c757d;
+            opacity: 0.6;
+        }
+        .no-data {
+            background: #fff3cd;
+            color: #856404;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #ffeaa7;
+        }
+        .login-prompt {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .category-stat {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #5a67d8; }
+        .refresh-btn {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <h1>👤 Mi Perfil - Academia UMBRAMED</h1>
+            <p>Sistema de Perfiles Personalizados</p>
+            <div style="margin-top: 20px;">
+                <button onclick="refreshProfile()" class="refresh-btn">🔄 Actualizar Perfil</button>
+                <button onclick="goToAcademia()">🎓 Ir a Academia</button>
+                <button onclick="clearData()">🗑️ Limpiar Datos</button>
+            </div>
+        </div>
+
+        <div id="profileContent">
+            <div class="login-prompt">
+                <h3>🔍 Cargando información del perfil...</h3>
+                <p>Verificando datos almacenados en el navegador...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadProfile() {
+            const profileContent = document.getElementById('profileContent');
+            
+            try {
+                // Cargar datos de usuario
+                const userData = localStorage.getItem('umbramed_users');
+                const userStats = localStorage.getItem('umbramed_stats');
+                
+                if (!userData) {
+                    showNoData();
+                    return;
+                }
+                
+                const users = JSON.parse(userData);
+                const stats = userStats ? JSON.parse(userStats) : {};
+                
+                // Buscar usuario actual (último login)
+                let currentUser = null;
+                let currentUserId = null;
+                let lastLoginDate = null;
+                
+                Object.values(users).forEach(user => {
+                    if (user.lastLogin && (!lastLoginDate || new Date(user.lastLogin) > new Date(lastLoginDate))) {
+                        currentUser = user;
+                        currentUserId = user.id;
+                        lastLoginDate = user.lastLogin;
+                    }
+                });
+                
+                if (!currentUser) {
+                    showNoActiveUser(users);
+                    return;
+                }
+                
+                const userStats_current = stats[currentUserId] || {
+                    testsCompleted: 0,
+                    totalQuestions: 0,
+                    correctAnswers: 0,
+                    averageScore: 0,
+                    categoryStats: {},
+                    achievements: [],
+                    streak: 0,
+                    timeSpent: 0
+                };
+                
+                showUserProfile(currentUser, userStats_current, users, stats);
+                
+            } catch (error) {
+                console.error('Error cargando perfil:', error);
+                showError();
+            }
+        }
+        
+        function showUserProfile(user, stats, allUsers, allStats) {
+            const profileContent = document.getElementById('profileContent');
+            
+            const achievementsList = [
+                { id: 'first_test', name: 'Primer Test', icon: '🎯', description: 'Completar tu primer test' },
+                { id: 'perfectionist', name: 'Perfeccionista', icon: '⭐', description: 'Obtener 95% de promedio' },
+                { id: 'dedicated', name: 'Dedicado', icon: '📚', description: 'Completar 10 tests' },
+                { id: 'streak_5', name: 'Racha de 5', icon: '🔥', description: 'Aprobar 5 tests seguidos' },
+                { id: 'expert', name: 'Experto', icon: '🏆', description: '50 tests con 85% promedio' }
+            ];
+            
+            profileContent.innerHTML = `
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <h3>📋 Información Personal</h3>
+                        <p><strong>Nombre:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Rol:</strong> ${user.role === 'admin' ? 'Administrador' : 'Estudiante'}</p>
+                        <p><strong>Especialidad:</strong> ${user.specialty || 'No especificada'}</p>
+                        <p><strong>Centro:</strong> ${user.workPlace || 'No especificado'}</p>
+                        <p><strong>Experiencia:</strong> ${user.experience || 'No especificada'}</p>
+                        <p><strong>Miembro desde:</strong> ${new Date(user.createdAt).toLocaleDateString('es-ES')}</p>
+                        <p><strong>Último acceso:</strong> ${user.lastLogin ? new Date(user.lastLogin).toLocaleString('es-ES') : 'Primer acceso'}</p>
+                        <p><strong>Estado del perfil:</strong> ${user.profileComplete ? '✅ Completo' : '⚠️ Incompleto'}</p>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <h3>📊 Estadísticas de Rendimiento</h3>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.testsCompleted}</div>
+                            <div class="stat-label">Tests Completados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.totalQuestions}</div>
+                            <div class="stat-label">Preguntas Respondidas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.correctAnswers}</div>
+                            <div class="stat-label">Respuestas Correctas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.averageScore}%</div>
+                            <div class="stat-label">Promedio General</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.streak}</div>
+                            <div class="stat-label">Racha Actual</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${Math.round(stats.timeSpent / 60) || 0}</div>
+                            <div class="stat-label">Minutos Estudiando</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <h3>🏆 Logros (${stats.achievements.length}/${achievementsList.length})</h3>
+                    <div>
+                        ${achievementsList.map(achievement => {
+                            const unlocked = stats.achievements.includes(achievement.id);
+                            return `<span class="achievement ${unlocked ? '' : 'locked'}">
+                                ${achievement.icon} ${achievement.name}
+                                ${unlocked ? '✅' : '🔒'}
+                            </span>`;
+                        }).join('')}
+                    </div>
+                    ${stats.achievements.length === 0 ? '<p style="margin-top: 15px; color: #6c757d;">¡Completa tu primer test para empezar a desbloquear logros!</p>' : ''}
+                </div>
+                
+                ${Object.keys(stats.categoryStats).length > 0 ? `
+                    <div class="profile-card">
+                        <h3>📈 Estadísticas por Categoría PAI</h3>
+                        ${Object.entries(stats.categoryStats).map(([category, catStats]) => `
+                            <div class="category-stat">
+                                <div>
+                                    <strong>${category}</strong><br>
+                                    <small>${catStats.tests} tests • ${catStats.questions} preguntas</small>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: ${catStats.averageScore >= 70 ? '#28a745' : '#dc3545'};">
+                                        ${catStats.averageScore}%
+                                    </div>
+                                    <small>${catStats.correct}/${catStats.questions} correctas</small>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '<div class="no-data"><h4>📊 Sin estadísticas por categoría</h4><p>Completa tests en diferentes categorías PAI para ver estadísticas detalladas.</p></div>'}
+                
+                <div class="profile-card">
+                    <h3>👥 Información del Sistema</h3>
+                    <p><strong>Usuarios registrados:</strong> ${Object.keys(allUsers).length}</p>
+                    <p><strong>Última actualización:</strong> ${new Date().toLocaleString('es-ES')}</p>
+                    <p><strong>Versión del sistema:</strong> Academia UMBRAMED v2.0 (Segura)</p>
+                    <div style="margin-top: 15px;">
+                        <small><strong>Usuarios en el sistema:</strong></small><br>
+                        ${Object.values(allUsers).map(u => `<small>• ${u.name} (${u.email}) - ${u.role}</small>`).join('<br>')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showNoData() {
+            const profileContent = document.getElementById('profileContent');
+            profileContent.innerHTML = `
+                <div class="no-data">
+                    <h3>❌ Sin datos de perfil</h3>
+                    <p>No se encontraron datos de usuario en el navegador.</p>
+                    <p>Esto puede significar que:</p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>No has iniciado sesión en la Academia UMBRAMED</li>
+                        <li>Los datos fueron eliminados del navegador</li>
+                        <li>Es la primera vez que usas el sistema</li>
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <button onclick="goToAcademia()">🎓 Ir a Academia UMBRAMED</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showNoActiveUser(users) {
+            const profileContent = document.getElementById('profileContent');
+            profileContent.innerHTML = `
+                <div class="no-data">
+                    <h3>⚠️ Sin sesión activa</h3>
+                    <p>Se encontraron ${Object.keys(users).length} usuario(s) registrado(s), pero ninguno tiene sesión activa.</p>
+                    <div style="margin-top: 20px;">
+                        <button onclick="goToAcademia()">🔑 Iniciar Sesión</button>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <small><strong>Usuarios registrados:</strong></small><br>
+                        ${Object.values(users).map(u => `<small>• ${u.name} (${u.email})</small>`).join('<br>')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showError() {
+            const profileContent = document.getElementById('profileContent');
+            profileContent.innerHTML = `
+                <div class="no-data">
+                    <h3>⚠️ Error cargando perfil</h3>
+                    <p>Hubo un problema al cargar los datos del perfil.</p>
+                    <button onclick="refreshProfile()">🔄 Intentar de nuevo</button>
+                </div>
+            `;
+        }
+        
+        function refreshProfile() {
+            document.getElementById('profileContent').innerHTML = `
+                <div class="login-prompt">
+                    <h3>🔄 Actualizando perfil...</h3>
+                    <p>Cargando datos más recientes...</p>
+                </div>
+            `;
+            setTimeout(loadProfile, 1000);
+        }
+        
+        function goToAcademia() {
+            window.open('academia.html', '_blank');
+        }
+        
+        function clearData() {
+            if (confirm('⚠️ ¿Estás seguro de que quieres eliminar todos los datos de usuario?\n\nEsto borrará:\n- Todos los perfiles\n- Todas las estadísticas\n- Todos los logros\n\nEsta acción no se puede deshacer.')) {
+                localStorage.removeItem('umbramed_users');
+                localStorage.removeItem('umbramed_stats');
+                alert('✅ Datos eliminados correctamente.');
+                refreshProfile();
+            }
+        }
+        
+        // Cargar perfil al iniciar
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>
