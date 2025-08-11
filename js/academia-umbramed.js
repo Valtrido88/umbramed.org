@@ -13,27 +13,15 @@ class AcademiaUmbramed {
         this.currentTestQuestions = [];
         this.questionManager = null;
         
-        // Datos de usuario (en producción esto vendría de una base de datos)
-        this.users = {
-            'admin': {
-                password: 'umbramed2025',
-                name: 'Administrador',
-                role: 'admin',
-                courses: ['ope-primaria-2025']
-            },
-            'medico': {
-                password: 'medico123',
-                name: 'Dr. Médico',
-                role: 'student',
-                courses: ['ope-primaria-2025']
-            },
-            'demo': {
-                password: 'demo',
-                name: 'Usuario Demo',
-                role: 'student',
-                courses: ['ope-primaria-2025']
-            }
-        };
+        // Sistema de autenticación seguro (simulando backend)
+        this.authenticateUser = this.authenticateUser.bind(this);
+        this.registerUser = this.registerUser.bind(this);
+        
+        // Base de datos simulada de usuarios (en producción esto estaría en el servidor)
+        this.userData = this.loadUserData();
+        
+        // Estadísticas de usuario
+        this.userStats = this.loadUserStats();
         
         // Configuración de cursos
         this.courses = {
@@ -85,12 +73,190 @@ class AcademiaUmbramed {
                 const stats = this.questionManager.getStats();
                 this.courses['ope-primaria-2025'].totalQuestions = stats.totalQuestions;
                 
-                console.log('Datos de preguntas cargados:', stats);
-            }
-        } catch (error) {
-            console.error('Error cargando datos de preguntas:', error);
-            // Usar datos por defecto si falla la carga
+        };
+    }
+    
+    // Sistema de autenticación seguro
+    loadUserData() {
+        // En producción esto vendría de una base de datos segura
+        const userData = localStorage.getItem('umbramed_users');
+        if (userData) {
+            return JSON.parse(userData);
         }
+        
+        // Usuarios por defecto solo para desarrollo (se eliminarán en producción)
+        return {
+            'admin@umbramed.org': {
+                id: 'admin',
+                email: 'admin@umbramed.org',
+                name: 'Administrador UMBRAMED',
+                role: 'admin',
+                courses: ['ope-primaria-2025'],
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                profileComplete: true
+            }
+        };
+    }
+    
+    loadUserStats() {
+        const stats = localStorage.getItem('umbramed_stats');
+        return stats ? JSON.parse(stats) : {};
+    }
+    
+    saveUserData() {
+        localStorage.setItem('umbramed_users', JSON.stringify(this.userData));
+    }
+    
+    saveUserStats() {
+        localStorage.setItem('umbramed_stats', JSON.stringify(this.userStats));
+    }
+    
+    // Función de autenticación segura
+    async authenticateUser(email, password) {
+        // Simular llamada a API (en producción sería una llamada real al servidor)
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const user = this.userData[email];
+                if (user && this.verifyPassword(password, email)) {
+                    // Actualizar último login
+                    user.lastLogin = new Date().toISOString();
+                    this.saveUserData();
+                    resolve({ success: true, user });
+                } else {
+                    resolve({ success: false, error: 'Credenciales incorrectas' });
+                }
+            }, 500); // Simular latencia de red
+        });
+    }
+    
+    // Verificación de contraseña (simulada - en producción sería hash)
+    verifyPassword(password, email) {
+        // Para el demo inicial, contraseñas simples
+        const defaultPasswords = {
+            'admin@umbramed.org': 'UmbramedAdmin2025!'
+        };
+        return defaultPasswords[email] === password;
+    }
+    
+    // Registro de nuevo usuario
+    async registerUser(userData) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                if (this.userData[userData.email]) {
+                    resolve({ success: false, error: 'El email ya está registrado' });
+                    return;
+                }
+                
+                const newUser = {
+                    id: Date.now().toString(),
+                    email: userData.email,
+                    name: userData.name,
+                    role: 'student',
+                    courses: ['ope-primaria-2025'],
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    profileComplete: false,
+                    specialty: userData.specialty || '',
+                    workPlace: userData.workPlace || '',
+                    experience: userData.experience || ''
+                };
+                
+                this.userData[userData.email] = newUser;
+                this.userStats[newUser.id] = {
+                    testsCompleted: 0,
+                    totalQuestions: 0,
+                    correctAnswers: 0,
+                    averageScore: 0,
+                    timeSpent: 0,
+                    categoryStats: {},
+                    achievements: [],
+                    streak: 0,
+                    lastTestDate: null
+                };
+                
+                this.saveUserData();
+                this.saveUserStats();
+                
+                resolve({ success: true, user: newUser });
+            }, 500);
+        });
+    }
+    
+    // Actualizar estadísticas del usuario
+    updateUserStats(userId, testResult) {
+        if (!this.userStats[userId]) {
+            this.userStats[userId] = {
+                testsCompleted: 0,
+                totalQuestions: 0,
+                correctAnswers: 0,
+                averageScore: 0,
+                timeSpent: 0,
+                categoryStats: {},
+                achievements: [],
+                streak: 0,
+                lastTestDate: null
+            };
+        }
+        
+        const stats = this.userStats[userId];
+        stats.testsCompleted++;
+        stats.totalQuestions += testResult.totalQuestions;
+        stats.correctAnswers += testResult.correctAnswers;
+        stats.averageScore = ((stats.correctAnswers / stats.totalQuestions) * 100).toFixed(1);
+        stats.timeSpent += testResult.timeSpent || 0;
+        stats.lastTestDate = new Date().toISOString();
+        
+        // Actualizar estadísticas por categoría
+        if (!stats.categoryStats[testResult.category]) {
+            stats.categoryStats[testResult.category] = {
+                tests: 0,
+                questions: 0,
+                correct: 0,
+                averageScore: 0
+            };
+        }
+        
+        const catStats = stats.categoryStats[testResult.category];
+        catStats.tests++;
+        catStats.questions += testResult.totalQuestions;
+        catStats.correct += testResult.correctAnswers;
+        catStats.averageScore = ((catStats.correct / catStats.questions) * 100).toFixed(1);
+        
+        // Calcular racha
+        if (testResult.score >= 70) {
+            stats.streak++;
+        } else {
+            stats.streak = 0;
+        }
+        
+        // Verificar logros
+        this.checkAchievements(userId, stats);
+        
+        this.saveUserStats();
+    }
+    
+    // Sistema de logros
+    checkAchievements(userId, stats) {
+        const achievements = [
+            { id: 'first_test', name: 'Primer Test', condition: () => stats.testsCompleted >= 1 },
+            { id: 'perfectionist', name: 'Perfeccionista', condition: () => stats.averageScore >= 95 },
+            { id: 'dedicated', name: 'Dedicado', condition: () => stats.testsCompleted >= 10 },
+            { id: 'streak_5', name: 'Racha de 5', condition: () => stats.streak >= 5 },
+            { id: 'expert', name: 'Experto', condition: () => stats.testsCompleted >= 50 && stats.averageScore >= 85 },
+        ];
+        
+        achievements.forEach(achievement => {
+            if (achievement.condition() && !stats.achievements.includes(achievement.id)) {
+                stats.achievements.push(achievement.id);
+                this.showAchievementNotification(achievement.name);
+            }
+        });
+    }
+    
+    showAchievementNotification(achievementName) {
+        // Mostrar notificación de logro
+        console.log(`🏆 ¡Logro desbloqueado: ${achievementName}!`);
     }
     
     render() {
