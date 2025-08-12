@@ -688,7 +688,421 @@
         </div>
     </div>
 
-    <script src="js/umbramed.js"></script>
-    <script src="js/medicamentos-visados.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let allMedications = [];
+            let filteredMedications = [];
+            let currentMedication = null;
+            let activeTab = 'info';
+
+            function initializePage() {
+                fetch('data/medicamentos-visados.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        allMedications = data;
+                        filteredMedications = [...allMedications];
+                        populateCategorySelect();
+                        updateStatistics();
+                        renderMedications();
+                        
+                        setTimeout(() => {
+                            document.querySelector('.stats-grid').classList.add('fade-in');
+                            document.querySelector('.search-controls').classList.add('fade-in');
+                            document.querySelector('#medications-grid').classList.add('fade-in');
+                        }, 100);
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar los datos de medicamentos visados:", error);
+                        const grid = document.getElementById('medications-grid');
+                        grid.innerHTML = `<p class="text-red-500 text-center col-span-full">Error al cargar la base de datos. Por favor, inténtelo de nuevo más tarde.</p>`;
+                    });
+            }
+
+            function setupEventListeners() {
+                document.getElementById('search-input').addEventListener('input', debounce(filterMedications, 300));
+                document.getElementById('category-select').addEventListener('change', filterMedications);
+                document.getElementById('medication-modal').addEventListener('click', function(e) {
+                    if (e.target.id === 'medication-modal') {
+                        closeMedicationModal();
+                    }
+                });
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !document.getElementById('medication-modal').classList.contains('hidden')) {
+                        closeMedicationModal();
+                    }
+                });
+            }
+
+            function populateCategorySelect() {
+                const select = document.getElementById('category-select');
+                const categories = [...new Set(allMedications.map(med => med.category))].sort();
+                
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
+            }
+
+            function updateStatistics() {
+                document.getElementById('total-medications').textContent = allMedications.length;
+                document.getElementById('total-categories').textContent = new Set(allMedications.map(med => med.category)).size;
+                document.getElementById('total-calculators').textContent = allMedications.filter(med => med.hasCalculator).length;
+                document.getElementById('filtered-results').textContent = filteredMedications.length;
+            }
+
+            function filterMedications() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const selectedCategory = document.getElementById('category-select').value;
+                
+                filteredMedications = allMedications.filter(med => {
+                    const matchesCategory = selectedCategory === 'all' || med.category === selectedCategory;
+                    const matchesSearch = med.name.toLowerCase().includes(searchTerm) ||
+                                         med.indication.toLowerCase().includes(searchTerm) ||
+                                         med.category.toLowerCase().includes(searchTerm);
+                    
+                    return matchesCategory && matchesSearch;
+                });
+                
+                updateStatistics();
+                renderMedications();
+            }
+
+            function renderMedications() {
+                const container = document.getElementById('medications-grid');
+                const noResults = document.getElementById('no-results');
+                
+                if (filteredMedications.length === 0) {
+                    container.style.display = 'none';
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+                
+                container.style.display = 'grid';
+                noResults.classList.add('hidden');
+                
+                container.innerHTML = filteredMedications.map(med => `
+                    <div class="medication-card" onclick="openMedicationModal('${med.id}')">
+                        <div>
+                            <h3 class="medication-name">${med.name}</h3>
+                            <p class="medication-category">${med.category}</p>
+                            <p class="medication-indication">${med.indication}</p>
+                        </div>
+                        ${med.hasCalculator ? '<div class="calculator-badge" title="Calculadora disponible">🧮</div>' : ''}
+                    </div>
+                `).join('');
+            }
+
+            window.openMedicationModal = function(medicationId) {
+                currentMedication = allMedications.find(med => med.id === medicationId);
+                if (!currentMedication) return;
+                
+                document.getElementById('modal-title').textContent = currentMedication.name;
+                document.getElementById('modal-category').textContent = currentMedication.category;
+                document.getElementById('modal-indication').textContent = currentMedication.indication;
+                document.getElementById('modal-mechanism').textContent = currentMedication.fichaTecnica.mecanismo;
+                document.getElementById('modal-posology').textContent = currentMedication.fichaTecnica.posologia;
+                document.getElementById('modal-side-effects').textContent = currentMedication.fichaTecnica.efectosAdversos;
+                document.getElementById('modal-contraindications').textContent = currentMedication.fichaTecnica.contraindicaciones;
+                
+                const calculatorTab = document.getElementById('calculator-tab');
+                const modalTabs = document.getElementById('modal-tabs');
+
+                if (currentMedication.hasCalculator) {
+                    calculatorTab.style.display = 'flex';
+                    modalTabs.style.display = 'flex';
+                    generateCalculator(currentMedication.calculatorType);
+                } else {
+                    calculatorTab.style.display = 'none';
+                    modalTabs.style.display = 'none';
+                }
+                
+                switchTab('info');
+                
+                document.getElementById('medication-modal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            window.closeMedicationModal = function() {
+                document.getElementById('medication-modal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                currentMedication = null;
+            }
+
+            window.switchTab = function(tab) {
+                activeTab = tab;
+                
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`.tab-button[onclick="switchTab('${tab}')"]`).classList.add('active');
+                
+                document.getElementById('tab-info').classList.toggle('hidden', tab !== 'info');
+                document.getElementById('tab-calculator').classList.toggle('hidden', tab !== 'calculator');
+            }
+
+            function generateCalculator(type) {
+                const container = document.getElementById('calculator-content');
+                
+                switch (type) {
+                    case 'APIXABAN':
+                        container.innerHTML = getApixabanCalculator();
+                        break;
+                    case 'SITAGLIPTIN':
+                        container.innerHTML = getSitagliptinCalculator();
+                        break;
+                    case 'CLOZAPINA':
+                        container.innerHTML = getClozapineCalculator();
+                        break;
+                    case 'EPOETIN':
+                        container.innerHTML = getEpoetinCalculator();
+                        break;
+                    case 'TOLVAPTAN':
+                        container.innerHTML = getTolvaptanCalculator();
+                        break;
+                    case 'AMIODARONE':
+                        container.innerHTML = getAmiodaroneCalculator();
+                        break;
+                    case 'CINACALCET':
+                        container.innerHTML = getCinacalcetCalculator();
+                        break;
+                    default:
+                        container.innerHTML = '<p>Calculadora no disponible.</p>';
+                }
+            }
+
+            function getApixabanCalculator() {
+                return `
+                    <h4 class="calculator-title">Calculadora de Dosis de Apixaban</h4>
+                    <p class="calculator-subtitle">Basado en criterios de reducción de dosis para FANV.</p>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Edad (años)</label>
+                        <input type="number" id="apixaban-age" class="calc-input" oninput="calculateApixaban()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Peso (kg)</label>
+                        <input type="number" id="apixaban-weight" class="calc-input" oninput="calculateApixaban()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Creatinina Sérica (mg/dL)</label>
+                        <input type="number" step="0.1" id="apixaban-creatinine" class="calc-input" oninput="calculateApixaban()">
+                    </div>
+                    <div id="apixaban-result" class="calc-result">
+                        <div class="calc-result-value">Introduzca todos los valores.</div>
+                    </div>
+                `;
+            }
+
+            window.calculateApixaban = function() {
+                const age = parseFloat(document.getElementById('apixaban-age').value);
+                const weight = parseFloat(document.getElementById('apixaban-weight').value);
+                const creatinine = parseFloat(document.getElementById('apixaban-creatinine').value);
+                const resultDiv = document.getElementById('apixaban-result');
+                
+                if (isNaN(age) || isNaN(weight) || isNaN(creatinine)) {
+                    resultDiv.innerHTML = '<div class="calc-result-value">Introduzca todos los valores.</div>';
+                    return;
+                }
+                
+                let criteriaCount = 0;
+                if (age >= 80) criteriaCount++;
+                if (weight <= 60) criteriaCount++;
+                if (creatinine >= 1.5) criteriaCount++;
+                
+                const dose = criteriaCount >= 2 
+                    ? "Dosis recomendada: 2.5 mg dos veces al día."
+                    : "Dosis recomendada: 5 mg dos veces al día.";
+                
+                resultDiv.innerHTML = `<div class="calc-result-value">${dose}</div>`;
+            }
+
+            function getSitagliptinCalculator() {
+                return `
+                    <h4 class="calculator-title">Ajuste de Dosis de Sitagliptina por Función Renal</h4>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Tasa de Filtración Glomerular (TFG) (ml/min)</label>
+                        <input type="number" id="sitagliptin-gfr" class="calc-input" oninput="calculateSitagliptin()">
+                    </div>
+                    <div id="sitagliptin-result" class="calc-result">
+                        <div class="calc-result-value">Introduzca el valor de TFG.</div>
+                    </div>
+                `;
+            }
+
+            window.calculateSitagliptin = function() {
+                const gfr = parseFloat(document.getElementById('sitagliptin-gfr').value);
+                const resultDiv = document.getElementById('sitagliptin-result');
+                
+                if (isNaN(gfr)) {
+                    resultDiv.innerHTML = '<div class="calc-result-value">Introduzca el valor de TFG.</div>';
+                    return;
+                }
+                
+                let dose;
+                if (gfr >= 45) {
+                    dose = "Dosis recomendada: 100 mg una vez al día.";
+                } else if (gfr >= 30) {
+                    dose = "Dosis recomendada: 50 mg una vez al día.";
+                } else {
+                    dose = "Dosis recomendada: 25 mg una vez al día.";
+                }
+                
+                resultDiv.innerHTML = `<div class="calc-result-value">${dose}</div>`;
+            }
+
+            function getClozapineCalculator() {
+                return `
+                    <h4 class="calculator-title">Esquema de Titulación de Clozapina</h4>
+                    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0;">
+                        <ul style="list-style: disc; margin-left: 1.5rem; line-height: 1.6;">
+                            <li><strong>Día 1:</strong> 12.5 mg una o dos veces al día.</li>
+                            <li><strong>Día 2:</strong> 25 mg una o dos veces al día.</li>
+                            <li><strong>Incrementos:</strong> Aumentar en 25-50 mg/día hasta objetivo de 300-450 mg/día en 2-3 semanas.</li>
+                            <li><strong>Dosis máxima:</strong> 900 mg/día.</li>
+                        </ul>
+                    </div>
+                    <div class="alert-box alert-danger">
+                        <strong>¡ALERTA!</strong> Requiere monitorización hematológica semanal durante las primeras 18 semanas, luego mensual.
+                    </div>
+                `;
+            }
+
+            function getEpoetinCalculator() {
+                return `
+                    <h4 class="calculator-title">Calculadora de Dosis de Epoetina Alfa (Anemia en IRC)</h4>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Peso (kg)</label>
+                        <input type="number" id="epoetin-weight" class="calc-input" oninput="calculateEpoetin()">
+                    </div>
+                    <div id="epoetin-result" class="calc-result">
+                        <div class="calc-result-value">Introduzca el peso del paciente.</div>
+                        <div class="calc-result-note">Ajustar según respuesta de Hemoglobina. Objetivo: 10-12 g/dL.</div>
+                    </div>
+                `;
+            }
+
+            window.calculateEpoetin = function() {
+                const weight = parseFloat(document.getElementById('epoetin-weight').value);
+                const resultDiv = document.getElementById('epoetin-result');
+                
+                if (isNaN(weight)) {
+                    resultDiv.innerHTML = `
+                        <div class="calc-result-value">Introduzca el peso del paciente.</div>
+                        <div class="calc-result-note">Ajustar según respuesta de Hemoglobina. Objetivo: 10-12 g/dL.</div>
+                    `;
+                    return;
+                }
+                
+                const initialDose = weight * 50;
+                resultDiv.innerHTML = `
+                    <div class="calc-result-value">Dosis inicial recomendada: ${initialDose.toLocaleString()} UI, 3 veces por semana.</div>
+                    <div class="calc-result-note">Ajustar según respuesta de Hemoglobina. Objetivo: 10-12 g/dL.</div>
+                `;
+            }
+
+            function getTolvaptanCalculator() {
+                return `
+                    <h4 class="calculator-title">Guía Rápida de Tolvaptán</h4>
+                    <div style="display: grid; gap: 1rem; margin: 1rem 0;">
+                        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 0.5rem;">Hiponatremia (SIADH)</h5>
+                            <p style="color: #6b7280; margin: 0;">Dosis inicial: 15 mg/día. Titular a 30-60 mg/día. No usar >30 días. Corregir sodio lentamente.</p>
+                        </div>
+                        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 0.5rem;">Poliquistosis Renal (PQRAD)</h5>
+                            <p style="color: #6b7280; margin: 0;">Dosis inicial: 60 mg/día (45+15). Titular a 90 mg/día (60+30) o 120 mg/día (90+30).</p>
+                        </div>
+                    </div>
+                    <div class="alert-box alert-warning">
+                        <strong>¡ALERTA!</strong> Riesgo de hepatotoxicidad. Monitorizar enzimas hepáticas antes de iniciar y mensualmente durante 18 meses.
+                    </div>
+                `;
+            }
+
+            function getAmiodaroneCalculator() {
+                return `
+                    <h4 class="calculator-title">Guía de Dosificación de Amiodarona</h4>
+                    <div style="display: grid; gap: 1rem; margin: 1rem 0;">
+                        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 0.5rem;">Dosis de Carga Oral</h5>
+                            <p style="color: #6b7280; margin: 0;">800-1600 mg/día durante 1-3 semanas, luego reducir a 600-800 mg/día durante 1 mes.</p>
+                        </div>
+                        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 0.5rem;">Dosis de Mantenimiento</h5>
+                            <p style="color: #6b7280; margin: 0;">Dosis efectiva más baja, usualmente 200 mg/día. Algunos pacientes pueden requerir hasta 400 mg/día.</p>
+                        </div>
+                    </div>
+                    <div class="alert-box alert-danger">
+                        <strong>¡ALERTA!</strong> Múltiples toxicidades (pulmonar, hepática, tiroidea). Monitorización periódica es crucial.
+                    </div>
+                `;
+            }
+
+            function getCinacalcetCalculator() {
+                return `
+                    <h4 class="calculator-title">Guía de Ajuste de Cinacalcet (Hiperparatiroidismo 2º)</h4>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Nivel de PTHi (pg/mL)</label>
+                        <input type="number" id="cinacalcet-pth" class="calc-input" oninput="calculateCinacalcet()">
+                    </div>
+                    <div id="cinacalcet-result" class="calc-result">
+                        <div class="calc-result-value">Introduzca el nivel de PTH.</div>
+                        <div class="calc-result-note">Siempre verificar niveles de Calcio y Fósforo antes de ajustar.</div>
+                    </div>
+                `;
+            }
+
+            window.calculateCinacalcet = function() {
+                const pth = parseFloat(document.getElementById('cinacalcet-pth').value);
+                const resultDiv = document.getElementById('cinacalcet-result');
+                
+                if (isNaN(pth)) {
+                    resultDiv.innerHTML = `
+                        <div class="calc-result-value">Introduzca el nivel de PTH.</div>
+                        <div class="calc-result-note">Siempre verificar niveles de Calcio y Fósforo antes de ajustar.</div>
+                    `;
+                    return;
+                }
+                
+                let advice;
+                if (pth > 300) {
+                    advice = "Considerar iniciar o aumentar dosis de Cinacalcet.";
+                } else if (pth < 150) {
+                    advice = "Considerar reducir o suspender Cinacalcet.";
+                } else {
+                    advice = "Nivel de PTH en rango objetivo (150-300 pg/mL). Mantener dosis actual.";
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="calc-result-value">${advice}</div>
+                    <div class="calc-result-note">Siempre verificar niveles de Calcio y Fósforo antes de ajustar.</div>
+                `;
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            window.showMobileFilters = function() {
+                document.getElementById('category-select').focus();
+            }
+
+            initializePage();
+            setupEventListeners();
+        });
+
+        // Common login functions
+        function showLogin() {
+            window.location.href = 'academia.html';
+        }
+    </script>
 </body>
 </html>
+

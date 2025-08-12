@@ -527,14 +527,18 @@ class AcademiaUmbramed {
                 return this.renderImportDialogView();
             case 'question-analytics':
                 return this.renderQuestionAnalyticsView();
+            case 'test':
+                return this.renderTestView();
+            case 'test-results':
+                return this.renderTestResultsView();
+            case 'detailed-results':
+                return this.renderDetailedResultsView();
             case 'profile':
                 return this.renderProfileView();
             case 'course':
                 return this.renderCourseView();
             case 'category':
                 return this.renderCategoryView();
-            case 'test':
-                return this.renderTestView();
             case 'results':
                 return this.renderResultsView();
             default:

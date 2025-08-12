@@ -1,0 +1,217 @@
+[
+    {
+        "id": "apixaban",
+        "name": "Apixaban",
+        "category": "Anticoagulantes",
+        "indication": "Prevención de ictus y embolia sistémica en pacientes con fibrilación auricular no valvular.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor oral, potente, reversible, directo y altamente selectivo del factor Xa.",
+            "posologia": "Dosis recomendada: 5 mg dos veces al día. Reducir a 2.5 mg dos veces al día si cumple ≥2 criterios (edad ≥80, peso ≤60kg, Cr ≥1.5mg/dL).",
+            "efectosAdversos": "Sangrado (principalmente), anemia, náuseas.",
+            "contraindicaciones": "Sangrado activo clínicamente significativo, hepatopatía asociada a coagulopatía."
+        },
+        "hasCalculator": true,
+        "calculatorType": "APIXABAN"
+    },
+    {
+        "id": "rivaroxaban",
+        "name": "Rivaroxaban",
+        "category": "Anticoagulantes",
+        "indication": "Tratamiento de la trombosis venosa profunda (TVP) y de la embolia pulmonar (EP).",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor oral, directo y altamente selectivo del factor Xa.",
+            "posologia": "Varía según indicación. Para TVP/EP: 15 mg dos veces al día durante 3 semanas, luego 20 mg una vez al día. Ajuste en IR.",
+            "efectosAdversos": "Hemorragias, mareo, cefalea, anemia.",
+            "contraindicaciones": "Hemorragia activa, enfermedad hepática con coagulopatía."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "dabigatran",
+        "name": "Dabigatrán",
+        "category": "Anticoagulantes",
+        "indication": "Prevención primaria de episodios tromboembólicos venosos en cirugía de reemplazo de cadera o rodilla.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor directo, competitivo y reversible de la trombina.",
+            "posologia": "150 mg dos veces al día o 110 mg dos veces al día en pacientes seleccionados. Requiere ajuste renal.",
+            "efectosAdversos": "Sangrado, dispepsia, dolor abdominal.",
+            "contraindicaciones": "Sangrado activo, insuficiencia renal grave (CrCl < 30 ml/min)."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "edoxaban",
+        "name": "Edoxaban",
+        "category": "Anticoagulantes",
+        "indication": "Tratamiento de trombosis venosa profunda y embolia pulmonar.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor oral directo del factor Xa.",
+            "posologia": "60 mg una vez al día (30 mg si CrCl 30-50 ml/min, peso ≤60kg, o uso concomitante de ciertos inhibidores P-gp).",
+            "efectosAdversos": "Sangrado, anemia, erupción cutánea.",
+            "contraindicaciones": "Sangrado activo, insuficiencia renal grave."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "sitagliptin",
+        "name": "Sitagliptina",
+        "category": "Antidiabéticos",
+        "indication": "Tratamiento de la diabetes mellitus tipo 2 como monoterapia o en combinación.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor de la dipeptidil peptidasa-4 (DPP-4) que aumenta los niveles de GLP-1 y GIP.",
+            "posologia": "100 mg una vez al día. Ajuste en insuficiencia renal: 50 mg (TFG 30-50) o 25 mg (TFG <30).",
+            "efectosAdversos": "Infecciones del tracto respiratorio superior, cefalea, osteoartritis.",
+            "contraindicaciones": "Hipersensibilidad al principio activo. Precaución en pancreatitis aguda."
+        },
+        "hasCalculator": true,
+        "calculatorType": "SITAGLIPTIN"
+    },
+    {
+        "id": "empagliflozin",
+        "name": "Empagliflozina",
+        "category": "Antidiabéticos",
+        "indication": "Tratamiento de diabetes mellitus tipo 2 e insuficiencia cardíaca.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor del cotransportador sodio-glucosa tipo 2 (SGLT2) en el túbulo proximal renal.",
+            "posologia": "10 mg una vez al día, puede aumentarse a 25 mg. Suspender si TFG <30 ml/min/1.73m².",
+            "efectosAdversos": "Infecciones genitourinarias, poliuria, hipotensión.",
+            "contraindicaciones": "Diabetes tipo 1, cetoacidosis diabética, insuficiencia renal grave."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "clozapine",
+        "name": "Clozapina",
+        "category": "Psiquiatría",
+        "indication": "Esquizofrenia resistente al tratamiento y reducción del riesgo de comportamiento suicida.",
+        "fichaTecnica": {
+            "mecanismo": "Antipsicótico atípico con afinidad por receptores D1, D2, 5-HT2, α-adrenérgicos y muscarínicos.",
+            "posologia": "Inicio: 12.5 mg 1-2 veces/día. Titular gradualmente hasta 300-450 mg/día. Máximo: 900 mg/día.",
+            "efectosAdversos": "Sedación, hipersalivación, taquicardia, estreñimiento, agranulocitosis.",
+            "contraindicaciones": "Antecedentes de agranulocitosis, epilepsia no controlada, íleo paralítico."
+        },
+        "hasCalculator": true,
+        "calculatorType": "CLOZAPINA"
+    },
+    {
+        "id": "olanzapine",
+        "name": "Olanzapina",
+        "category": "Psiquiatría",
+        "indication": "Tratamiento de esquizofrenia y episodios maníacos moderados a severos.",
+        "fichaTecnica": {
+            "mecanismo": "Antipsicótico atípico con actividad antagonista sobre receptores dopaminérgicos y serotoninérgicos.",
+            "posologia": "5-10 mg/día inicial. Rango terapéutico: 5-20 mg/día. Ajustar según respuesta clínica.",
+            "efectosAdversos": "Aumento de peso, somnolencia, mareo, estreñimiento, xerostomía.",
+            "contraindicaciones": "Hipersensibilidad, glaucoma de ángulo cerrado, hipertrofia prostática."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "epoetin",
+        "name": "Epoetina Alfa",
+        "category": "Nefrología",
+        "indication": "Tratamiento de la anemia asociada a insuficiencia renal crónica.",
+        "fichaTecnica": {
+            "mecanismo": "Eritropoyetina recombinante humana que estimula la eritropoyesis.",
+            "posologia": "Inicial: 50 UI/kg, 3 veces/semana SC o IV. Ajustar según niveles de Hb objetivo (10-12 g/dL).",
+            "efectosAdversos": "Hipertensión, cefalea, síntomas gripales, trombosis vascular.",
+            "contraindicaciones": "Hipertensión no controlada, hipersensibilidad a proteínas derivadas de células de mamífero."
+        },
+        "hasCalculator": true,
+        "calculatorType": "EPOETIN"
+    },
+    {
+        "id": "tolvaptan",
+        "name": "Tolvaptán",
+        "category": "Nefrología",
+        "indication": "Hiponatremia hipervolémica e isovolémica, y poliquistosis renal autosómica dominante.",
+        "fichaTecnica": {
+            "mecanismo": "Antagonista selectivo del receptor de vasopresina V2 que induce diuresis acuosa.",
+            "posologia": "Hiponatremia: 15 mg/día inicial, titular hasta 30-60 mg/día. PQRAD: inicio con 60 mg/día.",
+            "efectosAdversos": "Sed, poliuria, fatiga, mareo, hepatotoxicidad.",
+            "contraindicaciones": "Incapacidad para percibir sed, hipovolemia, anuria."
+        },
+        "hasCalculator": true,
+        "calculatorType": "TOLVAPTAN"
+    },
+    {
+        "id": "amiodarone",
+        "name": "Amiodarona",
+        "category": "Cardiología",
+        "indication": "Tratamiento de arritmias ventriculares y supraventriculares graves.",
+        "fichaTecnica": {
+            "mecanismo": "Antiarrítmico clase III que bloquea canales de potasio, prolonga el período refractario.",
+            "posologia": "Carga: 800-1600 mg/día por 1-3 semanas. Mantenimiento: 200-400 mg/día.",
+            "efectosAdversos": "Toxicidad pulmonar, hepatotoxicidad, disfunción tiroidea, fotosensibilidad.",
+            "contraindicaciones": "Bradicardia sinusal severa, bloqueo AV de alto grado, disfunción tiroidea."
+        },
+        "hasCalculator": true,
+        "calculatorType": "AMIODARONE"
+    },
+    {
+        "id": "atorvastatin",
+        "name": "Atorvastatina",
+        "category": "Cardiología",
+        "indication": "Tratamiento de hipercolesterolemia y prevención cardiovascular.",
+        "fichaTecnica": {
+            "mecanismo": "Inhibidor de la HMG-CoA reductasa que reduce la síntesis de colesterol.",
+            "posologia": "10-20 mg/día inicial. Rango: 10-80 mg/día según objetivos de LDL.",
+            "efectosAdversos": "Mialgia, elevación de transaminasas, cefalea, dispepsia.",
+            "contraindicaciones": "Enfermedad hepática activa, embarazo, lactancia."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "cinacalcet",
+        "name": "Cinacalcet",
+        "category": "Endocrinología",
+        "indication": "Hiperparatiroidismo secundario en pacientes con insuficiencia renal crónica en diálisis.",
+        "fichaTecnica": {
+            "mecanismo": "Calcimimético que activa el receptor sensor de calcio en las glándulas paratiroides.",
+            "posologia": "Inicial: 30 mg/día. Titular cada 2-4 semanas hasta máximo 180 mg/día.",
+            "efectosAdversos": "Náuseas, vómitos, diarrea, mialgia, mareo.",
+            "contraindicaciones": "Hipocalcemia, hipersensibilidad al principio activo."
+        },
+        "hasCalculator": true,
+        "calculatorType": "CINACALCET"
+    },
+    {
+        "id": "levothyroxine",
+        "name": "Levotiroxina",
+        "category": "Endocrinología",
+        "indication": "Tratamiento del hipotiroidismo y supresión de TSH en cáncer de tiroides.",
+        "fichaTecnica": {
+            "mecanismo": "Hormona tiroidea sintética que reemplaza la tiroxina endógena deficiente.",
+            "posologia": "1.6 μg/kg/día en adultos. Ajustar según niveles de TSH cada 6-8 semanas.",
+            "efectosAdversos": "Síntomas de hipertiroidismo si sobredosificación: taquicardia, ansiedad, insomnio.",
+            "contraindicaciones": "Tirotoxicosis, infarto agudo de miocardio, insuficiencia suprarrenal no tratada."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "bevacizumab",
+        "name": "Bevacizumab",
+        "category": "Oncología",
+        "indication": "Tratamiento de cáncer colorrectal metastásico, cáncer de pulmón no microcítico, cáncer renal.",
+        "fichaTecnica": {
+            "mecanismo": "Anticuerpo monoclonal humanizado que inhibe el factor de crecimiento endotelial vascular (VEGF).",
+            "posologia": "5-10 mg/kg cada 2 semanas o 7.5-15 mg/kg cada 3 semanas según protocolo.",
+            "efectosAdversos": "Hipertensión, proteinuria, hemorragia, tromboembolismo, perforación GI.",
+            "contraindicaciones": "Hemorragia reciente, cirugía mayor reciente, hipertensión no controlada."
+        },
+        "hasCalculator": false
+    },
+    {
+        "id": "levetiracetam",
+        "name": "Levetiracetam",
+        "category": "Neurología",
+        "indication": "Tratamiento de epilepsia como monoterapia y terapia complementaria.",
+        "fichaTecnica": {
+            "mecanismo": "Antiepiléptico que modula la liberación de neurotransmisores a través de la proteína SV2A.",
+            "posologia": "Inicial: 500 mg dos veces/día. Titular hasta 1000-1500 mg dos veces/día.",
+            "efectosAdversos": "Somnolencia, astenia, mareo, cambios de comportamiento, agresividad.",
+            "contraindicaciones": "Hipersensibilidad. Precaución en insuficiencia renal."
+        },
+        "hasCalculator": false
+    }
+]

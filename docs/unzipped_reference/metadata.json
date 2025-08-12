@@ -1,0 +1,6 @@
+{
+  "name": "Guía de Cuidado Paliativo Asistida por IA",
+  "description": "Una herramienta de apoyo para médicos y familiares de pacientes en cuidados paliativos. Ofrece un verificador de interacciones de medicamentos para perfusiones, guías de dosificación generadas por IA y consejos prácticos y empáticos para el cuidado al final de la vida.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

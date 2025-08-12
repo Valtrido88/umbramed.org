@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Apoyo en Cuidados Paliativos - umbramed.org</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header-container">
+        <div class="logo-container">
+            <a href="../index.html"><img src="https://i.imgur.com/5f5Bqf8.png" alt="Logo Umbramed" class="logo"></a>
+            <h1>umbramed.org</h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="../herramientas.html">Herramientas</a></li>
+                <li><a href="../academia.html">Academia</a></li>
+                <li><a href="../software.html">Software</a></li>
+                <li><a href="../mi-perfil.html">Mi Perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div id="pali-assist-container" class="pali-assist-container">
+            <!-- Home View: Role Selection -->
+            <div id="home-view">
+                <div class="text-center">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-700 mb-2">Bienvenido a la Guía de Apoyo</h2>
+                    <p class="text-slate-500 mb-12 max-w-2xl mx-auto">Seleccione su rol para acceder a las herramientas y recursos personalizados.</p>
+                    <div class="role-selection-container">
+                        <div class="role-card" id="physician-role-card">
+                            <div class="role-icon"><i class="fas fa-stethoscope"></i></div>
+                            <h3 class="role-title">Soy Médico</h3>
+                            <p class="role-description">Acceda al verificador de interacciones en perfusiones y a guías de dosificación.</p>
+                        </div>
+                        <div class="role-card" id="family-role-card">
+                            <div class="role-icon"><i class="fas fa-users"></i></div>
+                            <h3 class="role-title">Soy Familiar o Cuidador</h3>
+                            <p class="role-description">Encuentre consejos prácticos y apoyo emocional para acompañar a su ser querido.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physician View -->
+            <div id="physician-view" class="hidden">
+                <button class="back-button">&larr; Volver a la selección de rol</button>
+                <div class="view-content">
+                    <h2 class="view-title">Herramientas para Médicos</h2>
+                    <p class="view-description">Utilice el verificador de compatibilidad para perfusiones subcutáneas y genere guías de preparación.</p>
+                    
+                    <div id="drug-interaction-checker" class="space-y-6">
+                        <div>
+                            <label for="drug-select" class="form-label">Añadir Fármaco a la Perfusión</label>
+                            <div class="flex gap-2">
+                                <select id="drug-select" class="form-select">
+                                    <option value="">Seleccione un fármaco...</option>
+                                </select>
+                                <button id="add-drug-btn" class="button-primary-icon"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold">Fármacos en la Perfusión:</h4>
+                            <ul id="selected-drugs-list" class="mt-2 space-y-2"></ul>
+                            <p id="no-drugs-message" class="text-slate-500 mt-2 text-sm">Añada fármacos para comenzar.</p>
+                        </div>
+
+                        <div id="interaction-warning" class="alert-warning hidden">
+                            <div class="flex">
+                                <div class="flex-shrink-0"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="ml-3">
+                                    <h3 class="alert-title">Alerta de Interacción</h3>
+                                    <div class="mt-2 text-sm" id="interaction-warning-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <button id="generate-protocol-btn" class="button-primary w-full" disabled>Generar Guía de Preparación y Dosificación</button>
+                            <p id="protocol-error-message" class="text-xs text-center text-red-600 mt-2 hidden">Corrija las interacciones antes de generar la guía.</p>
+                        </div>
+
+                        <div id="protocol-spinner" class="spinner-container hidden"><div class="spinner"></div></div>
+
+                        <div id="protocol-output" class="output-container hidden">
+                            <h3 class="output-title">Guía de Preparación Sugerida</h3>
+                            <div id="protocol-content" class="prose"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family View -->
+            <div id="family-view" class="hidden">
+                <button class="back-button">&larr; Volver a la selección de rol</button>
+                <div class="view-content">
+                    <div class="flex items-start mb-4">
+                        <div class="text-sky-500 mr-4 mt-1 flex-shrink-0"><i class="fas fa-book-open"></i></div>
+                        <div>
+                            <h2 class="view-title">Carta de Apoyo para la Familia</h2>
+                            <p class="view-description">Una guía unificada con consejos para comprender y acompañar en el proceso final de la vida.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div id="generate-letter-container" class="text-center">
+                            <p class="mb-4 text-slate-600">Haga clic en el botón para generar una carta con información y apoyo práctico.</p>
+                            <button id="generate-letter-btn" class="button-primary max-w-xs mx-auto">Generar Carta</button>
+                        </div>
+
+                        <div id="letter-spinner" class="spinner-container hidden"><div class="spinner"></div></div>
+
+                        <div id="letter-output" class="hidden">
+                            <div id="letter-content" class="prose"></div>
+                            <div class="mt-8 text-right">
+                                <button id="print-letter-btn" class="button-secondary">
+                                    <i class="fas fa-print"></i>
+                                    <span class="ml-2">Imprimir Carta</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 umbramed.org. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="../js/cuidados-paliativos-ia.js"></script>
+</body>
+</html>

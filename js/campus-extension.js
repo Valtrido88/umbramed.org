@@ -930,5 +930,893 @@ Object.assign(AcademiaUmbramed.prototype, {
                 </button>
             </div>
         `;
+    },
+    
+    // === FUNCIONES PARA TESTS Y SIMULACROS ===
+    
+    filterByCategory(category) {
+        // Filtrar preguntas por categoría específica
+        this.currentCategory = category;
+        this.startCategoryTest(category, this.currentQuestionBank);
+    },
+    
+    startRandomTest(bankId) {
+        const specialty = this.specialties[this.currentSpecialty];
+        const bank = specialty.questionBanks[bankId];
+        
+        if (!bank.questions || bank.questions.length === 0) {
+            alert('⚠️ Este banco no tiene preguntas disponibles.\n\nAgrega preguntas primero para poder realizar el test.');
+            return;
+        }
+        
+        // Configurar test aleatorio
+        this.currentTest = {
+            bankId: bankId,
+            bankName: bank.name,
+            questions: this.shuffleArray([...bank.questions]),
+            currentQuestionIndex: 0,
+            answers: [],
+            startTime: new Date(),
+            isRandom: true
+        };
+        
+        this.currentView = 'test';
+        this.render();
+    },
+    
+    startCategoryTest(category, bankId) {
+        const specialty = this.specialties[this.currentSpecialty];
+        const bank = specialty.questionBanks[bankId];
+        
+        const categoryQuestions = bank.questions.filter(q => q.category === category);
+        
+        if (categoryQuestions.length === 0) {
+            alert(`⚠️ No hay preguntas disponibles en la categoría "${category}".\n\nAgrega preguntas a esta categoría primero.`);
+            return;
+        }
+        
+        // Configurar test por categoría
+        this.currentTest = {
+            bankId: bankId,
+            bankName: bank.name,
+            category: category,
+            questions: this.shuffleArray([...categoryQuestions]),
+            currentQuestionIndex: 0,
+            answers: [],
+            startTime: new Date(),
+            isCategory: true
+        };
+        
+        this.currentView = 'test';
+        this.render();
+    },
+    
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    },
+    
+    selectTestAnswer(answerIndex, element) {
+        // Guardar la respuesta seleccionada
+        if (!this.currentTest.answers) {
+            this.currentTest.answers = [];
+        }
+        
+        this.currentTest.answers[this.currentTest.currentQuestionIndex] = answerIndex;
+        
+        // Actualizar visualmente la selección
+        const allLabels = element.parentNode.querySelectorAll('label');
+        allLabels.forEach(label => {
+            label.style.borderColor = '#e9ecef';
+            label.style.background = 'white';
+        });
+        
+        const bank = this.specialties[this.currentSpecialty].questionBanks[this.currentTest.bankId];
+        element.style.borderColor = bank.color;
+        element.style.background = bank.color + '20';
+    },
+    
+    previousQuestion() {
+        if (this.currentTest.currentQuestionIndex > 0) {
+            this.currentTest.currentQuestionIndex--;
+            this.render();
+        }
+    },
+    
+    nextQuestion() {
+        if (this.currentTest.currentQuestionIndex < this.currentTest.questions.length - 1) {
+            this.currentTest.currentQuestionIndex++;
+            this.render();
+        }
+    },
+    
+    exitTest() {
+        if (confirm('¿Estás seguro de que quieres salir del test?\n\nSe perderá todo el progreso actual.')) {
+            this.currentTest = null;
+            this.openQuestionBank(this.currentQuestionBank);
+        }
+    },
+    
+    finishTest() {
+        const unanswered = this.currentTest.questions.length - this.currentTest.answers.filter(a => a !== undefined).length;
+        
+        if (unanswered > 0) {
+            if (!confirm(`Tienes ${unanswered} pregunta(s) sin responder.\n\n¿Quieres finalizar el test de todas formas?`)) {
+                return;
+            }
+        }
+        
+        // Calcular resultados
+        this.calculateTestResults();
+        this.currentView = 'test-results';
+        this.render();
+    },
+    
+    calculateTestResults() {
+        const test = this.currentTest;
+        let correct = 0;
+        let incorrect = 0;
+        let unanswered = 0;
+        
+        const results = test.questions.map((question, index) => {
+            const userAnswer = test.answers[index];
+            const isCorrect = userAnswer === question.correct;
+            
+            if (userAnswer === undefined) {
+                unanswered++;
+                return { ...question, userAnswer: null, isCorrect: false, status: 'unanswered' };
+            } else if (isCorrect) {
+                correct++;
+                return { ...question, userAnswer, isCorrect: true, status: 'correct' };
+            } else {
+                incorrect++;
+                return { ...question, userAnswer, isCorrect: false, status: 'incorrect' };
+            }
+        });
+        
+        const endTime = new Date();
+        const totalTime = Math.floor((endTime - test.startTime) / 1000);
+        const percentage = ((correct / test.questions.length) * 100).toFixed(1);
+        
+        this.testResults = {
+            ...test,
+            endTime,
+            totalTime,
+            correct,
+            incorrect,
+            unanswered,
+            percentage,
+            results,
+            passed: percentage >= 70 // Criterio de aprobado
+    },
+    
+    },
+    
+    renderTestView() {
+        if (!this.currentTest || !this.currentTest.questions) {
+            return '<div>Error: No hay test configurado</div>';
+        }
+        
+        const test = this.currentTest;
+        const currentQuestion = test.questions[test.currentQuestionIndex];
+        const progress = ((test.currentQuestionIndex + 1) / test.questions.length) * 100;
+        const timeElapsed = Math.floor((new Date() - test.startTime) / 1000);
+        const minutes = Math.floor(timeElapsed / 60);
+        const seconds = timeElapsed % 60;
+        
+        const specialty = this.specialties[this.currentSpecialty];
+        const bank = specialty.questionBanks[test.bankId];
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${specialty.name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${test.bankId}')">${test.bankName}</a> >
+                <span>Test en Curso</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; 
+                           padding: 1.5rem; background: ${bank.color}15; border-radius: 15px; border-left: 5px solid ${bank.color};">
+                    <div>
+                        <h1 style="color: var(--accent-black); font-size: 1.8rem; font-weight: 700; margin: 0;">
+                            ${bank.icon} ${test.bankName}
+                        </h1>
+                        <p style="color: var(--text-light); margin: 0.5rem 0 0;">
+                            ${test.isCategory ? `Categoría: ${test.category}` : 'Test Aleatorio'} | 
+                            Pregunta ${test.currentQuestionIndex + 1} de ${test.questions.length}
+                        </p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: ${bank.color};">
+                            ⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">Tiempo transcurrido</div>
+                    </div>
+                </div>
+                
+                <!-- Barra de progreso -->
+                <div style="background: #e9ecef; border-radius: 10px; height: 8px; margin-bottom: 2rem; overflow: hidden;">
+                    <div style="background: ${bank.color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
+                </div>
+                
+                <!-- Pregunta actual -->
+                <div style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; 
+                           box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: ${bank.color}; color: white; border-radius: 10px; 
+                                   padding: 0.5rem 1rem; font-weight: 700; font-size: 0.9rem;">
+                            ${currentQuestion.category}
+                        </div>
+                        <div style="background: ${bank.color}30; color: ${bank.color}; border-radius: 10px; 
+                                   padding: 0.5rem 1rem; font-weight: 600; font-size: 0.9rem;">
+                            ${currentQuestion.difficulty}
+                        </div>
+                    </div>
+                    
+                    <h2 style="color: var(--accent-black); font-size: 1.4rem; font-weight: 600; 
+                              line-height: 1.6; margin-bottom: 2rem;">
+                        ${test.currentQuestionIndex + 1}. ${currentQuestion.question}
+                    </h2>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        ${currentQuestion.options.map((option, index) => `
+                            <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; 
+                                          border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; 
+                                          transition: all 0.3s ease; background: white;
+                                          ${test.answers && test.answers[test.currentQuestionIndex] === index ? 
+                                            `border-color: ${bank.color}; background: ${bank.color}20;` : ''}"
+                                   onmouseover="this.style.borderColor='${bank.color}'; this.style.background='${bank.color}10';"
+                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e9ecef'; this.style.background='white'; }"
+                                   onclick="academiaUmbramed.selectTestAnswer(${index}, this)">
+                                <input type="radio" name="test-answer" value="${index}" 
+                                       ${test.answers && test.answers[test.currentQuestionIndex] === index ? 'checked' : ''}
+                                       style="width: 20px; height: 20px; accent-color: ${bank.color};">
+                                <div style="flex: 1;">
+                                    <span style="font-weight: 600; color: ${bank.color}; margin-right: 0.5rem;">
+                                        ${String.fromCharCode(65 + index)})
+                                    </span>
+                                    ${option}
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Botones de navegación -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button onclick="academiaUmbramed.previousQuestion()" 
+                            ${test.currentQuestionIndex === 0 ? 'disabled' : ''}
+                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer; 
+                                   ${test.currentQuestionIndex === 0 ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                        ← Anterior
+                    </button>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="academiaUmbramed.exitTest()" 
+                                style="background: #dc3545; color: white; border: none; padding: 1rem 2rem; 
+                                       border-radius: 25px; font-weight: 600; cursor: pointer;">
+                            ❌ Salir del Test
+                        </button>
+                        
+                        ${test.currentQuestionIndex === test.questions.length - 1 ? `
+                            <button onclick="academiaUmbramed.finishTest()" 
+                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
+                                ✅ Finalizar Test
+                            </button>
+                        ` : `
+                            <button onclick="academiaUmbramed.nextQuestion()" 
+                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
+                                Siguiente →
+                            </button>
+                        `}
+                    </div>
+                </div>
+                
+                <!-- Información adicional -->
+                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; text-align: center;">
+                    <div style="color: var(--text-light); font-size: 0.9rem;">
+                        💡 Puedes cambiar tu respuesta en cualquier momento antes de pasar a la siguiente pregunta
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+    
+    renderTestResultsView() {
+        const results = this.testResults;
+        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+        const minutes = Math.floor(results.totalTime / 60);
+        const seconds = results.totalTime % 60;
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
+                <span>Resultados</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">
+                        ${results.passed ? '🎉' : '📚'}
+                    </div>
+                    <h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+                        ${results.passed ? '¡Felicitaciones!' : '¡Sigue Practicando!'}
+                    </h1>
+                    <p style="color: var(--text-light); font-size: 1.2rem;">
+                        ${results.isCategory ? `Test de ${results.category}` : 'Test Aleatorio'} completado
+                    </p>
+                </div>
+                
+                <!-- Resultados principales -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                    <div style="background: ${results.passed ? '#28a745' : '#dc3545'}; color: white; 
+                               padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.percentage}%
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Puntuación Final</div>
+                    </div>
+                    <div style="background: #28a745; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.correct}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Correctas</div>
+                    </div>
+                    <div style="background: #dc3545; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.incorrect}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Incorrectas</div>
+                    </div>
+                    <div style="background: #6c757d; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${minutes}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Tiempo Total</div>
+                    </div>
+                </div>
+                
+                <!-- Acciones -->
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
+                    <button onclick="academiaUmbramed.showDetailedResults()" 
+                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        📋 Ver Respuestas Detalladas
+                    </button>
+                    <button onclick="academiaUmbramed.startRandomTest('${results.bankId}')" 
+                            style="background: #17a2b8; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        🔄 Repetir Test
+                    </button>
+                    <button onclick="academiaUmbramed.openQuestionBank('${results.bankId}')" 
+                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        ← Volver al Banco
+                    </button>
+                </div>
+                
+                <!-- Estadísticas por categoría -->
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--accent-black); margin-bottom: 2rem; text-align: center;">
+                        📊 Análisis por Categorías
+                    </h3>
+                    ${this.generateCategoryAnalysis(results)}
+                </div>
+            </div>
+        `;
+    },
+    
+    generateCategoryAnalysis(results) {
+        const categories = {};
+        
+        results.results.forEach(result => {
+            if (!categories[result.category]) {
+                categories[result.category] = { total: 0, correct: 0 };
+            }
+            categories[result.category].total++;
+            if (result.isCorrect) {
+                categories[result.category].correct++;
+            }
+        });
+        
+        return Object.entries(categories).map(([category, stats]) => {
+            const percentage = ((stats.correct / stats.total) * 100).toFixed(1);
+            const color = percentage >= 70 ? '#28a745' : percentage >= 50 ? '#ffc107' : '#dc3545';
+            
+            return `
+                <div style="display: flex; justify-content: space-between; align-items: center; 
+                           padding: 1rem; margin-bottom: 1rem; border-radius: 10px; background: #f8f9fa;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--accent-black);">${category}</div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">
+                            ${stats.correct} de ${stats.total} correctas
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: ${color};">
+                            ${percentage}%
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+    
+    renderDetailedResultsView() {
+        const results = this.testResults;
+        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
+                <span>Respuestas Detalladas</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <h1 style="color: var(--accent-black); font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">
+                    📋 Respuestas Detalladas
+                </h1>
+                
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <button onclick="academiaUmbramed.currentView='test-results'; academiaUmbramed.render();" 
+                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        ← Volver a Resultados
+                    </button>
+                </div>
+                
+                <div style="display: grid; gap: 2rem;">
+                    ${results.results.map((result, index) => {
+                        const statusColor = result.status === 'correct' ? '#28a745' : 
+                                          result.status === 'incorrect' ? '#dc3545' : '#6c757d';
+                        const statusIcon = result.status === 'correct' ? '✅' : 
+                                         result.status === 'incorrect' ? '❌' : '⚪';
+                        
+                        return `
+                            <div style="background: white; border-radius: 15px; padding: 2rem; 
+                                       box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid ${statusColor};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="font-size: 1.5rem;">${statusIcon}</div>
+                                        <div>
+                                            <div style="font-weight: 700; color: var(--accent-black); font-size: 1.1rem;">
+                                                Pregunta ${index + 1}
+                                            </div>
+                                            <div style="color: var(--text-light); font-size: 0.9rem;">
+                                                ${result.category} | ${result.difficulty}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="background: ${statusColor}; color: white; padding: 0.5rem 1rem; 
+                                               border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
+                                        ${result.status === 'correct' ? 'CORRECTA' : 
+                                          result.status === 'incorrect' ? 'INCORRECTA' : 'SIN RESPONDER'}
+                                    </div>
+                                </div>
+                                
+                                <h3 style="color: var(--accent-black); font-size: 1.2rem; font-weight: 600; 
+                                          line-height: 1.6; margin-bottom: 1.5rem;">
+                                    ${result.question}
+                                </h3>
+                                
+                                <div style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem;">
+                                    ${result.options.map((option, optIndex) => {
+                                        const isCorrect = optIndex === result.correct;
+                                        const isUserAnswer = optIndex === result.userAnswer;
+                                        
+                                        let optionStyle = 'background: #f8f9fa; border: 2px solid #e9ecef;';
+                                        if (isCorrect) {
+                                            optionStyle = 'background: #d4edda; border: 2px solid #28a745;';
+                                        } else if (isUserAnswer && !isCorrect) {
+                                            optionStyle = 'background: #f8d7da; border: 2px solid #dc3545;';
+                                        }
+                                        
+                                        return `
+                                            <div style="${optionStyle} padding: 1rem; border-radius: 10px;">
+                                                <span style="font-weight: 600; margin-right: 0.5rem;">
+                                                    ${String.fromCharCode(65 + optIndex)})
+                                                </span>
+                                                ${option}
+                                                ${isCorrect ? ' ✅' : ''}
+                                                ${isUserAnswer && !isCorrect ? ' ❌ Tu respuesta' : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                
+                                ${result.explanation ? `
+                                    <div style="background: #e8f4f8; padding: 1.5rem; border-radius: 10px; 
+                                               border-left: 4px solid #17a2b8;">
+                                        <div style="font-weight: 600; color: #0c5460; margin-bottom: 0.5rem;">
+                                            💡 Explicación:
+                                        </div>
+                                        <div style="color: #0c5460; line-height: 1.6;">
+                                            ${result.explanation}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    },
+    
+    renderTestView() {
+        if (!this.currentTest || !this.currentTest.questions) {
+            return '<div>Error: No hay test configurado</div>';
+        }
+        
+        const test = this.currentTest;
+        const currentQuestion = test.questions[test.currentQuestionIndex];
+        const progress = ((test.currentQuestionIndex + 1) / test.questions.length) * 100;
+        const timeElapsed = Math.floor((new Date() - test.startTime) / 1000);
+        const minutes = Math.floor(timeElapsed / 60);
+        const seconds = timeElapsed % 60;
+        
+        const specialty = this.specialties[this.currentSpecialty];
+        const bank = specialty.questionBanks[test.bankId];
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${specialty.name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${test.bankId}')">${test.bankName}</a> >
+                <span>Test en Curso</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; 
+                           padding: 1.5rem; background: ${bank.color}15; border-radius: 15px; border-left: 5px solid ${bank.color};">
+                    <div>
+                        <h1 style="color: var(--accent-black); font-size: 1.8rem; font-weight: 700; margin: 0;">
+                            ${bank.icon} ${test.bankName}
+                        </h1>
+                        <p style="color: var(--text-light); margin: 0.5rem 0 0;">
+                            ${test.isCategory ? `Categoría: ${test.category}` : 'Test Aleatorio'} | 
+                            Pregunta ${test.currentQuestionIndex + 1} de ${test.questions.length}
+                        </p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: ${bank.color};">
+                            ⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">Tiempo transcurrido</div>
+                    </div>
+                </div>
+                
+                <!-- Barra de progreso -->
+                <div style="background: #e9ecef; border-radius: 10px; height: 8px; margin-bottom: 2rem; overflow: hidden;">
+                    <div style="background: ${bank.color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
+                </div>
+                
+                <!-- Pregunta actual -->
+                <div style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; 
+                           box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: ${bank.color}; color: white; border-radius: 10px; 
+                                   padding: 0.5rem 1rem; font-weight: 700; font-size: 0.9rem;">
+                            ${currentQuestion.category}
+                        </div>
+                        <div style="background: ${bank.color}30; color: ${bank.color}; border-radius: 10px; 
+                                   padding: 0.5rem 1rem; font-weight: 600; font-size: 0.9rem;">
+                            ${currentQuestion.difficulty}
+                        </div>
+                    </div>
+                    
+                    <h2 style="color: var(--accent-black); font-size: 1.4rem; font-weight: 600; 
+                              line-height: 1.6; margin-bottom: 2rem;">
+                        ${test.currentQuestionIndex + 1}. ${currentQuestion.question}
+                    </h2>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        ${currentQuestion.options.map((option, index) => `
+                            <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; 
+                                          border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; 
+                                          transition: all 0.3s ease; background: white;
+                                          ${test.answers && test.answers[test.currentQuestionIndex] === index ? 
+                                            `border-color: ${bank.color}; background: ${bank.color}20;` : ''}"
+                                   onmouseover="this.style.borderColor='${bank.color}'; this.style.background='${bank.color}10';"
+                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e9ecef'; this.style.background='white'; }"
+                                   onclick="academiaUmbramed.selectTestAnswer(${index}, this)">
+                                <input type="radio" name="test-answer" value="${index}" 
+                                       ${test.answers && test.answers[test.currentQuestionIndex] === index ? 'checked' : ''}
+                                       style="width: 20px; height: 20px; accent-color: ${bank.color};">
+                                <div style="flex: 1;">
+                                    <span style="font-weight: 600; color: ${bank.color}; margin-right: 0.5rem;">
+                                        ${String.fromCharCode(65 + index)})
+                                    </span>
+                                    ${option}
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Botones de navegación -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button onclick="academiaUmbramed.previousQuestion()" 
+                            ${test.currentQuestionIndex === 0 ? 'disabled' : ''}
+                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer; 
+                                   ${test.currentQuestionIndex === 0 ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                        ← Anterior
+                    </button>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="academiaUmbramed.exitTest()" 
+                                style="background: #dc3545; color: white; border: none; padding: 1rem 2rem; 
+                                       border-radius: 25px; font-weight: 600; cursor: pointer;">
+                            ❌ Salir del Test
+                        </button>
+                        
+                        ${test.currentQuestionIndex === test.questions.length - 1 ? `
+                            <button onclick="academiaUmbramed.finishTest()" 
+                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
+                                ✅ Finalizar Test
+                            </button>
+                        ` : `
+                            <button onclick="academiaUmbramed.nextQuestion()" 
+                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
+                                Siguiente →
+                            </button>
+                        `}
+                    </div>
+                </div>
+                
+                <!-- Información adicional -->
+                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; text-align: center;">
+                    <div style="color: var(--text-light); font-size: 0.9rem;">
+                        💡 Puedes cambiar tu respuesta en cualquier momento antes de pasar a la siguiente pregunta
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+    
+    renderTestResultsView() {
+        const results = this.testResults;
+        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+        const minutes = Math.floor(results.totalTime / 60);
+        const seconds = results.totalTime % 60;
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
+                <span>Resultados</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">
+                        ${results.passed ? '🎉' : '📚'}
+                    </div>
+                    <h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+                        ${results.passed ? '¡Felicitaciones!' : '¡Sigue Practicando!'}
+                    </h1>
+                    <p style="color: var(--text-light); font-size: 1.2rem;">
+                        ${results.isCategory ? `Test de ${results.category}` : 'Test Aleatorio'} completado
+                    </p>
+                </div>
+                
+                <!-- Resultados principales -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                    <div style="background: ${results.passed ? '#28a745' : '#dc3545'}; color: white; 
+                               padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.percentage}%
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Puntuación Final</div>
+                    </div>
+                    <div style="background: #28a745; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.correct}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Correctas</div>
+                    </div>
+                    <div style="background: #dc3545; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${results.incorrect}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Incorrectas</div>
+                    </div>
+                    <div style="background: #6c757d; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ${minutes}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">Tiempo Total</div>
+                    </div>
+                </div>
+                
+                <!-- Acciones -->
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
+                    <button onclick="academiaUmbramed.showDetailedResults()" 
+                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        📋 Ver Respuestas Detalladas
+                    </button>
+                    <button onclick="academiaUmbramed.startRandomTest('${results.bankId}')" 
+                            style="background: #17a2b8; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        🔄 Repetir Test
+                    </button>
+                    <button onclick="academiaUmbramed.openQuestionBank('${results.bankId}')" 
+                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        ← Volver al Banco
+                    </button>
+                </div>
+                
+                <!-- Estadísticas por categoría -->
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--accent-black); margin-bottom: 2rem; text-align: center;">
+                        📊 Análisis por Categorías
+                    </h3>
+                    ${this.generateCategoryAnalysis(results)}
+                </div>
+            </div>
+        `;
+    },
+    
+    generateCategoryAnalysis(results) {
+        const categories = {};
+        
+        results.results.forEach(result => {
+            if (!categories[result.category]) {
+                categories[result.category] = { total: 0, correct: 0 };
+            }
+            categories[result.category].total++;
+            if (result.isCorrect) {
+                categories[result.category].correct++;
+            }
+        });
+        
+        return Object.entries(categories).map(([category, stats]) => {
+            const percentage = ((stats.correct / stats.total) * 100).toFixed(1);
+            const color = percentage >= 70 ? '#28a745' : percentage >= 50 ? '#ffc107' : '#dc3545';
+            
+            return `
+                <div style="display: flex; justify-content: space-between; align-items: center; 
+                           padding: 1rem; margin-bottom: 1rem; border-radius: 10px; background: #f8f9fa;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--accent-black);">${category}</div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">
+                            ${stats.correct} de ${stats.total} correctas
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: ${color};">
+                            ${percentage}%
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+    
+    renderDetailedResultsView() {
+        const results = this.testResults;
+        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+        
+        return `
+            <div class="breadcrumb">
+                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
+                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
+                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
+                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
+                <span>Respuestas Detalladas</span>
+            </div>
+            
+            <div class="dashboard-card">
+                <h1 style="color: var(--accent-black); font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">
+                    📋 Respuestas Detalladas
+                </h1>
+                
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <button onclick="academiaUmbramed.currentView='test-results'; academiaUmbramed.render();" 
+                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
+                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        ← Volver a Resultados
+                    </button>
+                </div>
+                
+                <div style="display: grid; gap: 2rem;">
+                    ${results.results.map((result, index) => {
+                        const statusColor = result.status === 'correct' ? '#28a745' : 
+                                          result.status === 'incorrect' ? '#dc3545' : '#6c757d';
+                        const statusIcon = result.status === 'correct' ? '✅' : 
+                                         result.status === 'incorrect' ? '❌' : '⚪';
+                        
+                        return `
+                            <div style="background: white; border-radius: 15px; padding: 2rem; 
+                                       box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid ${statusColor};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="font-size: 1.5rem;">${statusIcon}</div>
+                                        <div>
+                                            <div style="font-weight: 700; color: var(--accent-black); font-size: 1.1rem;">
+                                                Pregunta ${index + 1}
+                                            </div>
+                                            <div style="color: var(--text-light); font-size: 0.9rem;">
+                                                ${result.category} | ${result.difficulty}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="background: ${statusColor}; color: white; padding: 0.5rem 1rem; 
+                                               border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
+                                        ${result.status === 'correct' ? 'CORRECTA' : 
+                                          result.status === 'incorrect' ? 'INCORRECTA' : 'SIN RESPONDER'}
+                                    </div>
+                                </div>
+                                
+                                <h3 style="color: var(--accent-black); font-size: 1.2rem; font-weight: 600; 
+                                          line-height: 1.6; margin-bottom: 1.5rem;">
+                                    ${result.question}
+                                </h3>
+                                
+                                <div style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem;">
+                                    ${result.options.map((option, optIndex) => {
+                                        const isCorrect = optIndex === result.correct;
+                                        const isUserAnswer = optIndex === result.userAnswer;
+                                        
+                                        let optionStyle = 'background: #f8f9fa; border: 2px solid #e9ecef;';
+                                        if (isCorrect) {
+                                            optionStyle = 'background: #d4edda; border: 2px solid #28a745;';
+                                        } else if (isUserAnswer && !isCorrect) {
+                                            optionStyle = 'background: #f8d7da; border: 2px solid #dc3545;';
+                                        }
+                                        
+                                        return `
+                                            <div style="${optionStyle} padding: 1rem; border-radius: 10px;">
+                                                <span style="font-weight: 600; margin-right: 0.5rem;">
+                                                    ${String.fromCharCode(65 + optIndex)})
+                                                </span>
+                                                ${option}
+                                                ${isCorrect ? ' ✅' : ''}
+                                                ${isUserAnswer && !isCorrect ? ' ❌ Tu respuesta' : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                
+                                ${result.explanation ? `
+                                    <div style="background: #e8f4f8; padding: 1.5rem; border-radius: 10px; 
+                                               border-left: 4px solid #17a2b8;">
+                                        <div style="font-weight: 600; color: #0c5460; margin-bottom: 0.5rem;">
+                                            💡 Explicación:
+                                        </div>
+                                        <div style="color: #0c5460; line-height: 1.6;">
+                                            ${result.explanation}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
     }
+    
 });

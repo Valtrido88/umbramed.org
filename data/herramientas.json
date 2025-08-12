@@ -1,0 +1,83 @@
+[
+    {
+        "id": "academia-umbramed",
+        "title": "ACADEMIA UMBRAMED",
+        "description": "<strong>¡NUEVO!</strong> Sistema completo de test de oposiciones SAS con 143 preguntas reales organizadas por PAI. Incluye sistema de login y seguimiento de progreso.",
+        "link": "academia.html",
+        "icon": "🎓",
+        "status": "featured",
+        "button_text": "🚀 Acceder a Academia"
+    },
+    {
+        "id": "calculadora-pediatrica",
+        "title": "Calculadora Pediátrica",
+        "description": "Calcula dosis de medicamentos pediátricos de forma precisa y segura. Incluye los medicamentos más utilizados en urgencias pediátricas.",
+        "link": "herramientas/calculadora_pediatrica.html",
+        "icon": "👶",
+        "status": "functional",
+        "button_text": "Usar Calculadora"
+    },
+    {
+        "id": "interpretador-serologico-vhb",
+        "title": "Interpretador Serológico VHB",
+        "description": "Interpreta resultados de marcadores serológicos de Hepatitis B de forma automática y proporciona diagnósticos precisos.",
+        "link": "interpretador_hepatitis.html",
+        "icon": "🧪",
+        "status": "functional",
+        "button_text": "Interpretar Resultados"
+    },
+    {
+        "id": "medicamentos-sin-lactosa",
+        "title": "Medicamentos Sin Lactosa",
+        "description": "Base de datos completa de medicamentos sin lactosa. Busca por principio activo o nombre comercial para pacientes intolerantes.",
+        "link": "medicamentos_sin_lactosa.html",
+        "icon": "💊",
+        "status": "functional",
+        "button_text": "Buscar Medicamentos"
+    },
+    {
+        "id": "medicamentos-visados-sas",
+        "title": "Medicamentos Visados SAS",
+        "description": "Consulta los medicamentos que requieren visado del SAS. Base de datos actualizada con criterios y procedimientos.",
+        "link": "medicamentos_visados.html",
+        "icon": "📋",
+        "status": "functional",
+        "button_text": "Consultar Visados"
+    },
+    {
+        "id": "analisis-laboratorio",
+        "title": "Análisis de Laboratorio",
+        "description": "Interpretación automática de análisis de laboratorio con valores de referencia y alertas clínicas. (En desarrollo)",
+        "link": "#",
+        "icon": "🔬",
+        "status": "development",
+        "button_text": "Próximamente"
+    },
+    {
+        "id": "escalas-clinicas",
+        "title": "Escalas Clínicas",
+        "description": "Colección de escalas de valoración clínica: Glasgow, APACHE, SOFA, y muchas más. (En desarrollo)",
+        "link": "#",
+        "icon": "📊",
+        "status": "development",
+        "button_text": "Próximamente"
+    },
+    {
+        "id": "guia-vacunacion",
+        "title": "Guía de Vacunación",
+        "description": "Calendario de vacunación actualizado con recordatorios y contraindicaciones específicas. (En desarrollo)",
+        "link": "#",
+        "icon": "💉",
+        "status": "development",
+        "button_text": "Próximamente"
+    },
+    {
+        "id": "pali-assist",
+        "title": "Guía de Apoyo en Cuidados Paliativos",
+        "description": "<strong>¡NUEVO!</strong> Herramienta asistida por IA para verificar compatibilidad de fármacos en perfusiones subcutáneas y generar guías de apoyo para familiares.",
+        "link": "cuidados-paliativos-ia.html",
+        "icon": "🕊️",
+        "status": "functional",
+        "button_text": "Acceder a Guía"
+    }
+]
