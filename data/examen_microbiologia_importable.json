@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Examen_1",
+    "questions": [
+      {"question": "1.-\tEn referencia al botulismo señale la respuesta incorrecta", "options": [], "answer": null},
+      {"question": "2.-\tEn relación a los cultivos de Nocardia señale la respuesta incorrecta:", "options": [], "answer": null},
+      {"question": "3.-\tUna bacteria autótrofa utiliza como fuente de carbono", "options": [], "answer": null},
+      {"question": "4.-\tCon respecto al género Aeromonas, que es falso:", "options": [], "answer": null},
+      {"question": "5.-\t¿cuál de las siguientes carácterísticas no es propia de Staphylocccus aureus?", "options": [], "answer": null},
+      {"question": "6.-\tLas porinas se localizan en", "options": [], "answer": null},
+      {"question": "7.-\tSeñale la respuesta correcta en referencia a las polimixinas", "options": [], "answer": null},
+      {"question": "8.-\tReferente a la membrana citoplasmática, cual de las siguientes afirmaciones es verdad:", "options": [], "answer": null},
+      {"question": "9.-\tEn el control serológico de la embarazada normal es recomendable incluir:", "options": [], "answer": null},
+      {"question": "10.-  En cuanto al género Nocardia, señale la respuesta incorrecta:", "options": [], "answer": null},
+      {"question": "11.- ¿En cual d e las siguientes cir\tcunstancias n o considera ría adecua da la realización de pruebas de susceptibilidad antibiótica en un paciente alérgico a antibióticos betalactámicos?", "options": [], "answer": null},
+      {"question": "12.-  ¿Cuál de las siguientes afirmaciones es FALSA en relación con las infecciones por CMV?", "options": [], "answer": null},
+      {"question": "13.-  ¿Cuál de los siguientes no es un mecanismo de resistencia bacteriana?", "options": [], "answer": null},
+      {"question": "14.- Con respecto a las infecciones del SNC producidas por VHS ¿cuál de estas afirmaciones es FALSA?", "options": [], "answer": null},
+      {"question": "15.-  ¿Qué es la toxina Panton-Valentine?", "options": [], "answer": null},
+      {"question": "16.- Existen diferentes pautas para el tratamiento de las cistit is. Indique cual de las siguientes afirmaciones es cierta:", "options": [], "answer": null},
+      {"question": "17.- Respecto a Plesiomonas shigelloides cual de las siguientes afirmaciones es falsa:", "options": [], "answer": null},
+      {"question": "18.-  Respecto al género Staphylococcus es falso que:", "options": [], "answer": null},
+      {"question": "19.-  Necesita L-cisteina en los primocultivos", "options": [], "answer": null},
+      {"question": "20.-  En el contexto de la evaluación clínica de la coinfección VIH-VHC, es cierto que:", "options": [], "answer": null},
+      {"question": "21.-  ¿Cuál de las siguientes afirmaciones es FALSA respecto al género Rickettsia?", "options": [], "answer": null},
+      {"question": "22.-  El primer paso para la patogenicidad bacteriana es:", "options": [], "answer": null},
+      {"question": "23.- ¿Cuales son los agentes etiológicos mas frecuentes en las ITU adquiridas en la comunidad en enfermos sin factores de riesgo específicos o enfermedades de base en España?", "options": [], "answer": null},
+      {"question": "24.-  En relación con la Aspergilosis pulmonar invasora aguda es falso que:", "options": [], "answer": null},
+      {"question": "25.-  Respecto al género Haemophilus, cual es falsa:", "options": [], "answer": null},
+      {"question": "26.-  ¿Cuál de las siguientes afirmaciones es FALSA?", "options": [], "answer": null},
+      {"question": "27.- ¿Cuál de las siguientes afirmaciones es CIERTA respecto a la utilidad de la detección de la carga viral plasmática del VIH?", "options": [], "answer": null},
+      {"question": "28.-  La presencia de IgM frente a un microorganismo suele significar:", "options": [], "answer": null},
+      {"question": "29.-  Invade los hematíes viejos", "options": [], "answer": null},
+      {"question": "30.- Respecto a la meningitis causada por Neisseria meningitidis indique la respuesta correcta:", "options": [], "answer": null}
+    ]
+  },
+  {
+    "name": "Examen_2",
+    "questions": [
+      {"question": "160.- ¿Cuál de los siguientes microorganismos presenta un alto riesgo de generar aerosoles durante su manipulación en el laboratorio?", "options": [], "answer": null}
+    ]
+  }
+]

@@ -1,3 +1,24 @@
+// Automatización directa de importación de preguntas de microbiología
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/data/examen_microbiologia_importable.json');
+        if (response.ok) {
+            const questionsBanks = await response.json();
+            // Para cada banco, importar automáticamente
+            if (Array.isArray(questionsBanks)) {
+                questionsBanks.forEach(bank => {
+                    // Asume que existe una función global para añadir bancos y preguntas
+                    if (window.academiaUmbramed && typeof window.academiaUmbramed.importQuestions === 'function') {
+                        window.academiaUmbramed.importQuestions(bank.questions, bank.name);
+                    }
+                });
+                console.log('Importación automática de microbiología completada.');
+            }
+        }
+    } catch (e) {
+        console.error('Error en la importación automática de microbiología:', e);
+    }
+});
 // Extensión del sistema Academia UMBRAMED - Campus Virtual de Especialidades
 
 // Agregar métodos al prototipo de AcademiaUmbramed
@@ -140,7 +161,6 @@ Object.assign(AcademiaUmbramed.prototype, {
             </div>
         `;
     },
-    
     selectSpecialty(specialtyId) {
         const specialty = this.specialties[specialtyId];
         if (!specialty) return;
@@ -156,89 +176,89 @@ Object.assign(AcademiaUmbramed.prototype, {
     },
     
     renderSpecialtyLoginView() {
-        const specialty = this.specialties[this.currentSpecialty];
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <span>${specialty.name}</span>
-            </div>
-            
-            <div class="login-card" style="max-width: 600px;">
-                <div style="background: ${specialty.color}; color: white; 
-                           border-radius: 50%; width: 100px; height: 100px; 
-                           display: flex; align-items: center; justify-content: center; 
-                           font-size: 3rem; margin: 0 auto 2rem;">
-                    ${specialty.icon}
-                </div>
-                
-                <h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
-                    ${specialty.name}
-                </h1>
-                <p style="color: var(--text-light); font-size: 1.2rem; margin-bottom: 2rem;">
-                    Acceso Especializado Requerido
-                </p>
-                
-                <div style="background: ${specialty.color}15; padding: 2rem; border-radius: 15px; 
-                           border-left: 5px solid ${specialty.color}; margin-bottom: 2rem;">
-                    <h3 style="color: ${specialty.color}; margin-bottom: 1rem;">📋 Información de la Especialidad</h3>
-                    <p style="margin-bottom: 1rem; line-height: 1.6;">${specialty.description}</p>
-                    <div style="display: grid; gap: 10px;">
-                        <div><strong>👨‍⚕️ Jefe de Servicio:</strong> ${specialty.head}</div>
-                        <div><strong>📚 Cursos Disponibles:</strong> ${specialty.courses.length}</div>
-                        <div><strong>🏢 Ubicación:</strong> ${specialty.building} Edificio ${specialty.name}</div>
+    // specialty ya está declarado en el ámbito superior
+                    <div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+                               padding: 3rem; border-radius: 20px; margin-bottom: 2rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+                                   gap: 2rem; max-width: 1000px; margin: 0 auto;">
+                            ${Object.values(this.specialties).map(specialty => `
+                                <div onclick="academiaUmbramed.selectSpecialty('${specialty.id}')" 
+                                     style="background: white; border-radius: 15px; padding: 2rem; 
+                                            cursor: pointer; transition: all 0.3s ease; 
+                                            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                                            border: 3px solid transparent; position: relative; overflow: hidden;"
+                                     onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'; this.style.borderColor='${specialty.color}';"
+                                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)';">
+                                    
+                                    <div style="background: linear-gradient(45deg, ${specialty.color}, ${specialty.color}90); 
+                                               position: absolute; top: 0; right: 0; width: 100px; height: 100px; 
+                                               border-radius: 0 15px 0 100px; opacity: 0.1;"></div>
+                                    
+                                    <div style="text-align: center; margin-bottom: 1.5rem; position: relative; z-index: 2;">
+                                        <div style="font-size: 4rem; margin-bottom: 1rem;">${specialty.building}</div>
+                                        <div style="background: ${specialty.color}; color: white; 
+                                                   border-radius: 50%; width: 60px; height: 60px; 
+                                                   display: flex; align-items: center; justify-content: center; 
+                                                   font-size: 2rem; margin: 0 auto; position: absolute; 
+                                                   top: 20px; right: 20px; box-shadow: 0 5px 15px ${specialty.color}50;">
+                                            ${specialty.icon}
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="position: relative; z-index: 2;">
+                                        <h3 style="color: var(--accent-black); font-size: 1.5rem; 
+                                                  font-weight: 600; margin-bottom: 0.5rem; text-align: center;">
+                                            ${specialty.name}
+                                        </h3>
+                                        <p style="color: var(--text-light); font-size: 1rem; 
+                                                 text-align: center; margin-bottom: 1.5rem; line-height: 1.4;">
+                                            ${specialty.description}
+                                        </p>
+                                        
+                                        <div style="background: ${specialty.color}15; padding: 1rem; 
+                                                   border-radius: 10px; border-left: 4px solid ${specialty.color};">
+                                            <div style="display: flex; justify-content: space-between; 
+                                                       align-items: center; margin-bottom: 0.5rem;">
+                                                <span style="font-weight: 600; color: ${specialty.color};">
+                                                    👨‍⚕️ Jefe de Servicio
+                                                </span>
+                                                <span style="font-size: 0.9rem; color: var(--text-light);">
+                                                    ${specialty.head}
+                                                </span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; 
+                                                       align-items: center; margin-bottom: 0.5rem;">
+                                                <span style="font-weight: 600; color: ${specialty.color};">
+                                                    📚 Cursos Disponibles
+                                                </span>
+                                                <span style="background: ${specialty.color}; color: white; 
+                                                         padding: 3px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                                    ${specialty.courses.length}
+                                                </span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; 
+                                                       align-items: center;">
+                                                <span style="font-weight: 600; color: ${specialty.color};">
+                                                    🔐 Acceso Requerido
+                                                </span>
+                                                <span style="font-size: 0.9rem;">
+                                                    ${specialty.requiresAccess ? '🔒 Restringido' : '🔓 Libre'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="text-align: center; margin-top: 1.5rem;">
+                                            <div style="background: ${specialty.color}; color: white; 
+                                                       padding: 12px 25px; border-radius: 25px; 
+                                                       font-weight: 600; display: inline-block;">
+                                                ${specialty.requiresAccess ? '🔑 Solicitar Acceso' : '🚀 Entrar Ahora'} →
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
-                </div>
-                
-                <form onsubmit="academiaUmbramed.handleSpecialtyAccess(event)">
-                    <div class="form-group">
-                        <label for="specialty-code">Código de Acceso de la Especialidad</label>
-                        <input type="password" id="specialty-code" name="code" required 
-                               placeholder="Código proporcionado por el jefe de servicio">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="specialty-justification">Justificación de Acceso</label>
-                        <textarea id="specialty-justification" name="justification" 
-                                 placeholder="Explica por qué necesitas acceso a esta especialidad..." 
-                                 rows="3" style="width: 100%; padding: 12px; border: 2px solid #e1e5e9; 
-                                               border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn-login" style="background: ${specialty.color};">
-                        🔑 Solicitar Acceso
-                    </button>
-                </form>
-                
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e1e5e9;">
-                    <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 1rem;">
-                        💡 Códigos de Demostración:
-                    </h4>
-                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-light);">
-                        <p><strong>Microbiología:</strong> MICRO2025</p>
-                        <p><strong>Cirugía Cardiovascular:</strong> CARDIO2025</p>
-                        <p><strong>Anatomía Patológica:</strong> ANAPAT2025</p>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 1rem; text-align: center;">
-                    <button onclick="academiaUmbramed.showCampus()" 
-                            style="background: none; border: none; color: var(--primary-red); 
-                                   text-decoration: underline; cursor: pointer;">
-                        ← Volver al Campus
-                    </button>
-                </div>
-                
-                <div id="specialty-error" class="hidden" style="background: #f8d7da; color: #721c24; 
-                     padding: 10px; border-radius: 5px; margin-top: 1rem;">
-                </div>
-            </div>
-        `;
-    },
-    
-    async handleSpecialtyAccess(event) {
-        event.preventDefault();
         const code = document.getElementById('specialty-code').value;
         const justification = document.getElementById('specialty-justification').value;
         const errorDiv = document.getElementById('specialty-error');
@@ -766,33 +786,10 @@ Object.assign(AcademiaUmbramed.prototype, {
         }
     },
     
-    parseCSVQuestions(csvText) {
-        const lines = csvText.split('\n');
-        const questions = [];
-        
-        for (let i = 1; i < lines.length; i++) { // Saltar header
-            const parts = lines[i].split(',');
-            if (parts.length >= 6) {
-                questions.push({
-                    question: parts[0],
-                    options: [parts[1], parts[2], parts[3], parts[4]],
-                    correct: parseInt(parts[5]) || 0,
-                    explanation: parts[6] || '',
-                    category: parts[7] || 'Sin categoría',
-                    difficulty: parts[8] || 'Intermedio',
-                    tags: parts[9] ? parts[9].split(';') : []
-                });
-            }
-        }
-        
-        return questions;
-    },
-    
     parseTextQuestions(text) {
         // Parser simple para texto con formato específico
         const questions = [];
         const blocks = text.split('\n\n');
-        
         blocks.forEach(block => {
             const lines = block.trim().split('\n');
             if (lines.length >= 6) {
@@ -800,7 +797,6 @@ Object.assign(AcademiaUmbramed.prototype, {
                 const options = lines.slice(1, 5);
                 const correctMatch = lines[5].match(/(\d+)/);
                 const correct = correctMatch ? parseInt(correctMatch[1]) - 1 : 0;
-                
                 questions.push({
                     question,
                     options,
@@ -812,17 +808,14 @@ Object.assign(AcademiaUmbramed.prototype, {
                 });
             }
         });
-        
         return questions;
     },
-    
     showImportDialog(questions) {
         // Mostrar dialog de confirmación de importación
         this.importedQuestions = questions;
         this.currentView = 'import-dialog';
         this.render();
     },
-    
     exportQuestions() {
         const specialty = this.specialties[this.currentSpecialty];
         if (!specialty || !specialty.questionBanks) return;
@@ -840,12 +833,10 @@ Object.assign(AcademiaUmbramed.prototype, {
         link.download = `ope-primaria-2025-preguntas-${new Date().toISOString().split('T')[0]}.json`;
         link.click();
     },
-    
     analyzeQuestions() {
         this.currentView = 'question-analytics';
         this.render();
     },
-    
     renderQuestionBankView() {
         const specialty = this.specialties[this.currentSpecialty];
         const bank = specialty.questionBanks[this.currentQuestionBank];
@@ -931,15 +922,12 @@ Object.assign(AcademiaUmbramed.prototype, {
             </div>
         `;
     },
-    
     // === FUNCIONES PARA TESTS Y SIMULACROS ===
-    
     filterByCategory(category) {
         // Filtrar preguntas por categoría específica
         this.currentCategory = category;
         this.startCategoryTest(category, this.currentQuestionBank);
     },
-    
     startRandomTest(bankId) {
         const specialty = this.specialties[this.currentSpecialty];
         const bank = specialty.questionBanks[bankId];
@@ -963,7 +951,6 @@ Object.assign(AcademiaUmbramed.prototype, {
         this.currentView = 'test';
         this.render();
     },
-    
     startCategoryTest(category, bankId) {
         const specialty = this.specialties[this.currentSpecialty];
         const bank = specialty.questionBanks[bankId];
@@ -990,7 +977,6 @@ Object.assign(AcademiaUmbramed.prototype, {
         this.currentView = 'test';
         this.render();
     },
-    
     shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -998,7 +984,6 @@ Object.assign(AcademiaUmbramed.prototype, {
         }
         return array;
     },
-    
     selectTestAnswer(answerIndex, element) {
         // Guardar la respuesta seleccionada
         if (!this.currentTest.answers) {
@@ -1018,28 +1003,24 @@ Object.assign(AcademiaUmbramed.prototype, {
         element.style.borderColor = bank.color;
         element.style.background = bank.color + '20';
     },
-    
     previousQuestion() {
         if (this.currentTest.currentQuestionIndex > 0) {
             this.currentTest.currentQuestionIndex--;
             this.render();
         }
     },
-    
     nextQuestion() {
         if (this.currentTest.currentQuestionIndex < this.currentTest.questions.length - 1) {
             this.currentTest.currentQuestionIndex++;
             this.render();
         }
     },
-    
     exitTest() {
         if (confirm('¿Estás seguro de que quieres salir del test?\n\nSe perderá todo el progreso actual.')) {
             this.currentTest = null;
             this.openQuestionBank(this.currentQuestionBank);
         }
     },
-    
     finishTest() {
         const unanswered = this.currentTest.questions.length - this.currentTest.answers.filter(a => a !== undefined).length;
         
@@ -1054,47 +1035,39 @@ Object.assign(AcademiaUmbramed.prototype, {
         this.currentView = 'test-results';
         this.render();
     },
-    
     calculateTestResults() {
-        const test = this.currentTest;
-        let correct = 0;
-        let incorrect = 0;
-        let unanswered = 0;
-        
-        const results = test.questions.map((question, index) => {
-            const userAnswer = test.answers[index];
-            const isCorrect = userAnswer === question.correct;
-            
+        var test = this.currentTest;
+        var correct = 0;
+        var incorrect = 0;
+        var unanswered = 0;
+        var resultsArr = test.questions.map(function(question, index) {
+            var userAnswer = test.answers[index];
+            var isCorrect = userAnswer === question.correct;
             if (userAnswer === undefined) {
                 unanswered++;
-                return { ...question, userAnswer: null, isCorrect: false, status: 'unanswered' };
+                return Object.assign({}, question, { userAnswer: null, isCorrect: false, status: 'unanswered' });
             } else if (isCorrect) {
                 correct++;
-                return { ...question, userAnswer, isCorrect: true, status: 'correct' };
+                return Object.assign({}, question, { userAnswer: userAnswer, isCorrect: true, status: 'correct' });
             } else {
                 incorrect++;
-                return { ...question, userAnswer, isCorrect: false, status: 'incorrect' };
+                return Object.assign({}, question, { userAnswer: userAnswer, isCorrect: false, status: 'incorrect' });
             }
         });
-        
-        const endTime = new Date();
-        const totalTime = Math.floor((endTime - test.startTime) / 1000);
-        const percentage = ((correct / test.questions.length) * 100).toFixed(1);
-        
-        this.testResults = {
-            ...test,
-            endTime,
-            totalTime,
-            correct,
-            incorrect,
-            unanswered,
-            percentage,
-            results,
-            passed: percentage >= 70 // Criterio de aprobado
-    },
-    
-    },
-    
+        var endTime = new Date();
+        var totalTime = Math.floor((endTime - test.startTime) / 1000);
+        var percentage = ((correct / test.questions.length) * 100).toFixed(1);
+        this.testResults = Object.assign({}, test, {
+            endTime: endTime,
+            totalTime: totalTime,
+            correct: correct,
+            incorrect: incorrect,
+            unanswered: unanswered,
+            percentage: percentage,
+            results: resultsArr,
+            passed: percentage >= 70
+        });
+
     renderTestView() {
         if (!this.currentTest || !this.currentTest.questions) {
             return '<div>Error: No hay test configurado</div>';
@@ -1110,713 +1083,181 @@ Object.assign(AcademiaUmbramed.prototype, {
         const specialty = this.specialties[this.currentSpecialty];
         const bank = specialty.questionBanks[test.bankId];
         
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${specialty.name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${test.bankId}')">${test.bankName}</a> >
-                <span>Test en Curso</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; 
-                           padding: 1.5rem; background: ${bank.color}15; border-radius: 15px; border-left: 5px solid ${bank.color};">
-                    <div>
-                        <h1 style="color: var(--accent-black); font-size: 1.8rem; font-weight: 700; margin: 0;">
-                            ${bank.icon} ${test.bankName}
-                        </h1>
-                        <p style="color: var(--text-light); margin: 0.5rem 0 0;">
-                            ${test.isCategory ? `Categoría: ${test.category}` : 'Test Aleatorio'} | 
-                            Pregunta ${test.currentQuestionIndex + 1} de ${test.questions.length}
-                        </p>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1.5rem; font-weight: 700; color: ${bank.color};">
-                            ⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}
-                        </div>
-                        <div style="color: var(--text-light); font-size: 0.9rem;">Tiempo transcurrido</div>
-                    </div>
-                </div>
-                
-                <!-- Barra de progreso -->
-                <div style="background: #e9ecef; border-radius: 10px; height: 8px; margin-bottom: 2rem; overflow: hidden;">
-                    <div style="background: ${bank.color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
-                </div>
-                
-                <!-- Pregunta actual -->
-                <div style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; 
-                           box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div style="background: ${bank.color}; color: white; border-radius: 10px; 
-                                   padding: 0.5rem 1rem; font-weight: 700; font-size: 0.9rem;">
-                            ${currentQuestion.category}
-                        </div>
-                        <div style="background: ${bank.color}30; color: ${bank.color}; border-radius: 10px; 
-                                   padding: 0.5rem 1rem; font-weight: 600; font-size: 0.9rem;">
-                            ${currentQuestion.difficulty}
-                        </div>
-                    </div>
-                    
-                    <h2 style="color: var(--accent-black); font-size: 1.4rem; font-weight: 600; 
-                              line-height: 1.6; margin-bottom: 2rem;">
-                        ${test.currentQuestionIndex + 1}. ${currentQuestion.question}
-                    </h2>
-                    
-                    <div style="display: grid; gap: 1rem;">
-                        ${currentQuestion.options.map((option, index) => `
-                            <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; 
-                                          border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; 
-                                          transition: all 0.3s ease; background: white;
-                                          ${test.answers && test.answers[test.currentQuestionIndex] === index ? 
-                                            `border-color: ${bank.color}; background: ${bank.color}20;` : ''}"
-                                   onmouseover="this.style.borderColor='${bank.color}'; this.style.background='${bank.color}10';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e9ecef'; this.style.background='white'; }"
-                                   onclick="academiaUmbramed.selectTestAnswer(${index}, this)">
-                                <input type="radio" name="test-answer" value="${index}" 
-                                       ${test.answers && test.answers[test.currentQuestionIndex] === index ? 'checked' : ''}
-                                       style="width: 20px; height: 20px; accent-color: ${bank.color};">
-                                <div style="flex: 1;">
-                                    <span style="font-weight: 600; color: ${bank.color}; margin-right: 0.5rem;">
-                                        ${String.fromCharCode(65 + index)})
-                                    </span>
-                                    ${option}
-                                </div>
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <!-- Botones de navegación -->
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button onclick="academiaUmbramed.previousQuestion()" 
-                            ${test.currentQuestionIndex === 0 ? 'disabled' : ''}
-                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer; 
-                                   ${test.currentQuestionIndex === 0 ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
-                        ← Anterior
-                    </button>
-                    
-                    <div style="display: flex; gap: 1rem;">
-                        <button onclick="academiaUmbramed.exitTest()" 
-                                style="background: #dc3545; color: white; border: none; padding: 1rem 2rem; 
-                                       border-radius: 25px; font-weight: 600; cursor: pointer;">
-                            ❌ Salir del Test
-                        </button>
-                        
-                        ${test.currentQuestionIndex === test.questions.length - 1 ? `
-                            <button onclick="academiaUmbramed.finishTest()" 
-                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
-                                ✅ Finalizar Test
-                            </button>
-                        ` : `
-                            <button onclick="academiaUmbramed.nextQuestion()" 
-                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
-                                Siguiente →
-                            </button>
-                        `}
-                    </div>
-                </div>
-                
-                <!-- Información adicional -->
-                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; text-align: center;">
-                    <div style="color: var(--text-light); font-size: 0.9rem;">
-                        💡 Puedes cambiar tu respuesta en cualquier momento antes de pasar a la siguiente pregunta
-                    </div>
-                </div>
-            </div>
-        `;
-    },
-    
-    renderTestResultsView() {
-        const results = this.testResults;
-        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
-        const minutes = Math.floor(results.totalTime / 60);
-        const seconds = results.totalTime % 60;
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
-                <span>Resultados</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <div style="text-align: center; margin-bottom: 3rem;">
-                    <div style="font-size: 5rem; margin-bottom: 1rem;">
-                        ${results.passed ? '🎉' : '📚'}
-                    </div>
-                    <h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
-                        ${results.passed ? '¡Felicitaciones!' : '¡Sigue Practicando!'}
-                    </h1>
-                    <p style="color: var(--text-light); font-size: 1.2rem;">
-                        ${results.isCategory ? `Test de ${results.category}` : 'Test Aleatorio'} completado
-                    </p>
-                </div>
-                
-                <!-- Resultados principales -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                    <div style="background: ${results.passed ? '#28a745' : '#dc3545'}; color: white; 
-                               padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.percentage}%
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Puntuación Final</div>
-                    </div>
-                    <div style="background: #28a745; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.correct}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Correctas</div>
-                    </div>
-                    <div style="background: #dc3545; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.incorrect}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Incorrectas</div>
-                    </div>
-                    <div style="background: #6c757d; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${minutes}:${seconds.toString().padStart(2, '0')}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Tiempo Total</div>
-                    </div>
-                </div>
-                
-                <!-- Acciones -->
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
-                    <button onclick="academiaUmbramed.showDetailedResults()" 
-                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        📋 Ver Respuestas Detalladas
-                    </button>
-                    <button onclick="academiaUmbramed.startRandomTest('${results.bankId}')" 
-                            style="background: #17a2b8; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        🔄 Repetir Test
-                    </button>
-                    <button onclick="academiaUmbramed.openQuestionBank('${results.bankId}')" 
-                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        ← Volver al Banco
-                    </button>
-                </div>
-                
-                <!-- Estadísticas por categoría -->
-                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--accent-black); margin-bottom: 2rem; text-align: center;">
-                        📊 Análisis por Categorías
-                    </h3>
-                    ${this.generateCategoryAnalysis(results)}
-                </div>
-            </div>
-        `;
-    },
-    
-    generateCategoryAnalysis(results) {
-        const categories = {};
-        
-        results.results.forEach(result => {
-            if (!categories[result.category]) {
-                categories[result.category] = { total: 0, correct: 0 };
-            }
-            categories[result.category].total++;
-            if (result.isCorrect) {
-                categories[result.category].correct++;
-            }
+        var html = [];
+        html.push('<div class="breadcrumb">');
+        html.push('<a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > ');
+        html.push('<a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >');
+        html.push('<a href="#" onclick="academiaUmbramed.selectSpecialty(\'' + this.currentSpecialty + '\')">' + specialty.name + '</a> >');
+        html.push('<a href="#" onclick="academiaUmbramed.openQuestionBank(\'' + test.bankId + '\')">' + test.bankName + '</a> >');
+        html.push('<span>Test en Curso</span>');
+        html.push('</div>');
+        html.push('<div class="dashboard-card">');
+        html.push('<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem; background: ' + bank.color + '15; border-radius: 15px; border-left: 5px solid ' + bank.color + ';">');
+        html.push('<div>');
+        html.push('<h1 style="color: var(--accent-black); font-size: 1.8rem; font-weight: 700; margin: 0;">' + bank.icon + ' ' + test.bankName + '</h1>');
+        html.push('<p style="color: var(--text-light); margin: 0.5rem 0 0;">' + (test.isCategory ? 'Categoría: ' + test.category : 'Test Aleatorio') + ' | Pregunta ' + (test.currentQuestionIndex + 1) + ' de ' + test.questions.length + '</p>');
+        html.push('</div>');
+        html.push('<div style="text-align: right;">');
+        html.push('<div style="font-size: 1.5rem; font-weight: 700; color: ' + bank.color + ';">⏱️ ' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0') + '</div>');
+        html.push('<div style="color: var(--text-light); font-size: 0.9rem;">Tiempo transcurrido</div>');
+        html.push('</div>');
+        html.push('</div>');
+        html.push('<div style="background: #e9ecef; border-radius: 10px; height: 8px; margin-bottom: 2rem; overflow: hidden;">');
+        html.push('<div style="background: ' + bank.color + '; height: 100%; width: ' + progress + '%; transition: width 0.3s ease;"></div>');
+        html.push('</div>');
+        html.push('<div style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">');
+        html.push('<div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">');
+        html.push('<div style="background: ' + bank.color + '; color: white; border-radius: 10px; padding: 0.5rem 1rem; font-weight: 700; font-size: 0.9rem;">' + currentQuestion.category + '</div>');
+        html.push('<div style="background: ' + bank.color + '30; color: ' + bank.color + '; border-radius: 10px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.9rem;">' + currentQuestion.difficulty + '</div>');
+        html.push('</div>');
+        html.push('<h2 style="color: var(--accent-black); font-size: 1.4rem; font-weight: 600; line-height: 1.6; margin-bottom: 2rem;">' + (test.currentQuestionIndex + 1) + '. ' + currentQuestion.question + '</h2>');
+        html.push('<div style="display: grid; gap: 1rem;">');
+        currentQuestion.options.forEach(function(option, index) {
+            html.push('<label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; background: white;' + (test.answers && test.answers[test.currentQuestionIndex] === index ? 'border-color: ' + bank.color + '; background: ' + bank.color + '20;' : '') + '" onmouseover="this.style.borderColor=\'' + bank.color + '\'; this.style.background=\'' + bank.color + '10\';" onmouseout="if(!this.querySelector(\'input\').checked) { this.style.borderColor=\'#e9ecef\'; this.style.background=\'white\'; }" onclick="academiaUmbramed.selectTestAnswer(' + index + ', this)">' +
+                '<input type="radio" name="test-answer" value="' + index + '" ' + (test.answers && test.answers[test.currentQuestionIndex] === index ? 'checked' : '') + ' style="width: 20px; height: 20px; accent-color: ' + bank.color + ';">' +
+                '<div style="flex: 1;"><span style="font-weight: 600; color: ' + bank.color + '; margin-right: 0.5rem;">' + String.fromCharCode(65 + index) + ') </span>' + option + '</div>' +
+                '</label>');
         });
-        
-        return Object.entries(categories).map(([category, stats]) => {
-            const percentage = ((stats.correct / stats.total) * 100).toFixed(1);
-            const color = percentage >= 70 ? '#28a745' : percentage >= 50 ? '#ffc107' : '#dc3545';
-            
-            return `
-                <div style="display: flex; justify-content: space-between; align-items: center; 
-                           padding: 1rem; margin-bottom: 1rem; border-radius: 10px; background: #f8f9fa;">
-                    <div style="flex: 1;">
-                        <div style="font-weight: 600; color: var(--accent-black);">${category}</div>
-                        <div style="color: var(--text-light); font-size: 0.9rem;">
-                            ${stats.correct} de ${stats.total} correctas
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1.5rem; font-weight: 700; color: ${color};">
-                            ${percentage}%
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    },
-    
-    renderDetailedResultsView() {
-        const results = this.testResults;
-        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
-                <span>Respuestas Detalladas</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <h1 style="color: var(--accent-black); font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">
-                    📋 Respuestas Detalladas
-                </h1>
-                
-                <div style="margin-bottom: 2rem; text-align: center;">
-                    <button onclick="academiaUmbramed.currentView='test-results'; academiaUmbramed.render();" 
-                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        ← Volver a Resultados
-                    </button>
-                </div>
-                
-                <div style="display: grid; gap: 2rem;">
-                    ${results.results.map((result, index) => {
-                        const statusColor = result.status === 'correct' ? '#28a745' : 
-                                          result.status === 'incorrect' ? '#dc3545' : '#6c757d';
-                        const statusIcon = result.status === 'correct' ? '✅' : 
-                                         result.status === 'incorrect' ? '❌' : '⚪';
-                        
-                        return `
-                            <div style="background: white; border-radius: 15px; padding: 2rem; 
-                                       box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid ${statusColor};">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
-                                        <div style="font-size: 1.5rem;">${statusIcon}</div>
-                                        <div>
-                                            <div style="font-weight: 700; color: var(--accent-black); font-size: 1.1rem;">
-                                                Pregunta ${index + 1}
-                                            </div>
-                                            <div style="color: var(--text-light); font-size: 0.9rem;">
-                                                ${result.category} | ${result.difficulty}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="background: ${statusColor}; color: white; padding: 0.5rem 1rem; 
-                                               border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
-                                        ${result.status === 'correct' ? 'CORRECTA' : 
-                                          result.status === 'incorrect' ? 'INCORRECTA' : 'SIN RESPONDER'}
-                                    </div>
-                                </div>
-                                
-                                <h3 style="color: var(--accent-black); font-size: 1.2rem; font-weight: 600; 
-                                          line-height: 1.6; margin-bottom: 1.5rem;">
-                                    ${result.question}
-                                </h3>
-                                
-                                <div style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem;">
-                                    ${result.options.map((option, optIndex) => {
-                                        const isCorrect = optIndex === result.correct;
-                                        const isUserAnswer = optIndex === result.userAnswer;
-                                        
-                                        let optionStyle = 'background: #f8f9fa; border: 2px solid #e9ecef;';
-                                        if (isCorrect) {
-                                            optionStyle = 'background: #d4edda; border: 2px solid #28a745;';
-                                        } else if (isUserAnswer && !isCorrect) {
-                                            optionStyle = 'background: #f8d7da; border: 2px solid #dc3545;';
-                                        }
-                                        
-                                        return `
-                                            <div style="${optionStyle} padding: 1rem; border-radius: 10px;">
-                                                <span style="font-weight: 600; margin-right: 0.5rem;">
-                                                    ${String.fromCharCode(65 + optIndex)})
-                                                </span>
-                                                ${option}
-                                                ${isCorrect ? ' ✅' : ''}
-                                                ${isUserAnswer && !isCorrect ? ' ❌ Tu respuesta' : ''}
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                                
-                                ${result.explanation ? `
-                                    <div style="background: #e8f4f8; padding: 1.5rem; border-radius: 10px; 
-                                               border-left: 4px solid #17a2b8;">
-                                        <div style="font-weight: 600; color: #0c5460; margin-bottom: 0.5rem;">
-                                            💡 Explicación:
-                                        </div>
-                                        <div style="color: #0c5460; line-height: 1.6;">
-                                            ${result.explanation}
-                                        </div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    },
-    
-    renderTestView() {
-        if (!this.currentTest || !this.currentTest.questions) {
-            return '<div>Error: No hay test configurado</div>';
+        html.push('</div>');
+        html.push('</div>');
+        html.push('<div style="display: flex; justify-content: space-between; align-items: center;">');
+        html.push('<button onclick="academiaUmbramed.previousQuestion()" ' + (test.currentQuestionIndex === 0 ? 'disabled' : '') + ' style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer; ' + (test.currentQuestionIndex === 0 ? 'opacity: 0.5; cursor: not-allowed;' : '') + '">← Anterior</button>');
+        html.push('<button onclick="academiaUmbramed.exitTest()" style="background: #ffdddd; color: #d9534f; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">❌ Salir del Test</button>');
+        if (test.currentQuestionIndex === test.questions.length - 1) {
+            html.push('<button onclick="academiaUmbramed.finishTest()" style="background: ' + bank.color + '; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">✅ Finalizar Test</button>');
+        } else {
+            html.push('<button onclick="academiaUmbramed.nextQuestion()" style="background: ' + bank.color + '; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">Siguiente →</button>');
         }
-        
-        const test = this.currentTest;
-        const currentQuestion = test.questions[test.currentQuestionIndex];
-        const progress = ((test.currentQuestionIndex + 1) / test.questions.length) * 100;
-        const timeElapsed = Math.floor((new Date() - test.startTime) / 1000);
-        const minutes = Math.floor(timeElapsed / 60);
-        const seconds = timeElapsed % 60;
-        
-        const specialty = this.specialties[this.currentSpecialty];
-        const bank = specialty.questionBanks[test.bankId];
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${specialty.name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${test.bankId}')">${test.bankName}</a> >
-                <span>Test en Curso</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; 
-                           padding: 1.5rem; background: ${bank.color}15; border-radius: 15px; border-left: 5px solid ${bank.color};">
-                    <div>
-                        <h1 style="color: var(--accent-black); font-size: 1.8rem; font-weight: 700; margin: 0;">
-                            ${bank.icon} ${test.bankName}
-                        </h1>
-                        <p style="color: var(--text-light); margin: 0.5rem 0 0;">
-                            ${test.isCategory ? `Categoría: ${test.category}` : 'Test Aleatorio'} | 
-                            Pregunta ${test.currentQuestionIndex + 1} de ${test.questions.length}
-                        </p>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1.5rem; font-weight: 700; color: ${bank.color};">
-                            ⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}
-                        </div>
-                        <div style="color: var(--text-light); font-size: 0.9rem;">Tiempo transcurrido</div>
-                    </div>
-                </div>
-                
-                <!-- Barra de progreso -->
-                <div style="background: #e9ecef; border-radius: 10px; height: 8px; margin-bottom: 2rem; overflow: hidden;">
-                    <div style="background: ${bank.color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
-                </div>
-                
-                <!-- Pregunta actual -->
-                <div style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; 
-                           box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div style="background: ${bank.color}; color: white; border-radius: 10px; 
-                                   padding: 0.5rem 1rem; font-weight: 700; font-size: 0.9rem;">
-                            ${currentQuestion.category}
-                        </div>
-                        <div style="background: ${bank.color}30; color: ${bank.color}; border-radius: 10px; 
-                                   padding: 0.5rem 1rem; font-weight: 600; font-size: 0.9rem;">
-                            ${currentQuestion.difficulty}
-                        </div>
-                    </div>
-                    
-                    <h2 style="color: var(--accent-black); font-size: 1.4rem; font-weight: 600; 
-                              line-height: 1.6; margin-bottom: 2rem;">
-                        ${test.currentQuestionIndex + 1}. ${currentQuestion.question}
-                    </h2>
-                    
-                    <div style="display: grid; gap: 1rem;">
-                        ${currentQuestion.options.map((option, index) => `
-                            <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; 
-                                          border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; 
-                                          transition: all 0.3s ease; background: white;
-                                          ${test.answers && test.answers[test.currentQuestionIndex] === index ? 
-                                            `border-color: ${bank.color}; background: ${bank.color}20;` : ''}"
-                                   onmouseover="this.style.borderColor='${bank.color}'; this.style.background='${bank.color}10';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e9ecef'; this.style.background='white'; }"
-                                   onclick="academiaUmbramed.selectTestAnswer(${index}, this)">
-                                <input type="radio" name="test-answer" value="${index}" 
-                                       ${test.answers && test.answers[test.currentQuestionIndex] === index ? 'checked' : ''}
-                                       style="width: 20px; height: 20px; accent-color: ${bank.color};">
-                                <div style="flex: 1;">
-                                    <span style="font-weight: 600; color: ${bank.color}; margin-right: 0.5rem;">
-                                        ${String.fromCharCode(65 + index)})
-                                    </span>
-                                    ${option}
-                                </div>
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <!-- Botones de navegación -->
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button onclick="academiaUmbramed.previousQuestion()" 
-                            ${test.currentQuestionIndex === 0 ? 'disabled' : ''}
-                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer; 
-                                   ${test.currentQuestionIndex === 0 ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
-                        ← Anterior
-                    </button>
-                    
-                    <div style="display: flex; gap: 1rem;">
-                        <button onclick="academiaUmbramed.exitTest()" 
-                                style="background: #dc3545; color: white; border: none; padding: 1rem 2rem; 
-                                       border-radius: 25px; font-weight: 600; cursor: pointer;">
-                            ❌ Salir del Test
-                        </button>
-                        
-                        ${test.currentQuestionIndex === test.questions.length - 1 ? `
-                            <button onclick="academiaUmbramed.finishTest()" 
-                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
-                                ✅ Finalizar Test
-                            </button>
-                        ` : `
-                            <button onclick="academiaUmbramed.nextQuestion()" 
-                                    style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                           border-radius: 25px; font-weight: 600; cursor: pointer;">
-                                Siguiente →
-                            </button>
-                        `}
-                    </div>
-                </div>
-                
-                <!-- Información adicional -->
-                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; text-align: center;">
-                    <div style="color: var(--text-light); font-size: 0.9rem;">
-                        💡 Puedes cambiar tu respuesta en cualquier momento antes de pasar a la siguiente pregunta
-                    </div>
-                </div>
-            </div>
-        `;
+        html.push('</div>');
+        html.push('<div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; text-align: center;">');
+        html.push('<div style="color: var(--text-light); font-size: 0.9rem;">💡 Puedes cambiar tu respuesta en cualquier momento antes de pasar a la siguiente pregunta</div>');
+        html.push('</div>');
+        html.push('</div>');
+        return html.join('');
     },
-    
     renderTestResultsView() {
-        const results = this.testResults;
-        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
-        const minutes = Math.floor(results.totalTime / 60);
-        const seconds = results.totalTime % 60;
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
-                <span>Resultados</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <div style="text-align: center; margin-bottom: 3rem;">
-                    <div style="font-size: 5rem; margin-bottom: 1rem;">
-                        ${results.passed ? '🎉' : '📚'}
-                    </div>
-                    <h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
-                        ${results.passed ? '¡Felicitaciones!' : '¡Sigue Practicando!'}
-                    </h1>
-                    <p style="color: var(--text-light); font-size: 1.2rem;">
-                        ${results.isCategory ? `Test de ${results.category}` : 'Test Aleatorio'} completado
-                    </p>
-                </div>
-                
-                <!-- Resultados principales -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                    <div style="background: ${results.passed ? '#28a745' : '#dc3545'}; color: white; 
-                               padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.percentage}%
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Puntuación Final</div>
-                    </div>
-                    <div style="background: #28a745; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.correct}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Correctas</div>
-                    </div>
-                    <div style="background: #dc3545; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${results.incorrect}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Incorrectas</div>
-                    </div>
-                    <div style="background: #6c757d; color: white; padding: 2rem; border-radius: 20px; text-align: center;">
-                        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
-                            ${minutes}:${seconds.toString().padStart(2, '0')}
-                        </div>
-                        <div style="font-size: 1.1rem; opacity: 0.9;">Tiempo Total</div>
-                    </div>
-                </div>
-                
-                <!-- Acciones -->
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
-                    <button onclick="academiaUmbramed.showDetailedResults()" 
-                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        📋 Ver Respuestas Detalladas
-                    </button>
-                    <button onclick="academiaUmbramed.startRandomTest('${results.bankId}')" 
-                            style="background: #17a2b8; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        🔄 Repetir Test
-                    </button>
-                    <button onclick="academiaUmbramed.openQuestionBank('${results.bankId}')" 
-                            style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        ← Volver al Banco
-                    </button>
-                </div>
-                
-                <!-- Estadísticas por categoría -->
-                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--accent-black); margin-bottom: 2rem; text-align: center;">
-                        📊 Análisis por Categorías
-                    </h3>
-                    ${this.generateCategoryAnalysis(results)}
-                </div>
-            </div>
-        `;
-    },
-    
-    generateCategoryAnalysis(results) {
-        const categories = {};
-        
-        results.results.forEach(result => {
-            if (!categories[result.category]) {
-                categories[result.category] = { total: 0, correct: 0 };
-            }
-            categories[result.category].total++;
-            if (result.isCorrect) {
-                categories[result.category].correct++;
-            }
-        });
-        
-        return Object.entries(categories).map(([category, stats]) => {
-            const percentage = ((stats.correct / stats.total) * 100).toFixed(1);
-            const color = percentage >= 70 ? '#28a745' : percentage >= 50 ? '#ffc107' : '#dc3545';
-            
-            return `
-                <div style="display: flex; justify-content: space-between; align-items: center; 
-                           padding: 1rem; margin-bottom: 1rem; border-radius: 10px; background: #f8f9fa;">
-                    <div style="flex: 1;">
-                        <div style="font-weight: 600; color: var(--accent-black);">${category}</div>
-                        <div style="color: var(--text-light); font-size: 0.9rem;">
-                            ${stats.correct} de ${stats.total} correctas
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1.5rem; font-weight: 700; color: ${color};">
-                            ${percentage}%
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    },
-    
-    renderDetailedResultsView() {
-        const results = this.testResults;
-        const bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
-        
-        return `
-            <div class="breadcrumb">
-                <a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > 
-                <a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >
-                <a href="#" onclick="academiaUmbramed.selectSpecialty('${this.currentSpecialty}')">${this.specialties[this.currentSpecialty].name}</a> >
-                <a href="#" onclick="academiaUmbramed.openQuestionBank('${results.bankId}')">${results.bankName}</a> >
-                <span>Respuestas Detalladas</span>
-            </div>
-            
-            <div class="dashboard-card">
-                <h1 style="color: var(--accent-black); font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">
-                    📋 Respuestas Detalladas
-                </h1>
-                
-                <div style="margin-bottom: 2rem; text-align: center;">
-                    <button onclick="academiaUmbramed.currentView='test-results'; academiaUmbramed.render();" 
-                            style="background: ${bank.color}; color: white; border: none; padding: 1rem 2rem; 
-                                   border-radius: 25px; font-weight: 600; cursor: pointer;">
-                        ← Volver a Resultados
-                    </button>
-                </div>
-                
-                <div style="display: grid; gap: 2rem;">
-                    ${results.results.map((result, index) => {
-                        const statusColor = result.status === 'correct' ? '#28a745' : 
-                                          result.status === 'incorrect' ? '#dc3545' : '#6c757d';
-                        const statusIcon = result.status === 'correct' ? '✅' : 
-                                         result.status === 'incorrect' ? '❌' : '⚪';
-                        
-                        return `
-                            <div style="background: white; border-radius: 15px; padding: 2rem; 
-                                       box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid ${statusColor};">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
-                                        <div style="font-size: 1.5rem;">${statusIcon}</div>
-                                        <div>
-                                            <div style="font-weight: 700; color: var(--accent-black); font-size: 1.1rem;">
-                                                Pregunta ${index + 1}
-                                            </div>
-                                            <div style="color: var(--text-light); font-size: 0.9rem;">
-                                                ${result.category} | ${result.difficulty}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="background: ${statusColor}; color: white; padding: 0.5rem 1rem; 
-                                               border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
-                                        ${result.status === 'correct' ? 'CORRECTA' : 
-                                          result.status === 'incorrect' ? 'INCORRECTA' : 'SIN RESPONDER'}
-                                    </div>
-                                </div>
-                                
-                                <h3 style="color: var(--accent-black); font-size: 1.2rem; font-weight: 600; 
-                                          line-height: 1.6; margin-bottom: 1.5rem;">
-                                    ${result.question}
-                                </h3>
-                                
-                                <div style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem;">
-                                    ${result.options.map((option, optIndex) => {
-                                        const isCorrect = optIndex === result.correct;
-                                        const isUserAnswer = optIndex === result.userAnswer;
-                                        
-                                        let optionStyle = 'background: #f8f9fa; border: 2px solid #e9ecef;';
-                                        if (isCorrect) {
-                                            optionStyle = 'background: #d4edda; border: 2px solid #28a745;';
-                                        } else if (isUserAnswer && !isCorrect) {
-                                            optionStyle = 'background: #f8d7da; border: 2px solid #dc3545;';
-                                        }
-                                        
-                                        return `
-                                            <div style="${optionStyle} padding: 1rem; border-radius: 10px;">
-                                                <span style="font-weight: 600; margin-right: 0.5rem;">
-                                                    ${String.fromCharCode(65 + optIndex)})
-                                                </span>
-                                                ${option}
-                                                ${isCorrect ? ' ✅' : ''}
-                                                ${isUserAnswer && !isCorrect ? ' ❌ Tu respuesta' : ''}
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                                
-                                ${result.explanation ? `
-                                    <div style="background: #e8f4f8; padding: 1.5rem; border-radius: 10px; 
-                                               border-left: 4px solid #17a2b8;">
-                                        <div style="font-weight: 600; color: #0c5460; margin-bottom: 0.5rem;">
-                                            💡 Explicación:
-                                        </div>
-                                        <div style="color: #0c5460; line-height: 1.6;">
-                                            ${result.explanation}
-                                        </div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
+    var results = this.testResults;
+    var bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+    var minutes = Math.floor(results.totalTime / 60);
+    var seconds = results.totalTime % 60;
+    var html = [];
+    html.push('<div class="breadcrumb">');
+    html.push('<a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > ');
+    html.push('<a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >');
+    html.push('<a href="#" onclick="academiaUmbramed.selectSpecialty(\'' + this.currentSpecialty + '\')">' + this.specialties[this.currentSpecialty].name + '</a> >');
+    html.push('<a href="#" onclick="academiaUmbramed.openQuestionBank(\'' + results.bankId + '\')">' + results.bankName + '</a> >');
+    html.push('<span>Resultados</span>');
+    html.push('</div>');
+    html.push('<div class="dashboard-card">');
+    html.push('<div style="text-align: center; margin-bottom: 3rem;">');
+    html.push('<div style="font-size: 5rem; margin-bottom: 1rem;">' + (results.passed ? '🎉' : '📚') + '</div>');
+    html.push('<h1 style="color: var(--accent-black); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">' + (results.passed ? '¡Felicitaciones!' : '¡Sigue Practicando!') + '</h1>');
+    html.push('<p style="color: var(--text-light); font-size: 1.2rem;">' + (results.isCategory ? 'Test de ' + results.category : 'Test Aleatorio') + ' completado</p>');
+    html.push('</div>');
+    html.push('<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">');
+    html.push('<div style="background: ' + (results.passed ? '#28a745' : '#dc3545') + '; color: white; padding: 2rem; border-radius: 20px; text-align: center;">');
+    html.push('<div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">' + results.percentage + '%</div>');
+    html.push('<div style="font-size: 1.1rem; opacity: 0.9;">Puntuación Final</div>');
+    html.push('</div>');
+    html.push('<div style="background: #28a745; color: white; padding: 2rem; border-radius: 20px; text-align: center;">');
+    html.push('<div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">' + results.correct + '</div>');
+    html.push('<div style="font-size: 1.1rem; opacity: 0.9;">Correctas</div>');
+    html.push('</div>');
+    html.push('<div style="background: #dc3545; color: white; padding: 2rem; border-radius: 20px; text-align: center;">');
+    html.push('<div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">' + results.incorrect + '</div>');
+    html.push('<div style="font-size: 1.1rem; opacity: 0.9;">Incorrectas</div>');
+    html.push('</div>');
+    html.push('<div style="background: #6c757d; color: white; padding: 2rem; border-radius: 20px; text-align: center;">');
+    html.push('<div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">' + minutes + ':' + seconds.toString().padStart(2, '0') + '</div>');
+    html.push('<div style="font-size: 1.1rem; opacity: 0.9;">Tiempo Total</div>');
+    html.push('</div>');
+    html.push('</div>');
+    html.push('<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem;">');
+    html.push('<button onclick="academiaUmbramed.showDetailedResults()" style="background: ' + bank.color + '; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">📋 Ver Respuestas Detalladas</button>');
+    html.push('<button onclick="academiaUmbramed.startRandomTest(\'' + results.bankId + '\')" style="background: #17a2b8; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">🔄 Repetir Test</button>');
+    html.push('<button onclick="academiaUmbramed.openQuestionBank(\'' + results.bankId + '\')" style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">← Volver al Banco</button>');
+    html.push('</div>');
+    html.push('<div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">');
+    html.push('<h3 style="color: var(--accent-black); margin-bottom: 2rem; text-align: center;">📊 Análisis por Categorías</h3>');
+    html.push(this.generateCategoryAnalysis(results));
+    html.push('</div>');
+    html.push('</div>');
+    return html.join('');
     }
     
-});
+    generateCategoryAnalysis(results) {
+        var categories = {};
+        results.results.forEach(function(result) {
+            if (!categories[result.category]) {
+                categories[result.category] = { total: 0, correct: 0 };
+            }
+            categories[result.category].total++;
+            if (result.isCorrect) {
+                categories[result.category].correct++;
+            }
+        });
+        var html = [];
+        Object.keys(categories).forEach(function(category) {
+            var stats = categories[category];
+            var percentage = ((stats.correct / stats.total) * 100).toFixed(1);
+            var color = percentage >= 70 ? '#28a745' : percentage >= 50 ? '#ffc107' : '#dc3545';
+            html.push('<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 1rem; border-radius: 10px; background: #f8f9fa;">');
+            html.push('<div style="flex: 1;">');
+            html.push('<div style="font-weight: 600; color: var(--accent-black);">' + category + '</div>');
+            html.push('<div style="color: var(--text-light); font-size: 0.9rem;">' + stats.correct + ' de ' + stats.total + ' correctas</div>');
+            html.push('</div>');
+            html.push('<div style="text-align: right;">');
+            html.push('<div style="font-size: 1.5rem; font-weight: 700; color: ' + color + ';">' + percentage + '%</div>');
+            html.push('</div>');
+            html.push('</div>');
+        });
+        return html.join('');
+    },
+    
+    renderDetailedResultsView() {
+        var results = this.testResults;
+        var bank = this.specialties[this.currentSpecialty].questionBanks[results.bankId];
+        var html = [];
+        html.push('<div class="breadcrumb">');
+        html.push('<a href="#" onclick="academiaUmbramed.goToDashboard()">🏠 Dashboard</a> > ');
+        html.push('<a href="#" onclick="academiaUmbramed.showCampus()">🏫 Campus</a> >');
+        html.push('<a href="#" onclick="academiaUmbramed.selectSpecialty(\'' + this.currentSpecialty + '\')">' + this.specialties[this.currentSpecialty].name + '</a> >');
+        html.push('<a href="#" onclick="academiaUmbramed.openQuestionBank(\'' + results.bankId + '\')">' + results.bankName + '</a> >');
+        html.push('<span>Respuestas Detalladas</span>');
+        html.push('</div>');
+        html.push('<div class="dashboard-card">');
+        html.push('<h1 style="color: var(--accent-black); font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">📋 Respuestas Detalladas</h1>');
+        html.push('<div style="margin-bottom: 2rem; text-align: center;">');
+        html.push('<button onclick="academiaUmbramed.currentView=\'test-results\'; academiaUmbramed.render();" style="background: ' + bank.color + '; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer;">← Volver a Resultados</button>');
+        html.push('</div>');
+        html.push('<div style="display: grid; gap: 2rem;">');
+        results.results.forEach(function(result, index) {
+            var statusColor = result.status === 'correct' ? '#28a745' : result.status === 'incorrect' ? '#dc3545' : '#6c757d';
+            var statusIcon = result.status === 'correct' ? '✅' : result.status === 'incorrect' ? '❌' : '⚪';
+            html.push('<div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid ' + statusColor + ';">');
+            html.push('<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">');
+            html.push('<div style="display: flex; align-items: center; gap: 1rem;">');
+            html.push('<div style="font-size: 1.5rem;">' + statusIcon + '</div>');
+            html.push('<div>');
+            html.push('<div style="font-weight: 700; color: var(--accent-black); font-size: 1.1rem;">Pregunta ' + (index + 1) + '</div>');
+            html.push('<div style="color: var(--text-light); font-size: 0.9rem;">' + result.category + ' | ' + result.difficulty + '</div>');
+            html.push('</div>');
+            html.push('</div>');
+            html.push('<div style="background: ' + statusColor + '; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">' + (result.status === 'correct' ? 'CORRECTA' : result.status === 'incorrect' ? 'INCORRECTA' : 'SIN RESPONDER') + '</div>');
+            html.push('</div>');
+            html.push('<h3 style="color: var(--accent-black); font-size: 1.2rem; font-weight: 600; line-height: 1.6; margin-bottom: 1.5rem;">' + result.question + '</h3>');
+            html.push('<div style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem;">');
+            result.options.forEach(function(option, optIndex) {
+                var isCorrect = optIndex === result.correct;
+                var isUserAnswer = optIndex === result.userAnswer;
+                var optionStyle = 'background: #f8f9fa; border: 2px solid #e9ecef;';
+                if (isCorrect) {
+                    optionStyle = 'background: #d4edda; border: 2px solid #28a745;';
+                } else if (isUserAnswer && !isCorrect) {
+                    optionStyle = 'background: #f8d7da; border: 2px solid #dc3545;';
+                }
+                html.push('<div style="' + optionStyle + ' padding: 1rem; border-radius: 10px;">' +
+                    '<span style="font-weight: 600; margin-right: 0.5rem;">' + String.fromCharCode(65 + optIndex) + ') </span>' + option +
+                    (isCorrect ? ' ✅' : '') +
+                    (isUserAnswer && !isCorrect ? ' ❌ Tu respuesta' : '') + '</div>');
+            });

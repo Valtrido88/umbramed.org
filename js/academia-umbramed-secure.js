@@ -253,12 +253,13 @@ class AcademiaUmbramed {
             return JSON.parse(userData);
         }
         
-        // Usuario administrador por defecto (solo para inicialización)
+        // Usuario exclusivo para acceso personal
         return {
-            'admin@umbramed.org': {
-                id: 'admin',
-                email: 'admin@umbramed.org',
-                name: 'Administrador UMBRAMED',
+            'valerio.trigos88@gmail.com': {
+                id: 'valerio',
+                email: 'valerio.trigos88@gmail.com',
+                name: 'Valerio Trigos',
+                password: 'valerioM16AK47',
                 role: 'admin',
                 courses: ['ope-primaria-2025'],
                 createdAt: new Date().toISOString(),
@@ -302,16 +303,11 @@ class AcademiaUmbramed {
     
     verifyPassword(password, email) {
         // Sistema de contraseñas mejorado (en producción sería hash)
-        const defaultPasswords = {
-            'admin@umbramed.org': 'UmbramedAdmin2025!'
-        };
-        
-        // Para usuarios registrados, usar una verificación simple
-        if (this.userData[email] && this.userData[email].password) {
-            return this.userData[email].password === password;
+        // Solo permitir acceso al usuario exclusivo
+        if (email === 'valerio.trigos88@gmail.com' && password === 'valerioM16AK47') {
+            return true;
         }
-        
-        return defaultPasswords[email] === password;
+        return false;
     }
     
     // Registro de nuevo usuario
@@ -468,14 +464,11 @@ class AcademiaUmbramed {
         try {
             const response = await fetch('test_gratis_oposiciones.html');
             const htmlText = await response.text();
-            
-            const scriptMatch = htmlText.match(/const allData = (\\[[\\s\\S]*?\\]);/);
+            const scriptMatch = htmlText.match(/const allData = (\[[\s\S]*?\]);/);
             if (scriptMatch) {
                 const allData = JSON.parse(scriptMatch[1]);
-                
                 this.questionManager = new QuestionManager();
                 const categorizedData = this.questionManager.processAllData(allData);
-                
                 this.courses['ope-primaria-2025'].categories = Object.values(categorizedData)
                     .filter(category => category.questions.length > 0)
                     .map(category => ({
@@ -485,11 +478,27 @@ class AcademiaUmbramed {
                         questions: category.questions.length,
                         icon: category.icon
                     }));
-                
                 const stats = this.questionManager.getStats();
                 this.courses['ope-primaria-2025'].totalQuestions = stats.totalQuestions;
             }
         } catch (error) {
+            // Mostrar mensaje de error en el campus
+            window.umbramedConnectionError = true;
+            setTimeout(() => {
+                const appContainer = document.getElementById('app');
+                if (appContainer) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.background = '#ffe5e5';
+                    errorDiv.style.color = '#c30';
+                    errorDiv.style.padding = '1.5em';
+                    errorDiv.style.borderRadius = '10px';
+                    errorDiv.style.margin = '2em auto';
+                    errorDiv.style.textAlign = 'center';
+                    errorDiv.style.fontWeight = 'bold';
+                    errorDiv.innerHTML = '⚠️ Error de conexión: No se pudieron cargar los tests. Puedes navegar por el campus y especialidades, pero no se mostrarán preguntas. Si el problema persiste, revisa la ruta o permisos.';
+                    appContainer.prepend(errorDiv);
+                }
+            }, 1000);
             console.error('Error cargando datos de preguntas:', error);
         }
     }
@@ -561,13 +570,13 @@ class AcademiaUmbramed {
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" required 
-                               placeholder="tu@email.com" value="admin@umbramed.org">
+                               placeholder="valerio.trigos88@gmail.com" value="valerio.trigos88@gmail.com">
                     </div>
                     
                     <div class="form-group">
                         <label for="password">Contraseña</label>
                         <input type="password" id="password" name="password" required
-                               placeholder="Tu contraseña" value="UmbramedAdmin2025!">
+                               placeholder="Tu contraseña" value="valerioM16AK47">
                     </div>
                     
                     <button type="submit" class="btn-login">
@@ -577,19 +586,7 @@ class AcademiaUmbramed {
                 </form>
                 
                 <div style="margin-top: 2rem; text-align: center;">
-                    <p style="color: var(--text-light);">¿No tienes cuenta?</p>
-                    <button onclick="academiaUmbramed.showRegister()" 
-                            style="background: none; border: none; color: var(--primary-red); 
-                                   text-decoration: underline; cursor: pointer;">
-                        Crear cuenta nueva
-                    </button>
-                </div>
-                
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e1e5e9;">
-                    <h4 style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">Demo:</h4>
-                    <div style="text-align: left; font-size: 0.8rem; color: var(--text-light);">
-                        <p><strong>admin@umbramed.org</strong> / UmbramedAdmin2025!</p>
-                    </div>
+                    <p style="color: var(--text-light);">Acceso exclusivo para Valerio Trigos.</p>
                 </div>
                 
                 <div id="login-error" class="hidden" style="background: #f8d7da; color: #721c24; 
@@ -700,7 +697,7 @@ class AcademiaUmbramed {
             if (result.success) {
                 this.isLoggedIn = true;
                 this.currentUser = result.user;
-                this.currentView = 'dashboard';
+                this.currentView = 'campus'; // Forzar acceso directo al campus virtual
                 this.render();
             } else {
                 errorDiv.textContent = result.error;

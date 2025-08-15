@@ -1,0 +1,5 @@
+{
+  "name": "Asistente de Diabetes Tipo 2",
+  "description": "Una herramienta integral para ayudar a los pacientes con diabetes tipo 2 a gestionar su tratamiento, registrar sus niveles de glucosa y recibir recomendaciones basadas en IA para ajustar su medicación, incluyendo la detección y corrección de los fenómenos del alba y Somogyi.",
+  "requestFramePermissions": []
+}

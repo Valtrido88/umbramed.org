@@ -58,27 +58,65 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateFamilyAdvice = () => {
         return new Promise(resolve => {
             setTimeout(() => {
+
                 const advice = `
                     <h1>Carta de Apoyo para la Familia y Cuidadores</h1>
-                    <p>Querida familia, querido cuidador,</p>
-                    <p>Sabemos que este es un momento increíblemente difícil. Acompañar a un ser querido en el final de su vida es un acto de profundo amor y generosidad. Esta guía busca ofrecerle un poco de luz y apoyo práctico en este camino.</p>
-                    
+                    <p>Querida familia, querido cuidador:</p>
+                    <p>Sabemos que este es un momento de gran dificultad y emociones intensas. Acompañar a un ser querido en el final de su vida es un acto de amor y generosidad. Esta carta quiere ofrecerle información útil, apoyo y recursos para afrontar este proceso con serenidad y confianza.</p>
+
                     <h2>Comprender los Síntomas Comunes</h2>
                     <ul>
                         <li><strong>Disminución del apetito:</strong> Es normal. No fuerce la comida. Ofrezca pequeños sorbos de líquido o trocitos de hielo para mantener la boca húmeda.</li>
                         <li><strong>Somnolencia y confusión:</strong> Su ser querido puede dormir más o parecer desorientado. Hable con calma y claridad, recuérdele quién es usted y dónde está.</li>
-                        <li><strong>Cambios en la respiración:</strong> Puede haber pausas o ruidos. Elevar la cabecera de la cama puede ayudar.</li>
+                        <li><strong>Cambios en la respiración:</strong> Puede haber pausas, ruidos o respiración irregular. Elevar la cabecera de la cama puede ayudar. Mantenga la calma y consulte al equipo si tiene dudas.</li>
+                        <li><strong>Dolor y otros síntomas:</strong> El equipo de cuidados paliativos está para ayudarle a controlar el dolor y otros síntomas. No dude en pedir ayuda si nota cambios o molestias.</li>
+                    </ul>
+
+                    <h2>Cuidados de la Boca y Prevención de Escaras</h2>
+                    <ul>
+                        <li><strong>Higiene bucal:</strong> Humedezca la boca con agua, suero o geles específicos. Limpie suavemente los labios y la lengua con una gasa húmeda. Ofrezca trocitos de hielo si lo tolera.</li>
+                        <li><strong>Evite la sequedad:</strong> Use bálsamo labial y evite enjuagues con alcohol. Consulte al equipo si observa heridas o molestias.</li>
+                        <li><strong>Prevención de escaras:</strong> Cambie de posición a su ser querido cada 2-3 horas si está encamado. Utilice cojines o almohadas para proteger zonas de apoyo. Mantenga la piel limpia y seca, y aplique cremas barrera si es necesario.</li>
+                        <li><strong>Vigile la piel:</strong> Observe enrojecimientos, heridas o zonas doloridas y comuníquelo al equipo sanitario.</li>
+                    </ul>
+
+                    <h2>Cambios Posturales y Movilización</h2>
+                    <ul>
+                        <li><strong>Movilización suave:</strong> Ayude a cambiar de posición con movimientos lentos y cuidadosos. Pregunte al equipo sobre técnicas seguras.</li>
+                        <li><strong>Comodidad:</strong> Ajuste almohadas y mantas para mejorar el confort. Evite ropas ajustadas y mantenga la cama ordenada.</li>
+                        <li><strong>Estimulación:</strong> Si es posible, anime a realizar pequeños movimientos o ejercicios suaves para evitar rigidez.</li>
+                    </ul>
+
+                    <h2>Consejos Prácticos para el Día a Día</h2>
+                    <ul>
+                        <li><strong>Higiene y confort:</strong> Mantenga la piel limpia y seca, cambie la ropa de cama si es necesario y ayude a su ser querido a cambiar de posición para evitar molestias.</li>
+                        <li><strong>Comunicación:</strong> Escuche y hable con sinceridad. A veces, el silencio y la compañía son más valiosos que las palabras.</li>
+                        <li><strong>Organización:</strong> Lleve un registro de los medicamentos y pautas. Anote dudas para consultarlas con el equipo sanitario.</li>
+                        <li><strong>Solicite ayuda:</strong> No dude en pedir apoyo a otros familiares, amigos o profesionales. El cuidado compartido es más llevadero.</li>
+                    </ul>
+
+                    <h2>Recursos y Trámites</h2>
+                    <ul>
+                        <li><strong>Equipo de cuidados paliativos:</strong> Contacte con ellos ante cualquier duda, síntoma nuevo o necesidad. Están para ayudarle.</li>
+                        <li><strong>Recursos sociales:</strong> Infórmese sobre ayudas a domicilio, teleasistencia y apoyo psicológico. El trabajador social puede orientarle sobre trámites y prestaciones.</li>
+                        <li><strong>Documentación y voluntades:</strong> Si no lo ha hecho, revise la documentación médica y las voluntades anticipadas. Consulte al equipo si necesita orientación legal.</li>
                     </ul>
 
                     <h2>El Cuidado Emocional y Espiritual</h2>
                     <ul>
-                        <li><strong>Su presencia es el mejor regalo:</strong> Simplemente estar ahí, en silencio, sosteniendo una mano, tiene un valor inmenso.</li>
+                        <li><strong>Su presencia es el mejor regalo:</strong> Estar ahí, en silencio, sosteniendo una mano, tiene un valor inmenso.</li>
                         <li><strong>Hable desde el corazón:</strong> Comparta recuerdos, dé las gracias, pida perdón, diga "te quiero". Nunca es tarde para estas palabras.</li>
-                        <li><strong>Música y ambiente:</strong> Una música suave o el sonido de la naturaleza pueden crear un entorno tranquilo.</li>
+                        <li><strong>Música y ambiente:</strong> Una música suave, luz cálida o el sonido de la naturaleza pueden crear un entorno tranquilo.</li>
+                        <li><strong>Apoyo psicológico:</strong> Si siente tristeza, ansiedad o miedo, hable con el equipo o busque ayuda profesional. Es normal necesitar apoyo.</li>
                     </ul>
 
                     <h2>Cuídese Usted También</h2>
-                    <p>No puede cuidar si no se cuida. Permítase descansar, pida ayuda a otros familiares o amigos, y no dude en hablar de sus sentimientos con el equipo de paliativos. Su bienestar es fundamental.</p>
+                    <ul>
+                        <li><strong>Descanse:</strong> Permítase descansar y delegar tareas. Su bienestar es fundamental para cuidar bien.</li>
+                        <li><strong>Exprésese:</strong> Hable de sus sentimientos con personas de confianza o con el equipo sanitario.</li>
+                        <li><strong>Duelo y despedida:</strong> El proceso de despedida es personal y único. Permítase sentir y vivir el duelo a su ritmo. Busque apoyo si lo necesita.</li>
+                    </ul>
+
                     <p>Con nuestro más profundo respeto y apoyo,<br>El equipo de umbramed.org</p>
                 `;
                 resolve(advice);

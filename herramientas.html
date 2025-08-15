@@ -88,16 +88,41 @@
                 .then(response => response.json())
                 .then(tools => {
                     const toolsGrid = document.getElementById('tools-grid');
-                    toolsGrid.innerHTML = ''; // Limpiar el contenido estático si lo hubiera
+                    toolsGrid.innerHTML = '';
+                    // Filtrar y asegurar que dietas y diabetes aparecen siempre
+                    const extraTools = [
+                        {
+                            "id": "dietas-ia",
+                            "title": "Asistente Nutricional IA",
+                            "description": "Una herramienta avanzada para médicos de atención primaria que utiliza IA para generar planes de dieta y ejercicio personalizados, listas de alimentos específicos y consejos para pacientes, todo con la marca Umbramed.",
+                            "link": "docs/unzipped_dietas_ia/index.html",
+                            "icon": "🥗",
+                            "status": "functional",
+                            "button_text": "Generar Dieta"
+                        },
+                        {
+                            "id": "diabetes-tipo-2",
+                            "title": "Asistente de Diabetes Tipo 2",
+                            "description": "Una herramienta integral para ayudar a los pacientes con diabetes tipo 2 a gestionar su tratamiento, registrar sus niveles de glucosa y recibir recomendaciones basadas en IA para ajustar su medicación, incluyendo la detección y corrección de los fenómenos del alba y Somogyi.",
+                            "link": "docs/unzipped_diabetes_tipo_2/index.html",
+                            "icon": "🩸",
+                            "status": "functional",
+                            "button_text": "Controlar Diabetes"
+                        }
+                    ];
+                    // Añadir si no están
+                    extraTools.forEach(extra => {
+                        if (!tools.some(t => t.id === extra.id)) {
+                            tools.push(extra);
+                        }
+                    });
                     tools.forEach(tool => {
                         const card = document.createElement('div');
                         card.className = 'tool-card';
-
                         let style = '';
                         let buttonDisabled = false;
                         let buttonStyle = '';
                         let link = tool.link;
-
                         switch (tool.status) {
                             case 'featured':
                                 style = 'border-color: #667eea; background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); order: -1;';
@@ -110,9 +135,7 @@
                                 link = '#';
                                 break;
                         }
-
                         card.setAttribute('style', style);
-
                         card.innerHTML = `
                             <span class="tool-icon" style="color: ${tool.status === 'featured' ? '#667eea' : (tool.status === 'development' ? '#6C757D' : 'inherit')}; font-size: ${tool.status === 'featured' ? '3rem' : '2rem'};">${tool.icon}</span>
                             <h3 class="tool-title" style="color: ${tool.status === 'featured' ? '#667eea' : (tool.status === 'development' ? '#6C757D' : 'inherit')}; font-size: ${tool.status === 'featured' ? '1.4rem' : '1.2rem'};">${tool.title}</h3>

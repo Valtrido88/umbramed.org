@@ -79,5 +79,24 @@
         "icon": "🕊️",
         "status": "functional",
         "button_text": "Acceder a Guía"
+    },
+    {
+        "id": "dietas-ia",
+        "title": "Asistente Nutricional IA",
+        "description": "Una herramienta avanzada para médicos de atención primaria que utiliza IA para generar planes de dieta y ejercicio personalizados, listas de alimentos específicos y consejos para pacientes, todo con la marca Umbramed.",
+        "link": "docs/unzipped_dietas_ia/index.html",
+        "icon": "🥗",
+        "status": "functional",
+        "button_text": "Generar Dieta"
+    }
+    ,
+    {
+        "id": "diabetes-tipo-2",
+        "title": "Asistente de Diabetes Tipo 2",
+        "description": "Una herramienta integral para ayudar a los pacientes con diabetes tipo 2 a gestionar su tratamiento, registrar sus niveles de glucosa y recibir recomendaciones basadas en IA para ajustar su medicación, incluyendo la detección y corrección de los fenómenos del alba y Somogyi.",
+        "link": "docs/unzipped_diabetes_tipo_2/index.html",
+        "icon": "🩸",
+        "status": "functional",
+        "button_text": "Controlar Diabetes"
     }
 ]
