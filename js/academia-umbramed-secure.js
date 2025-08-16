@@ -302,9 +302,8 @@ class AcademiaUmbramed {
     }
     
     verifyPassword(password, email) {
-        // Sistema de contraseñas mejorado (en producción sería hash)
-        // Solo permitir acceso al usuario exclusivo
-        if (email === 'valerio.trigos88@gmail.com' && password === 'valerioM16AK47') {
+        // Permitir acceso con cualquier usuario registrado
+        if (this.userData[email] && this.userData[email].password === password) {
             return true;
         }
         return false;
