@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <title>Guía de Cuidado Paliativo - UMBRAMED</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+  <!-- Página legacy: estilos auto-contenidos; styles.css eliminado. Recomendar uso de cuidados-paliativos-ia.html -->
   <style>
-    body { font-family: 'Rajdhani', Arial, sans-serif; background: #f5f7fa; }
+    body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; background: #f5f7fa; margin:0; }
     .container { max-width: 900px; margin: 2em auto; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px #c3cfe2; padding: 2em; }
     .role-select { display: flex; gap: 2em; justify-content: center; margin-bottom: 2em; }
     .role-card { background: #f8f9ff; border-radius: 12px; box-shadow: 0 2px 8px #c3cfe2; padding: 2em 1.5em; cursor: pointer; transition: box-shadow 0.2s; text-align: center; width: 220px; }
     .role-card:hover { box-shadow: 0 8px 24px #667eea44; }
     .role-icon { font-size: 3em; margin-bottom: 0.5em; }
     .back-btn { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 0.5em 1.2em; margin-bottom: 1em; cursor: pointer; font-weight: 600; }
-    .section-title { font-size: 2em; color: #2563eb; margin-bottom: 0.5em; }
+  .section-title { font-size: 2em; color: #2563eb; margin-bottom: 0.5em; font-weight:700; letter-spacing:.5px; }
     .alert { background: #fffbe6; border: 1px solid #ffe58f; color: #ad8b00; border-radius: 8px; padding: 1em; margin-bottom: 1em; }
     .drug-list { margin: 1em 0; }
     .drug-item { background: #f1f5f9; border-radius: 6px; padding: 0.5em 1em; margin-bottom: 0.5em; display: flex; justify-content: space-between; align-items: center; }
@@ -26,6 +26,9 @@
 </head>
 <body>
   <div class="container" id="mainContainer">
+    <div style="background:#fffbe6;border:1px solid #ffe58f;color:#ad8b00;border-radius:8px;padding:.75em 1em;margin:-1em -1em 1.5em;font-size:.9em">
+      Esta es una versión simplificada (legacy). Para funcionalidades avanzadas y generación asistida por IA use <a href="cuidados-paliativos-ia.html" style="color:#2563eb;font-weight:600">la nueva guía interactiva</a>.
+    </div>
     <h1 class="section-title">Guía de Cuidado Paliativo</h1>
     <div id="roleSelect" class="role-select">
       <div class="role-card" onclick="showPhysicianView()">

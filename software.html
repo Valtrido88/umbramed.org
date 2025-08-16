@@ -4,7 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Médico - UmbraMed.Org</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Página auto-contenida: estilos críticos inlined (styles.css eliminado). Tipografías usan system stack. -->
+    <style>
+        :root { --primary-red:#C41E3A; --lighter-bg:#F8F9FA; --text-dark:#222; --text-light:#6C757D; }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#fff;color:var(--text-dark);line-height:1.5}
+        .header{position:fixed;top:0;left:0;right:0;background:var(--lighter-bg);border-bottom:2px solid var(--primary-red);z-index:1000;padding:.5rem}
+        .nav-container{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:0 1rem;flex-wrap:wrap}
+        .logo-container{display:flex;align-items:center;gap:1rem;text-decoration:none}
+        .logo-container a{display:flex;align-items:center;gap:1rem;text-decoration:none;color:inherit}
+        .logo-dna{animation:spin 18s linear infinite}
+        @keyframes spin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+        .brand-text{font-weight:800;font-size:2rem;letter-spacing:2px;color:var(--primary-red);text-shadow:0 0 6px rgba(196,30,58,.25)}
+        .subtitle{font-size:.75rem;letter-spacing:2px;color:var(--text-light);margin-top:2px}
+        .nav-menu{list-style:none;display:flex;gap:1.5rem;flex-wrap:wrap;margin:0;padding:0}
+        .nav-item a{font-weight:600;text-decoration:none;color:var(--text-dark);letter-spacing:1px;padding:.5rem 0;position:relative}
+        .nav-item a:hover,.nav-item a.active{color:var(--primary-red)}
+        .nav-item a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--primary-red);transition:.3s}
+        .nav-item a:hover::after,.nav-item a.active::after{width:100%}
+        .login-btn{background:var(--primary-red);color:#fff;border:none;padding:.55rem 1rem;border-radius:6px;font-weight:600;cursor:pointer;box-shadow:0 2px 6px rgba(196,30,58,.3);transition:.25s}
+        .login-btn:hover{filter:brightness(1.1)}
+        .main-content{max-width:1400px;margin:130px auto 0;padding:2rem 1.5rem}
+        .section-title{text-align:center;font-size:2.2rem;font-weight:800;color:var(--primary-red);margin:0 0 2rem;text-shadow:0 0 8px rgba(196,30,58,.25)}
+        .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem}
+        .tool-card{background:linear-gradient(145deg,#fff,#f3f4f6);border:1px solid var(--primary-red);border-radius:10px;padding:1.75rem;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(196,30,58,.12);display:flex;flex-direction:column;gap:.75rem;transition:.3s}
+        .tool-card:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(196,30,58,.25)}
+        .tool-icon{font-size:2.8rem}
+        .tool-title{font-size:1.25rem;font-weight:700;letter-spacing:.5px}
+        .tool-description{font-size:.9rem;color:var(--text-light)}
+        .tool-link{background:var(--primary-red);color:#fff;border:none;border-radius:6px;padding:.75rem 1rem;font-weight:600;cursor:pointer;transition:.25s}
+        .tool-link:hover:not([disabled]){filter:brightness(1.1)}
+        .info-section{max-width:900px;margin:0 auto;border:1px solid #eee;border-left:5px solid var(--primary-red);padding:1.5rem 1.75rem;border-radius:10px;background:#fff}
+        .info-section h3{margin:0 0 .75rem;font-size:1.4rem;color:var(--primary-red)}
+        .info-section p{margin:0 0 1rem;color:#333}
+        .info-section ul{margin:0;padding-left:1.2rem;display:grid;gap:.4rem}
+        .info-section li{list-style:'✅ ';padding-left:.25rem}
+        .footer{margin-top:4rem;background:var(--lighter-bg);border-top:2px solid var(--primary-red);padding:2.5rem 1rem;text-align:center}
+        .footer-content{max-width:1200px;margin:0 auto;font-size:.85rem;color:var(--text-light);line-height:1.4}
+        @media (max-width:700px){.brand-text{font-size:1.6rem}.main-content{padding:1.25rem}.section-title{font-size:1.8rem}}
+    </style>
 </head>
 <body>
     <header class="header">
@@ -166,6 +204,7 @@
         <div class="footer-content">
             <p>&copy; 2025 UMBRAMED Medical Division. Todos los derechos reservados.</p>
             <p>Desarrollado para profesionales sanitarios de Andalucía.</p>
+            <p style="margin-top:.75rem;font-size:.7rem;opacity:.7">Versión previa informativa. Suite de software en desarrollo.</p>
         </div>
     </footer>
 
