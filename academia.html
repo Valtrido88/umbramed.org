@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academia UMBRAMED - Portal de Formación Médica</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Eliminado styles.css y fuentes externas para auto-contenido. Tipografías ahora usan system stack. -->
+    <!-- Tailwind CDN removido: se conservan sólo utilidades requeridas recreadas abajo si hiciera falta. -->
     <style>
         body {
             margin-top: 100px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
+    /* TODO: revisar duplicados de estilos y extraer sólo los necesarios; página pendiente de auto-contenido completo JS */
         
         .academia-container {
             max-width: 1200px;
