@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Guía de Cuidado Paliativo - UMBRAMED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: 'Rajdhani', Arial, sans-serif; background: #f5f7fa; }
+    .container { max-width: 900px; margin: 2em auto; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px #c3cfe2; padding: 2em; }
+    .role-select { display: flex; gap: 2em; justify-content: center; margin-bottom: 2em; }
+    .role-card { background: #f8f9ff; border-radius: 12px; box-shadow: 0 2px 8px #c3cfe2; padding: 2em 1.5em; cursor: pointer; transition: box-shadow 0.2s; text-align: center; width: 220px; }
+    .role-card:hover { box-shadow: 0 8px 24px #667eea44; }
+    .role-icon { font-size: 3em; margin-bottom: 0.5em; }
+    .back-btn { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 0.5em 1.2em; margin-bottom: 1em; cursor: pointer; font-weight: 600; }
+    .section-title { font-size: 2em; color: #2563eb; margin-bottom: 0.5em; }
+    .alert { background: #fffbe6; border: 1px solid #ffe58f; color: #ad8b00; border-radius: 8px; padding: 1em; margin-bottom: 1em; }
+    .drug-list { margin: 1em 0; }
+    .drug-item { background: #f1f5f9; border-radius: 6px; padding: 0.5em 1em; margin-bottom: 0.5em; display: flex; justify-content: space-between; align-items: center; }
+    .remove-btn { background: none; border: none; color: #c41e3a; font-size: 1.2em; cursor: pointer; }
+    .add-drug-row { display: flex; gap: 1em; align-items: center; margin-bottom: 1em; }
+    .generate-btn { background: #28a745; color: #fff; border: none; border-radius: 6px; padding: 0.7em 2em; font-weight: 600; cursor: pointer; }
+    .generate-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .protocol-box { background: #f8f9ff; border-radius: 8px; border: 1px solid #e1e5e9; padding: 1em; margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <h1 class="section-title">Guía de Cuidado Paliativo</h1>
+    <div id="roleSelect" class="role-select">
+      <div class="role-card" onclick="showPhysicianView()">
+        <div class="role-icon">🩺</div>
+        <div class="role-title"><strong>Soy Médico</strong></div>
+        <div class="role-desc">Acceda al verificador de interacciones y guías de dosificación.</div>
+      </div>
+      <div class="role-card" onclick="showFamilyView()">
+        <div class="role-icon">👨‍👩‍👧‍👦</div>
+        <div class="role-title"><strong>Soy Familiar o Cuidador</strong></div>
+        <div class="role-desc">Consejos prácticos y apoyo emocional para acompañar a su ser querido.</div>
+      </div>
+    </div>
+    <div id="physicianView" style="display:none;">
+      <button class="back-btn" onclick="showRoleSelect()">&larr; Volver</button>
+      <h2 class="section-title">Herramientas para Médicos</h2>
+      <p>Utilice el verificador de compatibilidad para perfusiones subcutáneas y genere guías de preparación.</p>
+      <div class="add-drug-row">
+        <select id="drugSelect">
+          <option value="">Seleccione un fármaco...</option>
+        </select>
+        <button onclick="addDrug()" id="addDrugBtn">Añadir</button>
+      </div>
+      <div id="drugList" class="drug-list"></div>
+      <div id="interactionAlert" class="alert" style="display:none;"></div>
+      <button class="generate-btn" onclick="generateProtocol()" id="generateBtn" disabled>Generar Guía de Preparación y Dosificación</button>
+      <div id="protocolBox" class="protocol-box" style="display:none;"></div>
+    </div>
+    <div id="familyView" style="display:none;">
+      <button class="back-btn" onclick="showRoleSelect()">&larr; Volver</button>
+      <h2 class="section-title">Recursos para Familiares y Cuidadores</h2>
+      <p>Encuentre consejos prácticos y apoyo emocional para acompañar a su ser querido en cuidados paliativos.</p>
+      <ul>
+        <li>Comunicación abierta con el equipo médico.</li>
+        <li>Apoyo emocional y psicológico.</li>
+        <li>Guía para el manejo de síntomas frecuentes.</li>
+        <li>Recursos de ayuda y contacto.</li>
+      </ul>
+    </div>
+  </div>
+  <script src="js/common.js"></script>
+  <script>
+    // --- Lógica de navegación ---
+    function showRoleSelect() {
+      document.getElementById('roleSelect').style.display = 'flex';
+      document.getElementById('physicianView').style.display = 'none';
+      document.getElementById('familyView').style.display = 'none';
+    }
+    function showPhysicianView() {
+      document.getElementById('roleSelect').style.display = 'none';
+      document.getElementById('physicianView').style.display = 'block';
+      document.getElementById('familyView').style.display = 'none';
+    }
+    function showFamilyView() {
+      document.getElementById('roleSelect').style.display = 'none';
+      document.getElementById('physicianView').style.display = 'none';
+      document.getElementById('familyView').style.display = 'block';
+    }
+
+    // --- Lógica de la herramienta de médico ---
+    const ALL_DRUGS = [
+      'Morfina', 'Midazolam', 'Haloperidol', 'Levomepromazina', 'Butilescopolamina', 'Metoclopramida', 'Dexametasona', 'Fentanilo', 'Ketamina', 'Ondansetrón'
+    ];
+    const PRECIPITATE_INTERACTIONS = {
+      'Dexametasona': ['Midazolam', 'Haloperidol', 'Levomepromazina', 'Ondansetrón'],
+      'Midazolam': ['Dexametasona'],
+      'Haloperidol': ['Dexametasona'],
+      'Levomepromazina': ['Dexametasona'],
+      'Ondansetrón': ['Dexametasona'],
+      'Metoclopramida': ['Fentanilo'],
+      'Fentanilo': ['Metoclopramida']
+    };
+    let selectedDrugs = [];
+
+    function updateDrugSelect() {
+      const select = document.getElementById('drugSelect');
+      select.innerHTML = '<option value="">Seleccione un fármaco...</option>';
+      ALL_DRUGS.forEach(drug => {
+        if (!selectedDrugs.includes(drug)) {
+          const opt = document.createElement('option');
+          opt.value = drug;
+          opt.textContent = drug;
+          select.appendChild(opt);
+        }
+      });
+      document.getElementById('addDrugBtn').disabled = select.value === '';
+    }
+
+    function addDrug() {
+      const select = document.getElementById('drugSelect');
+      const drug = select.value;
+      if (drug && !selectedDrugs.includes(drug)) {
+        selectedDrugs.push(drug);
+        updateDrugList();
+        updateDrugSelect();
+        checkInteractions();
+      }
+      select.value = '';
+      document.getElementById('addDrugBtn').disabled = true;
+    }
+
+    function removeDrug(drug) {
+      selectedDrugs = selectedDrugs.filter(d => d !== drug);
+      updateDrugList();
+      updateDrugSelect();
+      checkInteractions();
+    }
+
+    function updateDrugList() {
+      const list = document.getElementById('drugList');
+      list.innerHTML = '';
+      selectedDrugs.forEach(drug => {
+        const item = document.createElement('div');
+        item.className = 'drug-item';
+        item.innerHTML = `<span>${drug}</span> <button class="remove-btn" onclick="removeDrug('${drug}')">&times;</button>`;
+        list.appendChild(item);
+      });
+    }
+
+    function checkInteractions() {
+      let warning = '';
+      for (let i = 0; i < selectedDrugs.length; i++) {
+        for (let j = i + 1; j < selectedDrugs.length; j++) {
+          const drugA = selectedDrugs[i];
+          const drugB = selectedDrugs[j];
+          if ((PRECIPITATE_INTERACTIONS[drugA] && PRECIPITATE_INTERACTIONS[drugA].includes(drugB)) ||
+              (PRECIPITATE_INTERACTIONS[drugB] && PRECIPITATE_INTERACTIONS[drugB].includes(drugA))) {
+            warning = `¡Atención! Se ha detectado una interacción con riesgo de precipitación entre ${drugA} y ${drugB}.`;
+            break;
+          }
+        }
+        if (warning) break;
+      }
+      const alertDiv = document.getElementById('interactionAlert');
+      if (warning) {
+        alertDiv.textContent = warning;
+        alertDiv.style.display = 'block';
+        document.getElementById('generateBtn').disabled = true;
+      } else {
+        alertDiv.style.display = 'none';
+        document.getElementById('generateBtn').disabled = selectedDrugs.length === 0;
+      }
+    }
+
+    function generateProtocol() {
+      if (selectedDrugs.length === 0) return;
+      const protocolBox = document.getElementById('protocolBox');
+      protocolBox.style.display = 'block';
+      protocolBox.innerHTML = `<h3>Guía de Preparación Sugerida</h3><p>Perfusión subcutánea con: <strong>${selectedDrugs.join(', ')}</strong>.<br>Preparar según protocolo estándar y ajustar dosis individualmente.<br>Consultar guía clínica y farmacéutica para compatibilidad y dilución.</p>`;
+    }
+
+    // Inicialización
+    updateDrugSelect();
+    showRoleSelect();
+  </script>
+</body>
+</html>

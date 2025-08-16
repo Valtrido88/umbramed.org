@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interpretador Serológico de Hepatitis B - UMBRAMED Medical Division</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inlined critical styles (removed external styles.css, Google Fonts, Tailwind) -->
+    <style>
+    :root{--primary-red:#C41E3A;--dark-red:#8B0000;--light-bg:#FFFFFF;--lighter-bg:#F8F9FA;--text-dark:#343A40;--text-light:#6C757D;}body{margin:0;font-family:'Rajdhani',Arial,sans-serif;background:#f5f7fa;color:#1f2937;} .header{background:linear-gradient(135deg,var(--lighter-bg),var(--light-bg));border-bottom:3px solid var(--primary-red);padding:.75rem 0;position:sticky;top:0;z-index:50;} .nav-container{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem;} .logo-container{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit;} .brand-text{font-family:'Orbitron',monospace;font-size:1.9rem;font-weight:700;color:var(--primary-red);} .subtitle{font-size:.65rem;letter-spacing:2px;color:var(--text-light);} .nav-menu{list-style:none;display:flex;gap:1.2rem;margin:0;padding:0;} .nav-item a{text-decoration:none;color:#1f2937;font-size:.8rem;font-weight:600;letter-spacing:1px;position:relative;padding:.4rem .6rem;transition:.25s;} .nav-item a:hover,.nav-item a.active{color:var(--primary-red);} .login-btn{background:linear-gradient(45deg,var(--primary-red),var(--dark-red));color:#fff;border:none;padding:.5rem .9rem;border-radius:5px;cursor:pointer;font-weight:600;font-size:.7rem;letter-spacing:1px;} .login-btn:hover{filter:brightness(1.1);} main{padding:1rem;} .container{max-width:1200px;margin:0 auto;} .bg-white{background:#fff;} .rounded-lg{border-radius:.75rem;} .shadow-md{box-shadow:0 4px 12px rgba(0,0,0,.08);} .p-6{padding:1.5rem;} .mb-8{margin-bottom:2rem;} .flex{display:flex;} .items-center{align-items:center;} .space-x-3>*+*{margin-left:.75rem;} .text-2xl{font-size:1.5rem;} .font-bold{font-weight:700;} .text-gray-800{color:#1f2937;} .text-gray-600{color:#4b5563;} .text-gray-700{color:#374151;} .text-sm{font-size:.875rem;} .text-blue-600{color:#2563eb;} .text-blue-100{color:#dbeafe;} .mt-6{margin-top:1.5rem;} .mt-8{margin-top:2rem;} .hidden{display:none;} .border{border:1px solid #e5e7eb;} .border-gray-200{border-color:#e5e7eb;} .border-gray-300{border-color:#d1d5db;} .border-blue-500{border-color:#3b82f6;} .bg-blue-50{background:#eff6ff;} .rounded-md{border-radius:.5rem;} .rounded-lg{border-radius:.75rem;} .border-dashed{border-style:dashed;} .p-8{padding:2rem;} .text-center{text-align:center;} .font-semibold{font-weight:600;} .cursor-pointer{cursor:pointer;} .w-full{width:100%;} .h-32{height:8rem;} textarea{font-family:inherit;} .focus\:ring-2:focus{outline:2px solid #3b82f6;} button{font-family:inherit;} .transition-colors{transition:color .25s,background-color .25s,border-color .25s;} .duration-200{transition-duration:.2s;} .rounded-md{border-radius:.5rem;} .justify-end{justify-content:flex-end;} .px-6{padding-left:1.5rem;padding-right:1.5rem;} .py-3{padding-top:.75rem;padding-bottom:.75rem;} .bg-blue-600{background:#2563eb;} .hover\:bg-blue-700:hover{background:#1d4ed8;} .disabled\:bg-blue-400:disabled{background:#60a5fa;} .disabled\:cursor-not-allowed:disabled{cursor:not-allowed;} .animate-fade-in{animation:fadeIn .5s ease;} @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}} .bg-red-100{background:#fee2e2;} .border-l-4{border-left-width:4px;} .border-red-500{border-color:#ef4444;} .text-red-700{color:#b91c1c;} .p-4{padding:1rem;} .rounded-md{border-radius:.5rem;} .my-6{margin:1.5rem 0;} .text-lg{font-size:1.125rem;} .mt-1{margin-top:.25rem;} .gap-3{gap:.75rem;} .flex-wrap{flex-wrap:wrap;} .justify-center{justify-content:center;} .bg-gray-50{background:#f9fafb;} .bg-green-100{background:#dcfce7;} .text-green-800{color:#065f46;} .bg-yellow-100{background:#fef9c3;} .text-yellow-800{color:#854d0e;} .bg-red-100{background:#fee2e2;} .text-red-800{color:#991b1b;} .bg-blue-100{background:#dbeafe;} .text-blue-800{color:#1e3a8a;} .bg-gray-100{background:#f3f4f6;} .text-gray-800{color:#1f2937;} .px-4{padding-left:1rem;padding-right:1rem;} .py-2{padding-top:.5rem;padding-bottom:.5rem;} .rounded-full{border-radius:9999px;} .font-medium{font-weight:500;} .bg-yellow-50{background:#fffbeb;} .border-yellow-400{border-color:#facc15;} .border-blue-400{border-color:#60a5fa;} .bg-red-50{background:#fef2f2;} .border-red-400{border-color:#f87171;} .mt-0\.5{margin-top:.125rem;} .mr-3{margin-right:.75rem;} .mr-2{margin-right:.5rem;} .mb-2{margin-bottom:.5rem;} .mb-1{margin-bottom:.25rem;} .text-xs{font-size:.75rem;} footer.footer{background:var(--lighter-bg);padding:2rem 1rem;margin-top:3rem;border-top:2px solid var(--primary-red);text-align:center;} .footer-text{color:var(--text-light);font-size:.9rem;margin:.5rem 0;} .footer-warning{color:#FF4444;font-weight:600;font-size:.7rem;letter-spacing:1px;} @media print{.header,footer,.login-btn,#analyze-button,#upload-link,#drop-zone input{display:none!important;} body{background:#fff;} }
+    </style>
 </head>
 <body>
     <!-- Header común -->
@@ -51,7 +52,7 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4 md:p-8">
+    <main class="container">
         <div class="max-w-4xl mx-auto">
             <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                 <div class="flex items-center space-x-3 mb-4">
@@ -144,94 +145,41 @@
     </div>
 
     <script>
-        // UMBRAMED Medical Division - Sistema de Autenticación Unificado
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-
-        function closeLogin() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Credenciales de acceso (en producción esto debe estar en el servidor)
-            if (username === 'valerio' && password === 'umbramed2025') {
-                alert('✅ Acceso autorizado - Bienvenido Dr. Valerio');
-                closeLogin();
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-            } else {
-                alert('❌ Credenciales incorrectas');
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLogin();
-            }
-        });
-
-        // UMBRAMED Medical Division - Interpretador Serológico de Hepatitis B
-        // Sistema de interpretación serológica con IA integrada
-
-        // ATENCIÓN: La clave de API está hardcodeada. Esto es un riesgo de seguridad.
-        // En un entorno de producción, la clave debería gestionarse de forma segura en un backend.
-        const GEMINI_API_KEY = 'AIzaSyBf9oXtIOBRxkIzMRxaQ9Q_FzD3ZbXv-bA';
-        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-
-        let selectedFile = null;
-        let isAnalyzing = false;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeHepatitisInterpreter();
-        });
-
-        function initializeHepatitisInterpreter() {
-            console.log('🦠 UMBRAMED - Interpretador Serológico VHB inicializado');
-            setupEventListeners();
-            setupDropZone();
-        }
-
-        function setupEventListeners() {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-            const uploadLink = document.getElementById('upload-link');
-            const analyzeButton = document.getElementById('analyze-button');
-            const removeFileButton = document.getElementById('remove-file');
-
-            uploadLink.addEventListener('click', () => fileInput.click());
-            dropZone.addEventListener('click', (e) => {
-                if (e.target.id !== 'remove-file' && e.target.parentElement.id !== 'remove-file') {
-                    fileInput.click();
-                }
-            });
-
-            fileInput.addEventListener('change', handleFileSelect);
-            removeFileButton.addEventListener('click', removeFile);
-
-            dropZone.addEventListener('dragover', handleDragOver);
-            dropZone.addEventListener('dragleave', handleDragLeave);
-            dropZone.addEventListener('drop', handleDrop);
-
-            analyzeButton.addEventListener('click', analyzeReport);
-        }
-
-        function setupDropZone() {
-            const dropZone = document.getElementById('drop-zone');
-            dropZone.classList.add('border-gray-300');
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                processFile(file);
-            }
-        }
+    // Interpretador Serológico VHB (versión segura) - Usa endpoint IA genérico definido en window.UMBRA_AI_ENDPOINT
+    // NOTA: Debe configurarse window.UMBRA_AI_ENDPOINT antes de usar (por ejemplo en un <script> en index.html)
+    // Se ha eliminado cualquier clave hardcodeada.
+    
+    // --- Login básico modal (solo demo, NO producción) ---
+    function showLogin(){document.getElementById('loginModal').style.display='flex';}
+    function closeLogin(){document.getElementById('loginModal').style.display='none';}
+    function handleLogin(e){e.preventDefault();const u=document.getElementById('username').value;const p=document.getElementById('password').value;if(u==='valerio'&&p==='umbramed2025'){alert('✅ Acceso autorizado - Bienvenido Dr. Valerio');closeLogin();document.getElementById('username').value='';document.getElementById('password').value='';}else{alert('❌ Credenciales incorrectas');}}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLogin();});
+    
+    // --- Configuración IA ---
+    // Se admite meta tag <meta name="ai-endpoint" content="https://..."> como alternativa.
+    const AI_ENDPOINT = window.UMBRA_AI_ENDPOINT || document.querySelector('meta[name="ai-endpoint"]')?.content || null;
+    const AI_TIMEOUT_MS = 45000;
+    let selectedFile=null; let isAnalyzing=false;
+    document.addEventListener('DOMContentLoaded',()=>{initializeHepatitisInterpreter();setupEventListeners();});
+    function initializeHepatitisInterpreter(){setupDropZone();}
+    function setupEventListeners(){const dropZone=id('drop-zone');const fileInput=id('file-input');const uploadLink=id('upload-link');const analyzeButton=id('analyze-button');const removeFileButton=id('remove-file');uploadLink.addEventListener('click',()=>fileInput.click());dropZone.addEventListener('click',e=>{if(e.target.id!=='remove-file')fileInput.click();});fileInput.addEventListener('change',handleFileSelect);removeFileButton.addEventListener('click',removeFile);dropZone.addEventListener('dragover',handleDragOver);dropZone.addEventListener('dragleave',handleDragLeave);dropZone.addEventListener('drop',handleDrop);analyzeButton.addEventListener('click',analyzeReport);} 
+    const id=x=>document.getElementById(x);
+    function setupDropZone(){id('drop-zone').classList.add('border-gray-300');}
+    function handleFileSelect(e){const f=e.target.files[0];if(f)processFile(f);} function handleDragOver(e){e.preventDefault();const dz=id('drop-zone');dz.classList.remove('border-gray-300');dz.classList.add('border-blue-500','bg-blue-50');} function handleDragLeave(e){e.preventDefault();const dz=id('drop-zone');dz.classList.remove('border-blue-500','bg-blue-50');dz.classList.add('border-gray-300');} function handleDrop(e){e.preventDefault();const dz=id('drop-zone');dz.classList.remove('border-blue-500','bg-blue-50');dz.classList.add('border-gray-300');const files=e.dataTransfer.files;if(files.length>0)processFile(files[0]);}
+    function processFile(file){const valid=['image/png','image/jpeg','image/webp'];if(!valid.includes(file.type)){showError('Tipo de archivo no soportado.');return;}const max=10*1024*1024;if(file.size>max){showError('Archivo >10MB.');return;} selectedFile=file;showFilePreview(file);} 
+    function showFilePreview(file){const fp=id('file-preview');const up=id('upload-prompt');const img=id('preview-img');id('file-name').textContent=file.name;id('file-size').textContent=formatFileSize(file.size);img.src=URL.createObjectURL(file);up.classList.add('hidden');fp.classList.remove('hidden');fp.classList.add('flex');}
+    function removeFile(){selectedFile=null;const fp=id('file-preview');const up=id('upload-prompt');const img=id('preview-img');const fi=id('file-input');URL.revokeObjectURL(img.src);img.src='';fi.value='';fp.classList.add('hidden');fp.classList.remove('flex');up.classList.remove('hidden');}
+    function formatFileSize(bytes){if(bytes===0)return'0 Bytes';const k=1024;const sizes=['Bytes','KB','MB','GB'];const i=Math.floor(Math.log(bytes)/Math.log(k));return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+' '+sizes[i];}
+    async function analyzeReport(){if(isAnalyzing)return;const additional=id('lab-report-text').value.trim();if(!selectedFile&&!additional){showError('Seleccione archivo o texto.');return;} isAnalyzing=true;showLoading(true);hideError();try{let imageData=null;if(selectedFile){imageData=await fileToBase64(selectedFile);} const analysis=await performAIAnalysis(imageData,additional,selectedFile?.type);displayReport(analysis);}catch(err){console.error(err);showError('Error al analizar.');}finally{isAnalyzing=false;showLoading(false);}}
+    function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{res(r.result.split(',')[1]);};r.onerror=rej;r.readAsDataURL(file);});}
+    async function performAIAnalysis(imageData,additionalText,mimeType){if(!AI_ENDPOINT) throw new Error('Falta endpoint IA (defina window.UMBRA_AI_ENDPOINT)');const prompt=`Eres un experto en serología de Hepatitis B. Devuelve SOLO JSON válido con campos: estadoSerologico, interpretacion, marcadoresDetectados:[{marcador,resultado,significado}], recomendaciones[], seguimiento, nivelRiesgo (Bajo/Moderado/Alto), alertas[]. Usa español clínico conciso. Si faltan datos indícalo. Texto:${additionalText||'solo imagen'}`;const payload={prompt,purpose:'hepatitis_serology',image:{mimeType,data:imageData}};const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),AI_TIMEOUT_MS);try{const res=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});if(!res.ok) throw new Error('HTTP_'+res.status);const data=await res.json();let raw=(typeof data.content==='string'?data.content:JSON.stringify(data.content));const match=raw.match(/\{[\s\S]*\}/);if(!match) throw new Error('JSON ausente');return JSON.parse(match[0]);}finally{clearTimeout(timeout);} }
+    function displayReport(analysis){const rd=id('report-display');const html=`<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden"><div class="bg-blue-600 text-white p-6"><h2 class="text-2xl font-bold mb-2">Informe Serológico VHB</h2><p class="text-blue-100">${new Date().toLocaleDateString('es-ES')}</p></div><div class="p-6 border-b border-gray-200"><div class="flex items-center justify-between mb-4"><h3 class="text-xl font-semibold text-gray-800">Estado Serológico</h3><span class="px-4 py-2 rounded-full text-sm font-semibold ${getRiskBadgeClass(analysis.nivelRiesgo)}">${analysis.nivelRiesgo?`Riesgo ${analysis.nivelRiesgo}`:'Evaluación'}</span></div><div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg"><p class="text-lg font-semibold text-blue-800 mb-2">${sanitize(analysis.estadoSerologico)}</p><p class="text-gray-700">${sanitize(analysis.interpretacion)}</p></div></div><div class="p-6 border-b border-gray-200"><h3 class="text-xl font-semibold text-gray-800 mb-4">Marcadores Serológicos</h3><div class="grid gap-3">${(analysis.marcadoresDetectados||[]).map(m=>`<div class='flex items-center justify-between p-3 bg-gray-50 rounded-lg border'><div class='flex-1'><p class='font-semibold text-gray-800'>${sanitize(m.marcador)}</p><p class='text-sm text-gray-600'>${sanitize(m.significado)}</p></div><div class='ml-4'><span class='px-3 py-1 rounded-full text-sm font-medium ${getMarkerBadgeClass(m.resultado)}'>${sanitize(m.resultado)}</span></div></div>`).join('')||'<p class="text-gray-500 italic">Sin marcadores.</p>'}</div></div><div class="p-6 border-b border-gray-200"><h3 class="text-xl font-semibold text-gray-800 mb-4">Recomendaciones Clínicas</h3><div class="space-y-2">${(analysis.recomendaciones||[]).map(r=>`<div class='flex items-start'><span class='mr-2'>✔️</span><p class='text-gray-700'>${sanitize(r)}</p></div>`).join('')||'<p class="text-gray-500 italic">Sin recomendaciones.</p>'}</div></div>${analysis.seguimiento?`<div class='p-6 border-b border-gray-200'><h3 class='text-xl font-semibold text-gray-800 mb-4'>Seguimiento</h3><div class='bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg'><p class='text-gray-700'>${sanitize(analysis.seguimiento)}</p></div></div>`:''}${(analysis.alertas||[]).length?`<div class='p-6 border-b border-gray-200'><h3 class='text-xl font-semibold text-gray-800 mb-4'>Alertas Importantes</h3><div class='space-y-2'>${analysis.alertas.map(a=>`<div class='bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg'><p class='text-red-700 font-medium'>${sanitize(a)}</p></div>`).join('')}</div></div>`:''}<div class='p-6 bg-gray-50 text-center text-sm text-gray-600'><p class='mb-2'><strong>AVISO:</strong> Informe generado por IA; validar clínicamente.</p></div></div><div class='mt-6 flex flex-wrap gap-3 justify-center'><button onclick='printReport()' class='px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'>Imprimir</button><button onclick='newAnalysis()' class='px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors'>Nuevo Análisis</button></div>`;rd.innerHTML=html;rd.classList.remove('hidden');rd.scrollIntoView({behavior:'smooth',block:'start'});} 
+    function sanitize(str){return (str||'').toString().replace(/[<>]/g,c=>({'<':'&lt;','>':'&gt;'}[c]));}
+    function getRiskBadgeClass(r){switch((r||'').toLowerCase()){case'bajo':return'bg-green-100 text-green-800';case'moderado':return'bg-yellow-100 text-yellow-800';case'alto':return'bg-red-100 text-red-800';default:return'bg-gray-100 text-gray-800';}} function getMarkerBadgeClass(res){const l=(res||'').toLowerCase();if(l.includes('positivo')||l.includes('+'))return'bg-red-100 text-red-800';if(l.includes('negativo')||l.includes('-'))return'bg-green-100 text-green-800';return'bg-blue-100 text-blue-800';}
+    function showLoading(show){const spinner=id('loading-spinner');const btn=id('analyze-button');if(show){spinner.classList.remove('hidden');btn.disabled=true;btn.innerHTML='<span class="mr-2">⏳</span>Analizando...';}else{spinner.classList.add('hidden');btn.disabled=false;btn.innerHTML='<span class="mr-2">🔍</span>Analizar Informe';}}
+    function showError(msg){const d=id('error-display');id('error-message').textContent=msg;d.classList.remove('hidden');setTimeout(()=>hideError(),10000);} function hideError(){id('error-display').classList.add('hidden');}
+    function printReport(){window.print();} function newAnalysis(){if(selectedFile)removeFile();id('lab-report-text').value='';const rd=id('report-display');rd.classList.add('hidden');rd.innerHTML='';id('main-content').scrollIntoView({behavior:'smooth'});} 
+    </script>
 
         function handleDragOver(event) {
             event.preventDefault();
@@ -407,33 +355,8 @@
                 });
             }
 
-            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(`Error de API: ${response.status} - ${errorData.error?.message || 'Error desconocido'}`);
-            }
-
-            const data = await response.json();
-            
-            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-                throw new Error('Respuesta inválida de la API');
-            }
-
-            const responseText = data.candidates[0].content.parts[0].text;
-            
-            try {
-                const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-                if (!jsonMatch) throw new Error('No se encontró JSON válido en la respuesta de la IA.');
-                return JSON.parse(jsonMatch[0]);
-            } catch (parseError) {
-                console.error('Error parsing JSON:', parseError, 'Raw response:', responseText);
-                throw new Error('Error al procesar la respuesta de la IA. El formato no es el esperado.');
-            }
+            // Este bloque legacy se ha desactivado: ahora se usa performAIAnalysis() seguro arriba.
+            throw new Error('Mecanismo legacy Gemini deshabilitado: use AI_ENDPOINT genérico.');
         }
 
         function displayReport(analysis) {

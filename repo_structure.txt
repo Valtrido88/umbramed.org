@@ -1,0 +1,452 @@
+.
+├── CNAME
+├── NUEVA-ACADEMIA-SEGURA.md
+├── README.md
+├── STATUS-REPORT-FINAL.md
+├── academia.html
+├── calculadora_pediatrica.html
+├── cuidados-paliativos-ia.html
+├── cuidados-paliativos-simple.html
+├── cuidados_paliativos.html
+├── data
+│   ├── examen_microbiologia.json
+│   ├── examen_microbiologia_importable.json
+│   ├── herramientas.json
+│   ├── medicamentos-sin-lactosa.json
+│   ├── medicamentos-visados.json
+│   ├── paiandalucia
+│   │   ├── 2024.10.29_PA_DETERIORO_COG_v5_10.pdf
+│   │   ├── DA_ATG_Embarazo_v4-final.pdf
+│   │   ├── PAI_Cancer_colorrectal_v6.pdf
+│   │   ├── PAI_Cuidados_Paliativos_4definitivo.pdf
+│   │   ├── PAI_EPOC.pdf
+│   │   ├── PAI_Trastorno_Mental_Grave_2020.pdf
+│   │   ├── TABACO
+│   │   │   ├── 163.pdf
+│   │   │   ├── Hoja de información para pacientes_CITISINA.pdf
+│   │   │   └── todacitan_infografia_0.pdf
+│   │   ├── diabetes_mellitus_2018_18_06_2018.pdf
+│   │   ├── salud_5af1956d9925c_atencion_pacientes_pluripatologicos_2018.pdf
+│   │   ├── salud_5af1956dbff62_trans_adultos_29_06_2017.pdf
+│   │   ├── salud_5af1956dc5c6d_trans_infancia_adolescencia_29_06_2017.pdf
+│   │   ├── salud_5af1956fb9ac1_enfermedad_parkinson_29_mayo_2015.pdf
+│   │   ├── salud_5af1957075765_pai_ictus_abril_2015.pdf
+│   │   ├── salud_5af19570c6b5d_guia_rapida_riesgo_vascular.pdf
+│   │   ├── salud_5af1957159122_trastornos_alimentarios_2018_new.pdf
+│   │   └── salud_5af195716a6e6_dialisis_trasplante_renal_junio_2016.pdf
+│   ├── pali-assist_-herramienta-de-soporte-en-cuidados-paliativos (3).zip
+│   └── unzipped_diabetes_tipo_2
+│       ├── App.tsx
+│       ├── README.md
+│       ├── components
+│       │   ├── ClinicalMode.tsx
+│       │   ├── Disclaimer.tsx
+│       │   ├── ResearchMode.tsx
+│       │   ├── Spinner.tsx
+│       │   └── icons
+│       │       ├── PillIcon.tsx
+│       │       └── SyringeIcon.tsx
+│       ├── index.html
+│       ├── index.tsx
+│       ├── metadata.json
+│       ├── package.json
+│       ├── services
+│       │   └── geminiService.ts
+│       ├── tsconfig.json
+│       ├── types.ts
+│       └── vite.config.ts
+├── debug-cuidados.html
+├── diagnostico-completo.html
+├── docs
+│   ├── Microbiologia examenes OPE.docx
+│   ├── asistente-de-diabetes-tipo-2.zip
+│   ├── extract_microbiologia.py
+│   ├── extraction_workspace
+│   │   ├── copy-of-copy-of-test-pai-diabetes-mellitus
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── copy-of-test-pai-tabaquismo
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── copy-of-test-pai-trastorno-mental-grave
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── extract_all_questions.py
+│   │   ├── extracted_questions.json
+│   │   ├── pai-atención-a-pacientes-pluripatológicos
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── pai-pluripatologicos-examen-reales.html
+│   │   │   ├── pai-pluripatologicos-examen-solo-reales.json
+│   │   │   ├── pai-pluripatologicos-examen.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── pai-deterioro-cognitivo---test-interactivo
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── pai-enfermedad-de-parkinson
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── pai-riesgo-vascular
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-atención-a-personas-transexuales-adultas
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-atención-a-personas-transexuales-en-la-infancia-y-adolescencia
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-atención-al-trauma-grave
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-cuidados-paliativos
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-cáncer-colorrectal
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-epoc
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   ├── test-pai-trastorno-mental-grave
+│   │   │   ├── App.tsx
+│   │   │   ├── README.md
+│   │   │   ├── components
+│   │   │   │   ├── ModeSelector.tsx
+│   │   │   │   ├── QuestionCard.tsx
+│   │   │   │   ├── Quiz.tsx
+│   │   │   │   ├── QuizView.tsx
+│   │   │   │   └── Results.tsx
+│   │   │   ├── index.html
+│   │   │   ├── index.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── package.json
+│   │   │   ├── services
+│   │   │   │   └── quizData.ts
+│   │   │   ├── tsconfig.json
+│   │   │   ├── types.ts
+│   │   │   └── vite.config.ts
+│   │   └── test-pai-trauma-grave-en-el-embarazo
+│   │       ├── App.tsx
+│   │       ├── README.md
+│   │       ├── components
+│   │       │   ├── ModeSelector.tsx
+│   │       │   ├── QuestionCard.tsx
+│   │       │   ├── Quiz.tsx
+│   │       │   ├── QuizView.tsx
+│   │       │   └── Results.tsx
+│   │       ├── index.html
+│   │       ├── index.tsx
+│   │       ├── metadata.json
+│   │       ├── package.json
+│   │       ├── services
+│   │       │   └── quizData.ts
+│   │       ├── tsconfig.json
+│   │       ├── types.ts
+│   │       └── vite.config.ts
+│   ├── guía-de-cuidado-paliativo-asistida-por-ia (1).zip
+│   ├── medicamentos-adicionales-ejemplo.js
+│   ├── referenciaspreguntasrespuestasoriginales
+│   │   ├── copy-of-copy-of-test-pai-diabetes-mellitus.zip
+│   │   ├── copy-of-test-pai-tabaquismo.zip
+│   │   ├── copy-of-test-pai-trastorno-mental-grave.zip
+│   │   ├── pai-atención-a-pacientes-pluripatológicos.zip
+│   │   ├── pai-deterioro-cognitivo---test-interactivo.zip
+│   │   ├── pai-enfermedad-de-parkinson.zip
+│   │   ├── pai-riesgo-vascular.zip
+│   │   ├── test-pai-atención-a-personas-transexuales-adultas.zip
+│   │   ├── test-pai-atención-a-personas-transexuales-en-la-infancia-y-adolescencia.zip
+│   │   ├── test-pai-atención-al-trauma-grave.zip
+│   │   ├── test-pai-cuidados-paliativos.zip
+│   │   ├── test-pai-cáncer-colorrectal.zip
+│   │   ├── test-pai-epoc.zip
+│   │   ├── test-pai-trastorno-mental-grave.zip
+│   │   └── test-pai-trauma-grave-en-el-embarazo.zip
+│   ├── umbramed_-asistente-nutricional-ia.zip
+│   ├── unzipped_dietas_ia
+│   │   ├── App.tsx
+│   │   ├── README.md
+│   │   ├── components
+│   │   │   ├── PrintableContent.tsx
+│   │   │   └── Spinner.tsx
+│   │   ├── constants.tsx
+│   │   ├── dist
+│   │   │   ├── assets
+│   │   │   │   ├── index-D-lLFHJO.js
+│   │   │   │   ├── index.es-Y22EErWw.js
+│   │   │   │   └── purify.es-CQJ0hv7W.js
+│   │   │   └── index.html
+│   │   ├── examen_microbiologia.json
+│   │   ├── index.html
+│   │   ├── index.tsx
+│   │   ├── metadata.json
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── services
+│   │   │   └── geminiService.ts
+│   │   ├── tsconfig.json
+│   │   ├── types.ts
+│   │   └── vite.config.ts
+│   └── unzipped_reference
+│       ├── App.tsx
+│       ├── README.md
+│       ├── components
+│       │   ├── AdviceCard.tsx
+│       │   ├── DrugInteractionChecker.tsx
+│       │   ├── FamilyView.tsx
+│       │   ├── Footer.tsx
+│       │   ├── Header.tsx
+│       │   ├── PhysicianView.tsx
+│       │   ├── Spinner.tsx
+│       │   └── icons
+│       │       ├── BeakerIcon.tsx
+│       │       ├── BookOpenIcon.tsx
+│       │       ├── ExclamationTriangleIcon.tsx
+│       │       ├── PlusIcon.tsx
+│       │       ├── PrinterIcon.tsx
+│       │       ├── StethoscopeIcon.tsx
+│       │       ├── TrashIcon.tsx
+│       │       └── UsersIcon.tsx
+│       ├── index.html
+│       ├── index.tsx
+│       ├── metadata.json
+│       ├── package.json
+│       ├── services
+│       │   └── geminiService.ts
+│       ├── tsconfig.json
+│       ├── types.ts
+│       └── vite.config.ts
+├── functionality-test.html
+├── guia_cuidados_paliativos.html
+├── herramientas
+│   └── calculadora_pediatrica.html
+├── herramientas.html
+├── herramientas_corrupted_backup.html
+├── index.html
+├── infografias.html
+├── interpretador_hepatitis.html
+├── js
+│   ├── academia-umbramed-secure.js
+│   ├── academia-umbramed.js
+│   ├── campus-extension.js
+│   ├── common-new.js
+│   ├── common.js
+│   ├── cuidados-config.js
+│   ├── cuidados-paliativos-ia.js
+│   ├── cuidados-paliativos.js
+│   ├── interpretador-hepatitis.js
+│   ├── medicamentos-visados.js
+│   ├── question-manager.js
+│   ├── test-hepatitis-validator.js
+│   ├── umbramed-components.js
+│   └── umbramed.js
+├── medicamentos_sin_lactosa.html
+├── medicamentos_visados.html
+├── mi-perfil.html
+├── preguntas-csv-ejemplo.csv
+├── preguntas-ejemplo-ope-2025.json
+├── repo_structure.txt
+├── software.html
+├── software_corrupted_backup.html
+├── styles.css
+├── test-ai-functionality.html
+├── test-ai-minimal.html
+├── test-login-academia.html
+├── test_gratis_oposiciones.html
+├── test_gratis_oposiciones_backup.html
+└── verification.html
+
+67 directories, 383 files

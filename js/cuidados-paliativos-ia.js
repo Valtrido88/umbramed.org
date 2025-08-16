@@ -17,113 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 10, name: 'Ondansetrón' }
     ];
 
-    const PRECIPITATE_INTERACTIONS = {
-        'Dexametasona': ['Midazolam', 'Haloperidol', 'Levomepromazina', 'Ondansetrón'],
-        'Midazolam': ['Dexametasona'],
-        'Haloperidol': ['Dexametasona'],
-        'Levomepromazina': ['Dexametasona'],
-        'Ondansetrón': ['Dexametasona'],
-        'Metoclopramida': ['Fentanilo'],
-        'Fentanilo': ['Metoclopramida'],
-    };
-
-    // Mock Services
-    const generateDosingProtocol = (drugNames) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                const protocol = `
-                    <h3>Protocolo de Dosificación para: ${drugNames.join(', ')}</h3>
-                    <p><strong>1. Preparación de la perfusión:</strong></p>
-                    <ul>
-                        <li>Utilizar suero salino fisiológico (SSF) como diluyente principal.</li>
-                        <li>Cargar los fármacos en la misma jeringa, comprobando la compatibilidad.</li>
-                        <li>Aforar hasta un volumen final de 20 ml con SSF.</li>
-                    </ul>
-                    <p><strong>2. Pauta de administración:</strong></p>
-                    <ul>
-                        <li>Administrar por vía subcutánea (SC) continua mediante infusor elastomérico.</li>
-                        <li>Velocidad de infusión: 0.8 ml/hora para una duración de 24 horas.</li>
-                    </ul>
-                    <p><strong>3. Dosis sugeridas (ajustar según respuesta clínica):</strong></p>
-                    <ul>
-                        ${drugNames.map(name => `<li><strong>${name}:</strong> Iniciar con 10-20 mg/24h.</li>`).join('')}
-                    </ul>
-                    <p><em><strong>Nota:</strong> Esta es una guía general. Las dosis y pautas deben ser individualizadas por el médico prescriptor según la situación clínica del paciente.</em></p>
-                `;
-                resolve(protocol);
-            }, 1500);
-        });
-    };
-
-    const generateFamilyAdvice = () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-
-                const advice = `
-                    <h1>Carta de Apoyo para la Familia y Cuidadores</h1>
-                    <p>Querida familia, querido cuidador:</p>
-                    <p>Sabemos que este es un momento de gran dificultad y emociones intensas. Acompañar a un ser querido en el final de su vida es un acto de amor y generosidad. Esta carta quiere ofrecerle información útil, apoyo y recursos para afrontar este proceso con serenidad y confianza.</p>
-
-                    <h2>Comprender los Síntomas Comunes</h2>
-                    <ul>
-                        <li><strong>Disminución del apetito:</strong> Es normal. No fuerce la comida. Ofrezca pequeños sorbos de líquido o trocitos de hielo para mantener la boca húmeda.</li>
-                        <li><strong>Somnolencia y confusión:</strong> Su ser querido puede dormir más o parecer desorientado. Hable con calma y claridad, recuérdele quién es usted y dónde está.</li>
-                        <li><strong>Cambios en la respiración:</strong> Puede haber pausas, ruidos o respiración irregular. Elevar la cabecera de la cama puede ayudar. Mantenga la calma y consulte al equipo si tiene dudas.</li>
-                        <li><strong>Dolor y otros síntomas:</strong> El equipo de cuidados paliativos está para ayudarle a controlar el dolor y otros síntomas. No dude en pedir ayuda si nota cambios o molestias.</li>
-                    </ul>
-
-                    <h2>Cuidados de la Boca y Prevención de Escaras</h2>
-                    <ul>
-                        <li><strong>Higiene bucal:</strong> Humedezca la boca con agua, suero o geles específicos. Limpie suavemente los labios y la lengua con una gasa húmeda. Ofrezca trocitos de hielo si lo tolera.</li>
-                        <li><strong>Evite la sequedad:</strong> Use bálsamo labial y evite enjuagues con alcohol. Consulte al equipo si observa heridas o molestias.</li>
-                        <li><strong>Prevención de escaras:</strong> Cambie de posición a su ser querido cada 2-3 horas si está encamado. Utilice cojines o almohadas para proteger zonas de apoyo. Mantenga la piel limpia y seca, y aplique cremas barrera si es necesario.</li>
-                        <li><strong>Vigile la piel:</strong> Observe enrojecimientos, heridas o zonas doloridas y comuníquelo al equipo sanitario.</li>
-                    </ul>
-
-                    <h2>Cambios Posturales y Movilización</h2>
-                    <ul>
-                        <li><strong>Movilización suave:</strong> Ayude a cambiar de posición con movimientos lentos y cuidadosos. Pregunte al equipo sobre técnicas seguras.</li>
-                        <li><strong>Comodidad:</strong> Ajuste almohadas y mantas para mejorar el confort. Evite ropas ajustadas y mantenga la cama ordenada.</li>
-                        <li><strong>Estimulación:</strong> Si es posible, anime a realizar pequeños movimientos o ejercicios suaves para evitar rigidez.</li>
-                    </ul>
-
-                    <h2>Consejos Prácticos para el Día a Día</h2>
-                    <ul>
-                        <li><strong>Higiene y confort:</strong> Mantenga la piel limpia y seca, cambie la ropa de cama si es necesario y ayude a su ser querido a cambiar de posición para evitar molestias.</li>
-                        <li><strong>Comunicación:</strong> Escuche y hable con sinceridad. A veces, el silencio y la compañía son más valiosos que las palabras.</li>
-                        <li><strong>Organización:</strong> Lleve un registro de los medicamentos y pautas. Anote dudas para consultarlas con el equipo sanitario.</li>
-                        <li><strong>Solicite ayuda:</strong> No dude en pedir apoyo a otros familiares, amigos o profesionales. El cuidado compartido es más llevadero.</li>
-                    </ul>
-
-                    <h2>Recursos y Trámites</h2>
-                    <ul>
-                        <li><strong>Equipo de cuidados paliativos:</strong> Contacte con ellos ante cualquier duda, síntoma nuevo o necesidad. Están para ayudarle.</li>
-                        <li><strong>Recursos sociales:</strong> Infórmese sobre ayudas a domicilio, teleasistencia y apoyo psicológico. El trabajador social puede orientarle sobre trámites y prestaciones.</li>
-                        <li><strong>Documentación y voluntades:</strong> Si no lo ha hecho, revise la documentación médica y las voluntades anticipadas. Consulte al equipo si necesita orientación legal.</li>
-                    </ul>
-
-                    <h2>El Cuidado Emocional y Espiritual</h2>
-                    <ul>
-                        <li><strong>Su presencia es el mejor regalo:</strong> Estar ahí, en silencio, sosteniendo una mano, tiene un valor inmenso.</li>
-                        <li><strong>Hable desde el corazón:</strong> Comparta recuerdos, dé las gracias, pida perdón, diga "te quiero". Nunca es tarde para estas palabras.</li>
-                        <li><strong>Música y ambiente:</strong> Una música suave, luz cálida o el sonido de la naturaleza pueden crear un entorno tranquilo.</li>
-                        <li><strong>Apoyo psicológico:</strong> Si siente tristeza, ansiedad o miedo, hable con el equipo o busque ayuda profesional. Es normal necesitar apoyo.</li>
-                    </ul>
-
-                    <h2>Cuídese Usted También</h2>
-                    <ul>
-                        <li><strong>Descanse:</strong> Permítase descansar y delegar tareas. Su bienestar es fundamental para cuidar bien.</li>
-                        <li><strong>Exprésese:</strong> Hable de sus sentimientos con personas de confianza o con el equipo sanitario.</li>
-                        <li><strong>Duelo y despedida:</strong> El proceso de despedida es personal y único. Permítase sentir y vivir el duelo a su ritmo. Busque apoyo si lo necesita.</li>
-                    </ul>
-
-                    <p>Con nuestro más profundo respeto y apoyo,<br>El equipo de umbramed.org</p>
-                `;
-                resolve(advice);
-            }, 1500);
-        });
-    };
-
     // DOM Elements
     const homeView = document.getElementById('home-view');
     const physicianView = document.getElementById('physician-view');
@@ -147,6 +40,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Family View Elements
     const generateLetterBtn = document.getElementById('generate-letter-btn');
+        // ================= Configuración IA =================
+        const AI_ENDPOINT = window.UMBRA_AI_ENDPOINT || document.querySelector('meta[name="ai-endpoint"]')?.content || null;
+        const AI_TIMEOUT_MS = 45000;
+
+        // Sanitización básica (permitidos: p, h1-h4, ul, ol, li, em, strong, br)
+        const sanitizeHTML = (raw) => {
+            if (!raw) return '';
+            // eliminar scripts/iframes/style/event handlers
+            let cleaned = raw
+                .replace(/<\s*script[^>]*>.*?<\s*\/script>/gis, '')
+                .replace(/<\s*style[^>]*>.*?<\s*\/style>/gis, '')
+                .replace(/<\s*iframe[^>]*>.*?<\s*\/iframe>/gis, '')
+                .replace(/on[a-zA-Z]+\s*=\s*"[^"]*"/g, '')
+                .replace(/on[a-zA-Z]+\s*=\s*'[^']*'/g, '')
+                .replace(/javascript:/gi, '');
+            // eliminar tags no permitidos conservando texto
+            cleaned = cleaned.replace(/<(?!\/?(?:p|h1|h2|h3|h4|ul|ol|li|em|strong|br)\b)[^>]*>/gi, '');
+            return cleaned;
+        };
+
+        const callAI = async ({ prompt, purpose }) => {
+            if (!AI_ENDPOINT) {
+                throw new Error('NO_ENDPOINT_CONFIGURED');
+            }
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+            try {
+                const res = await fetch(AI_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, purpose }),
+                    signal: controller.signal
+                });
+                if (!res.ok) {
+                    throw new Error(`AI_HTTP_${res.status}`);
+                }
+                const data = await res.json();
+                if (!data || typeof data.content !== 'string') {
+                    throw new Error('AI_INVALID_RESPONSE');
+                }
+                return sanitizeHTML(data.content);
+            } finally {
+                clearTimeout(timeout);
+            }
+        };
+
+        const buildProtocolPrompt = (drugNames) => `Genera una GUÍA CLÍNICA estructurada en HTML SIMPLE para la PREPARACIÓN y DOSIFICACIÓN de una perfusión subcutánea continua que incluye exactamente estos fármacos: ${drugNames.join(', ')}. Incluir secciones claras con encabezados h3: 1) Preparación (diluyente, volumen estándar, orden de carga si relevante) 2) Compatibilidad general 3) Dosis orientativas iniciales (expresar rangos razonables por 24h; si un fármaco requiere titulación individual indícalo) 4) Recomendaciones de titulación y monitorización 5) Estabilidad y consideraciones de mezcla 6) Advertencias y necesidad de individualización. Responder solo con HTML permitido (p, h3, ul, li, strong, em, br). Español.`;
+
+        const buildFamilyLetterPrompt = () => `Redacta una CARTA DE APOYO (tono empático y profesional) para familiares y cuidadores de un paciente en fase terminal. Estructura en HTML simple con h2/h3 y listas. Secciones: Comprender síntomas frecuentes (apetito, sueño, respiración, confusión), Apoyo emocional y comunicación, Manejo práctico básico, Autocuidado del cuidador, Cuándo contactar con el equipo sanitario (signos de alarma), Mensaje final de agradecimiento y dignidad. No incluir recomendaciones médicas invasivas ni promesas irreales. Solo HTML permitido (p, h2, h3, ul, li, strong, em, br). Español.`;
+
+        const generateDosingProtocol = async (drugNames) => {
+            const prompt = buildProtocolPrompt(drugNames);
+            return await callAI({ prompt, purpose: 'protocol' });
+        };
+
+        const generateFamilyAdvice = async () => {
+            const prompt = buildFamilyLetterPrompt();
+            return await callAI({ prompt, purpose: 'family_letter' });
+        };
     const generateLetterContainer = document.getElementById('generate-letter-container');
     const letterSpinner = document.getElementById('letter-spinner');
     const letterOutput = document.getElementById('letter-output');
@@ -243,30 +195,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleGenerateProtocol = async () => {
         if (selectedDrugs.length === 0) return;
-
         protocolSpinner.classList.remove('hidden');
         protocolOutput.classList.add('hidden');
+        protocolContent.innerHTML = '';
         generateProtocolBtn.disabled = true;
-
+        generateProtocolBtn.textContent = 'Generando…';
         const drugNames = selectedDrugs.map(d => d.name);
-        const protocol = await generateDosingProtocol(drugNames);
-        
-        protocolContent.innerHTML = protocol;
-        protocolSpinner.classList.add('hidden');
-        protocolOutput.classList.remove('hidden');
-        generateProtocolBtn.disabled = false;
+        try {
+            const protocol = await generateDosingProtocol(drugNames);
+            protocolContent.innerHTML = protocol;
+            protocolOutput.classList.remove('hidden');
+        } catch (err) {
+            let msg;
+            if (err.message === 'NO_ENDPOINT_CONFIGURED') {
+                msg = '<p><strong>Configuración requerida:</strong> No se ha definido un endpoint de IA. Defina window.UMBRA_AI_ENDPOINT o meta name="ai-endpoint".</p>';
+            } else if (err.name === 'AbortError') {
+                msg = '<p><strong>Tiempo excedido:</strong> El servicio de IA no respondió a tiempo. Intente de nuevo.</p>';
+            } else {
+                msg = '<p><strong>Error:</strong> No se pudo generar la guía. Reintente más tarde.</p>';
+            }
+            protocolContent.innerHTML = msg;
+            protocolOutput.classList.remove('hidden');
+        } finally {
+            protocolSpinner.classList.add('hidden');
+            generateProtocolBtn.disabled = false;
+            generateProtocolBtn.textContent = 'Generar Guía de Preparación y Dosificación';
+        }
     };
 
     const handleGenerateLetter = async () => {
         generateLetterContainer.classList.add('hidden');
         letterSpinner.classList.remove('hidden');
         letterOutput.classList.add('hidden');
-
-        const advice = await generateFamilyAdvice();
-
-        letterContent.innerHTML = advice;
-        letterSpinner.classList.add('hidden');
-        letterOutput.classList.remove('hidden');
+        letterContent.innerHTML = '';
+        try {
+            const advice = await generateFamilyAdvice();
+            letterContent.innerHTML = advice;
+        } catch (err) {
+            let msg;
+            if (err.message === 'NO_ENDPOINT_CONFIGURED') {
+                msg = '<p><strong>Configuración requerida:</strong> Falta endpoint IA. Añada window.UMBRA_AI_ENDPOINT o meta name="ai-endpoint".</p>';
+            } else if (err.name === 'AbortError') {
+                msg = '<p><strong>Tiempo excedido:</strong> El servicio tardó demasiado.</p>';
+            } else {
+                msg = '<p><strong>Error:</strong> No se pudo generar la carta. Intente más tarde.</p>';
+            }
+            letterContent.innerHTML = msg;
+        } finally {
+            letterSpinner.classList.add('hidden');
+            letterOutput.classList.remove('hidden');
+        }
     };
 
     const handlePrintLetter = () => {

@@ -1,12 +1,12 @@
 [
     {
-        "id": "academia-umbramed",
-        "title": "ACADEMIA UMBRAMED",
-        "description": "<strong>¡NUEVO!</strong> Sistema completo de test de oposiciones SAS con 143 preguntas reales organizadas por PAI. Incluye sistema de login y seguimiento de progreso.",
-        "link": "academia.html",
-        "icon": "🎓",
-        "status": "featured",
-        "button_text": "🚀 Acceder a Academia"
+        "id": "guia-cuidados-paliativos",
+        "title": "Guía de Cuidado Paliativo",
+        "description": "Herramienta integral para médicos y familiares: verificador de interacciones, guía de dosificación y recursos de apoyo emocional.",
+        "link": "guia_cuidados_paliativos.html",
+        "icon": "🩺",
+        "status": "functional",
+        "button_text": "Acceder a Guía"
     },
     {
         "id": "calculadora-pediatrica",
