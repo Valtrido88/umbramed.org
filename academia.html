@@ -7,6 +7,7 @@
     <!-- Eliminado styles.css y fuentes externas para auto-contenido. Tipografías ahora usan system stack. -->
     <!-- Tailwind CDN removido: se conservan sólo utilidades requeridas recreadas abajo si hiciera falta. -->
     <style>
+    :root { --primary-red:#C41E3A; --dark-red:#8B0000; --lighter-bg:#F8F9FA; --accent-black:#1A1A1A; --text-light:#6C757D; }
         body {
             margin-top: 100px;
             font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -196,11 +197,38 @@
     <script src="js/academia-umbramed-secure.js"></script>
     <script src="js/campus-extension.js"></script>
     <script>
+        // Fallback si auth.js no está presente
+        if (!window.showLogin) {
+            window.showLogin = function(){
+                document.querySelector('#app').scrollIntoView({behavior:'smooth'});
+            };
+        }
         // Inicializar la aplicación con sistema de autenticación seguro
         document.addEventListener('DOMContentLoaded', () => {
             UmbramedComponents.init('academia');
             AcademiaUmbramed.init();
+            // Aviso si no se cargan preguntas
+            setTimeout(()=>{
+                if(!window.academiaUmbramed?.questionManager){
+                    const app=document.getElementById('app');
+                    if(app && !document.getElementById('questions-load-warning')){
+                        const div=document.createElement('div');
+                        div.id='questions-load-warning';
+                        div.style.cssText='background:#fff3cd;color:#856404;padding:1rem 1.25rem;border-radius:10px;border:1px solid #ffeeba;margin:1rem auto;max-width:800px;font-size:.9rem;font-weight:500';
+                        div.innerHTML='⚠️ No se pudieron cargar las preguntas (extraer const allData de test_gratis_oposiciones.html). Verifica que el archivo exista y mantenga la línea const allData = [...];';
+                        app.prepend(div);
+                    }
+                }
+            },2000);
         });
+
+        // Auth inline mínimo
+        if(!window.UmbraAuth){
+            window.UmbraAuth={
+                login:(email,pwd)=>window.academiaUmbramed?.authenticateUser(email,pwd),
+                register:(data)=>window.academiaUmbramed?.registerUser(data)
+            };
+        }
         
         // Agregar estilos para notificaciones de logros
         const style = document.createElement('style');
