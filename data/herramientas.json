@@ -83,11 +83,11 @@
     {
         "id": "dietas-ia",
         "title": "Asistente Nutricional IA",
-        "description": "Una herramienta avanzada para médicos de atención primaria que utiliza IA para generar planes de dieta y ejercicio personalizados, listas de alimentos específicos y consejos para pacientes, todo con la marca Umbramed.",
-        "link": "docs/unzipped_dietas_ia/index.html",
-        "icon": "🥗",
-        "status": "functional",
-        "button_text": "Generar Dieta"
+    "description": "Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología. Versión BETA auto-contenida (revisar clínicamente).",
+    "link": "asistente_dietas.html",
+    "icon": "🥗",
+    "status": "functional",
+    "button_text": "Abrir Asistente"
     }
     ,
     {
@@ -98,5 +98,14 @@
         "icon": "🩸",
         "status": "functional",
         "button_text": "Controlar Diabetes"
+    },
+    {
+        "id": "campus-kike",
+        "title": "Campus OPE Kike",
+        "description": "Acceso privado para Kike: test rápido, simulacros, repaso de fallos y banco PAI/OPE 2025. Requiere login (alias kike).",
+        "link": "campus_kike.html",
+    "icon": "🔥",
+    "status": "featured",
+    "button_text": "Entrar Campus"
     }
 ]

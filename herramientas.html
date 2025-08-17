@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
     <title>Herramientas Médicas - UmbraMed.Org</title>
     <!-- Inlined critical styles extracted from styles.css -->
     <style>
@@ -91,77 +94,71 @@
     </footer>
 
     <!-- Embedded script: tools rendering + validation -->
+    <script src="js/versioning.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('data/herramientas.json')
-                .then(response => response.json())
-                .then(tools => {
-                    const toolsGrid = document.getElementById('tools-grid');
-                    toolsGrid.innerHTML = '';
-                    // Filtrar y asegurar que dietas y diabetes aparecen siempre
-                    const extraTools = [
-                        {
-                            "id": "dietas-ia",
-                            "title": "Asistente Nutricional IA",
-                            "description": "Una herramienta avanzada para médicos de atención primaria que utiliza IA para generar planes de dieta y ejercicio personalizados, listas de alimentos específicos y consejos para pacientes, todo con la marca Umbramed.",
-                            "link": "docs/unzipped_dietas_ia/index.html",
-                            "icon": "🥗",
-                            "status": "functional",
-                            "button_text": "Generar Dieta"
-                        },
-                        {
-                            "id": "diabetes-tipo-2",
-                            "title": "Asistente de Diabetes Tipo 2",
-                            "description": "Una herramienta integral para ayudar a los pacientes con diabetes tipo 2 a gestionar su tratamiento, registrar sus niveles de glucosa y recibir recomendaciones basadas en IA para ajustar su medicación, incluyendo la detección y corrección de los fenómenos del alba y Somogyi.",
-                            "link": "docs/unzipped_diabetes_tipo_2/index.html",
-                            "icon": "🩸",
-                            "status": "functional",
-                            "button_text": "Controlar Diabetes"
-                        }
-                    ];
-                    // Añadir si no están
-                    extraTools.forEach(extra => {
-                        if (!tools.some(t => t.id === extra.id)) {
-                            tools.push(extra);
-                        }
-                    });
-                    tools.forEach(tool => {
-                        const card = document.createElement('div');
-                        card.className = 'tool-card';
-                        let style = '';
-                        let buttonDisabled = false;
-                        let buttonStyle = '';
-                        let link = tool.link;
-                        switch (tool.status) {
-                            case 'featured':
-                                style = 'border-color: #667eea; background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); order: -1;';
-                                buttonStyle = 'background: #667eea; border-color: #667eea; font-weight: 600;';
-                                break;
-                            case 'development':
-                                style = 'opacity: 0.6; border-color: #6C757D;';
-                                buttonDisabled = true;
-                                buttonStyle = 'background: #6C757D; cursor: not-allowed;';
-                                link = '#';
-                                break;
-                        }
-                        card.setAttribute('style', style);
-                        card.innerHTML = `
-                            <span class="tool-icon" style="color: ${tool.status === 'featured' ? '#667eea' : (tool.status === 'development' ? '#6C757D' : 'inherit')}; font-size: ${tool.status === 'featured' ? '3rem' : '2rem'};">${tool.icon}</span>
-                            <h3 class="tool-title" style="color: ${tool.status === 'featured' ? '#667eea' : (tool.status === 'development' ? '#6C757D' : 'inherit')}; font-size: ${tool.status === 'featured' ? '1.4rem' : '1.2rem'};">${tool.title}</h3>
-                            <p class="tool-description" style="${tool.status === 'featured' ? 'font-weight: 500;' : ''}">${tool.description}</p>
-                            ${buttonDisabled 
-                                ? `<button class="tool-link" disabled style="${buttonStyle}">${tool.button_text}</button>`
-                                : `<a href="${link}" class="tool-link" style="${buttonStyle}">${tool.button_text}</a>`
-                            }
-                        `;
-                        toolsGrid.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al cargar las herramientas:', error);
-                    const toolsGrid = document.getElementById('tools-grid');
-                    toolsGrid.innerHTML = '<p>Error al cargar las herramientas. Por favor, intente de nuevo más tarde.</p>';
-                });
+            const toolsGrid = document.getElementById('tools-grid');
+            const HIDDEN_KEY='herramientas_hidden_v1';
+            const ORDER_KEY='herramientas_order_v1';
+            const hiddenIds = new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY)||'[]'));
+            const savedOrder = JSON.parse(localStorage.getItem(ORDER_KEY)||'[]');
+            function persist(){localStorage.setItem(HIDDEN_KEY,JSON.stringify([...hiddenIds]));localStorage.setItem(ORDER_KEY,JSON.stringify(savedOrder));}
+            function fetchTools(){return fetch('data/herramientas.json').then(r=>r.json());}
+            function baseExtras(){return [
+                {id:'dietas-ia',title:'Asistente Nutricional IA',description:'Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología. Versión BETA auto-contenida (revisar clínicamente).',link:'asistente_dietas.html',icon:'🥗',status:'functional',button_text:'Abrir Asistente'},
+                {id:'diabetes-tipo-2',title:'Asistente de Diabetes Tipo 2',description:'Una herramienta integral para ayuda en el control de diabetes tipo 2.',link:'docs/unzipped_diabetes_tipo_2/index.html',icon:'🩸',status:'development',button_text:'En Migración'},
+                {id:'campus-kike',title:'Campus OPE Kike',description:'Acceso privado: test rápido, simulacros, repaso de fallos y banco PAI/OPE 2025 (requiere login kike).',link:'campus_kike.html',icon:'🔥',status:'featured',button_text:'Entrar Campus'}
+            ];}
+            function applyOrder(arr){if(!savedOrder.length) return arr;const map=new Map(arr.map(t=>[t.id,t]));const ordered=[];savedOrder.forEach(id=>{if(map.has(id)&&!hiddenIds.has(id))ordered.push(map.get(id));});arr.forEach(t=>{if(!ordered.includes(t)&&!hiddenIds.has(t.id))ordered.push(t);});return ordered;}
+            function render(tools){toolsGrid.innerHTML='';tools.forEach(tool=>{const card=document.createElement('div');card.className='tool-card';card.dataset.id=tool.id;let style='';let buttonDisabled=false;let buttonStyle='';let link=tool.link;switch(tool.status){case'featured':style='border-color:#667eea;background:linear-gradient(135deg,#f8f9ff 0%,#e8ecff 100%);order:-1;';buttonStyle='background:#667eea;border-color:#667eea;font-weight:600;';break;case'development':style='opacity:.6;border-color:#6C757D;';buttonDisabled=true;buttonStyle='background:#6C757D;cursor:not-allowed;';link='#';break;}card.setAttribute('style',style);card.innerHTML=`<div class="edit-overlay" style="display:none;position:absolute;top:6px;right:6px;z-index:5;display:flex;gap:4px;"><button class="btn-remove" title="Eliminar" style="background:#dc2626;border:none;color:#fff;font-size:.6rem;padding:.35rem .5rem;border-radius:6px;cursor:pointer;font-weight:600;">✕</button><span class="drag-handle" title="Arrastrar" style="background:#334155;color:#fff;font-size:.6rem;padding:.35rem .45rem;border-radius:6px;cursor:grab;font-weight:600;">↕</span></div>
+                        <span class="tool-icon" style="color:${tool.status==='featured'?'#667eea':(tool.status==='development'?'#6C757D':'inherit')};font-size:${tool.status==='featured'?'3rem':'2rem'};">${tool.icon}</span>
+                        <h3 class="tool-title" style="color:${tool.status==='featured'?'#667eea':(tool.status==='development'?'#6C757D':'inherit')};font-size:${tool.status==='featured'?'1.4rem':'1.2rem'};">${tool.title}</h3>
+                        <p class="tool-description" style="${tool.status==='featured'?'font-weight:500;':''}">${tool.description}</p>
+                        ${buttonDisabled?`<button class="tool-link" disabled style="${buttonStyle}">${tool.button_text}</button>`:`<a href="${link}" class="tool-link" style="${buttonStyle}">${tool.button_text}</a>`}`;toolsGrid.appendChild(card);});}
+                        const ADD_KEY='herramientas_added_v1';
+                        function loadAdded(){try{return JSON.parse(localStorage.getItem(ADD_KEY)||'[]');}catch{return []}}
+                        function saveAdded(list){localStorage.setItem(ADD_KEY,JSON.stringify(list));}
+                        function loadAndRender(){fetchTools().then(json=>{const all=[...json];const extras=baseExtras();extras.forEach(e=>{if(!all.some(t=>t.id===e.id)) all.push(e);});const added=loadAdded();added.forEach(a=>{if(!all.some(t=>t.id===a.id)) all.push(a);});const filtered=all.filter(t=>!hiddenIds.has(t.id));const ordered=applyOrder(filtered);render(ordered);setupEditorUI();}).catch(err=>{console.error('Error al cargar herramientas',err);toolsGrid.innerHTML='<p>Error al cargar las herramientas.</p>';});}
+                        function isAdmin(){try{const s=window.UmbraAuthCore?.getSession();if(!s) return false;const allowed=['kike@umbramed.org','valerio.trigos88@gmail.com'];return allowed.includes(s.email)||s.role==='admin';}catch{return false;}}
+                        function setupEditorUI(){if(!isAdmin()) return;let panel=document.getElementById('editorToolsPanel');if(!panel){panel=document.createElement('div');panel.id='editorToolsPanel';panel.style.cssText='position:fixed;bottom:15px;right:15px;z-index:2000;background:#1e293b;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:6px;min-width:230px;font-family:system-ui,sans-serif;font-size:.65rem;';panel.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><strong style="font-size:.7rem;letter-spacing:.5px;">MODO EDICIÓN</strong><label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-weight:600;"><input id="toggleEdit" type="checkbox" style="transform:scale(1.1);cursor:pointer;"> <span>ON</span></label></div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <button id="btnExport" style="flex:1;background:#0d9488;border:none;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;cursor:pointer;">Exportar</button>
+                            <button id="btnAdd" style="flex:1;background:#6366f1;border:none;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;cursor:pointer;">Añadir</button>
+                            <button id="btnResetHidden" style="flex:1;background:#dc2626;border:none;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;cursor:pointer;">Reset</button>
+                        </div>
+                        <form id="addForm" style="display:none;flex-direction:column;gap:4px;background:#0f172a;padding:8px;border-radius:8px;margin-top:4px;" onsubmit="return false;">
+                            <input name="id" placeholder="id" required style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;">
+                            <input name="title" placeholder="Título" required style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;">
+                            <textarea name="description" placeholder="Descripción" rows="2" required style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;"></textarea>
+                            <input name="link" placeholder="enlace.html" required style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;">
+                            <input name="icon" placeholder="Icono (emoji)" style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;">
+                            <select name="status" style="padding:4px 6px;font-size:.6rem;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#fff;">
+                                <option value="functional">functional</option>
+                                <option value="featured">featured</option>
+                                <option value="development">development</option>
+                            </select>
+                            <button type="submit" style="margin-top:4px;background:#10b981;border:none;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;cursor:pointer;">Guardar</button>
+                        </form>
+                        <div id="exportBox" style="display:none;flex-direction:column;gap:4px;">
+                            <textarea readonly style="width:260px;height:140px;font-size:.6rem;padding:6px;border-radius:6px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;"></textarea>
+                            <button id="btnCopy" style="background:#6366f1;border:none;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;cursor:pointer;">Copiar</button>
+                        </div>
+                        <div style="font-size:.55rem;line-height:1.3;color:#94a3b8;">Solo administradores. Arrastra para reordenar. ✕ elimina (local). Añade módulos y exporta JSON.</div>`;document.body.appendChild(panel);}const toggle=document.getElementById('toggleEdit');const exportBtn=document.getElementById('btnExport');const addBtn=document.getElementById('btnAdd');const resetBtn=document.getElementById('btnResetHidden');const exportBox=document.getElementById('exportBox');const copyBtn=document.getElementById('btnCopy');const addForm=document.getElementById('addForm');toggle.onchange=()=>setEditMode(toggle.checked);exportBtn.onclick=()=>{exportBox.style.display=exportBox.style.display==='flex'?'none':'flex';if(exportBox.style.display==='flex'){const allCards=[...document.querySelectorAll('.tool-card')];const payload=allCards.map(c=>collectCardData(c.dataset.id));exportBox.querySelector('textarea').value=JSON.stringify(payload,null,2);} };copyBtn.onclick=()=>{const ta=exportBox.querySelector('textarea');ta.select();document.execCommand('copy');copyBtn.textContent='Copiado';setTimeout(()=>copyBtn.textContent='Copiar',1200);};addBtn.onclick=()=>{addForm.style.display=addForm.style.display==='flex'?'none':'flex';};addForm.onsubmit=()=>{const fd=new FormData(addForm);const id=(fd.get('id')||'').trim();if(!id){alert('ID requerido');return false;}const added=loadAdded();if(added.some(a=>a.id===id)){alert('ID ya existe');return false;}const tool={id,title:fd.get('title')||'',description:fd.get('description')||'',link:fd.get('link')||'#',icon:fd.get('icon')||'🧩',status:fd.get('status')||'functional',button_text:'Abrir'};added.push(tool);saveAdded(added);savedOrder.push(id);persist();addForm.reset();addForm.style.display='none';loadAndRender();return false;};resetBtn.onclick=()=>{if(confirm('Restaurar orden, mostrar y borrar añadidos locales?')){hiddenIds.clear();savedOrder.splice(0,savedOrder.length);saveAdded([]);persist();loadAndRender();}};decorateCards();}
+            function collectCardData(id){const card=document.querySelector(`.tool-card[data-id="${id}"]`);if(!card) return null;const title=card.querySelector('.tool-title')?.textContent||'';const description=card.querySelector('.tool-description')?.textContent||'';const icon=card.querySelector('.tool-icon')?.textContent||'';const link=card.querySelector('a.tool-link')?.getAttribute('href')||'#';return {id,title,description,link,icon,status:'functional',button_text:(card.querySelector('a.tool-link')||card.querySelector('button.tool-link'))?.textContent||'ABRIR'};}
+            function setEditMode(on){document.body.classList.toggle('editing-tools',on);[...document.querySelectorAll('.tool-card')].forEach(c=>{const overlay=c.querySelector('.edit-overlay');if(overlay) overlay.style.display=on?'flex':'none';c.draggable=on;c.classList.toggle('draggable',on);});if(on) attachDnD();}
+            function decorateCards(){[...document.querySelectorAll('.tool-card')].forEach(c=>{if(!c.querySelector('.edit-overlay')) return;const removeBtn=c.querySelector('.btn-remove');removeBtn.onclick=()=>{const id=c.dataset.id;if(confirm('Eliminar módulo '+id+'?')){hiddenIds.add(id);persist();c.remove();}};});}
+            function attachDnD(){const cards=[...document.querySelectorAll('.tool-card')];cards.forEach(card=>{card.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',card.dataset.id);card.classList.add('dragging');});card.addEventListener('dragend',()=>{card.classList.remove('dragging');updateOrder();});card.addEventListener('dragover',e=>{e.preventDefault();const dragging=document.querySelector('.tool-card.dragging');if(!dragging||dragging===card)return;const rect=card.getBoundingClientRect();const before=(e.clientY-rect.top)<rect.height/2;card.parentNode.insertBefore(dragging,before?card:card.nextSibling);});});}
+            function updateOrder(){const ids=[...document.querySelectorAll('.tool-card')].map(c=>c.dataset.id);savedOrder.splice(0,savedOrder.length,...ids.filter(id=>!hiddenIds.has(id)));persist();}
+            loadAndRender();
+            // Reactivar UI edición al loguear / limpiar al salir
+            window.addEventListener('umbramed:login', () => {
+                setTimeout(()=>loadAndRender(),50);
+            });
+            window.addEventListener('umbramed:logout', () => {
+                const panel=document.getElementById('editorToolsPanel');
+                if(panel) panel.remove();
+                hiddenIds.clear(); // opcional: limpiar ocultos al salir
+            });
         });
 
         // Función para mostrar login

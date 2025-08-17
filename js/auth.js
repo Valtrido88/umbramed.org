@@ -20,11 +20,11 @@
         const modal = document.createElement('div');
         modal.id='loginModal';
         modal.style.cssText='display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:3000;justify-content:center;align-items:center;padding:1rem;';
-        modal.innerHTML=`<div style="background:#fff;padding:2rem 2rem 1.5rem;border-radius:14px;max-width:420px;width:100%;position:relative;box-shadow:0 15px 45px rgba(0,0,0,.25);font-family:system-ui,sans-serif;">
+    modal.innerHTML=`<div style="background:#fff;padding:2rem 2rem 1.5rem;border-radius:14px;max-width:420px;width:100%;position:relative;box-shadow:0 15px 45px rgba(0,0,0,.25);font-family:system-ui,sans-serif;">
             <button type="button" onclick="closeLogin()" style="position:absolute;top:8px;right:10px;background:none;border:none;font-size:1.8rem;line-height:1;color:#C41E3A;cursor:pointer;font-weight:700;">×</button>
             <h2 style="color:#C41E3A;margin:0 0 1.2rem;font-size:1.4rem;text-align:center;letter-spacing:.5px;">ACCESO PRIVADO</h2>
             <form onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:.9rem;">
-                <input id="username" type="email" autocomplete="username" placeholder="Email" required style="padding:.8rem 1rem;border:2px solid #e5e5e5;border-radius:8px;font-size:.95rem;">
+        <input id="username" type="text" autocomplete="username" placeholder="Email o alias (kike / valerio)" required style="padding:.8rem 1rem;border:2px solid #e5e5e5;border-radius:8px;font-size:.95rem;">
                 <input id="password" type="password" autocomplete="current-password" placeholder="Contraseña" required style="padding:.8rem 1rem;border:2px solid #e5e5e5;border-radius:8px;font-size:.95rem;">
                 <button type="submit" style="margin-top:.3rem;background:linear-gradient(45deg,#C41E3A,#8B0000);border:none;color:#fff;padding:.85rem 1rem;font-weight:600;border-radius:8px;cursor:pointer;letter-spacing:.5px;">Entrar</button>
                 <div id="loginError" style="display:none;color:#b00020;font-size:.8rem;font-weight:600;text-align:center;">Credenciales inválidas</div>
@@ -44,7 +44,10 @@
     };
     window.handleLogin = function(e){
         e.preventDefault();
-        const email = (document.getElementById('username').value||'').trim().toLowerCase();
+    let email = (document.getElementById('username').value||'').trim().toLowerCase();
+    // Alias sin dominio
+    if(email === 'kike') email = 'kike@umbramed.org';
+    if(email === 'valerio') email = 'valerio.trigos88@gmail.com';
         const pwd = document.getElementById('password').value;
         const rec = USERS[email];
         const err = document.getElementById('loginError');
