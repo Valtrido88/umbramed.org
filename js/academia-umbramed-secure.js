@@ -31,6 +31,58 @@ class AcademiaUmbramed {
                 courses: ['microbiologia-basica', 'microbiologia-avanzada', 'resistencias-antibioticas'],
                 requiresAccess: true
             },
+            // Módulo personalizado para Kike
+            'kike-lo-va-a-petar': {
+                id: 'kike-lo-va-a-petar',
+                name: 'Kike lo va a petar',
+                description: 'Zona exclusiva para preparar microbiología a la carta. Tests personalizados y banco en construcción.',
+                icon: '🧪',
+                color: '#d35400',
+                building: '🔥',
+                head: 'Kike',
+                students: 1,
+                courses: ['micro-kike-basico', 'micro-kike-avanzado', 'simulacros-kike'],
+                requiresAccess: true,
+                isPersonal: true,
+                questionBanks: {
+                    'micro-kike-basico': {
+                        id: 'micro-kike-basico',
+                        name: 'Fundamentos Micro Kike',
+                        description: 'Preguntas básicas de microbiología para calentar motores.',
+                        icon: '🦠',
+                        color: '#e67e22',
+                        questions: [],
+                        categories: ['Bacteriología', 'Virología', 'Micología', 'Parasitología'],
+                        totalQuestions: 0,
+                        difficulty: ['Básico', 'Intermedio'],
+                        tags: ['microbiologia', 'basico']
+                    },
+                    'micro-kike-avanzado': {
+                        id: 'micro-kike-avanzado',
+                        name: 'Avanzado Micro Kike',
+                        description: 'Casos clínicos y preguntas complejas de microbiología.',
+                        icon: '🧫',
+                        color: '#ba4a00',
+                        questions: [],
+                        categories: ['Resistencias', 'Diagnóstico avanzado', 'Patogenia'],
+                        totalQuestions: 0,
+                        difficulty: ['Avanzado'],
+                        tags: ['microbiologia', 'avanzado']
+                    },
+                    'simulacros-kike': {
+                        id: 'simulacros-kike',
+                        name: 'Simulacros Kike',
+                        description: 'Simulacros cronometrados estilo OPE para microbiología.',
+                        icon: '⏱️',
+                        color: '#e59866',
+                        questions: [],
+                        categories: ['Simulacro 1', 'Simulacro 2'],
+                        totalQuestions: 0,
+                        difficulty: ['Mixto'],
+                        tags: ['simulacro', 'microbiologia']
+                    }
+                }
+            },
             'cirugia-cardiovascular': {
                 id: 'cirugia-cardiovascular', 
                 name: 'Cirugía Cardiovascular',
@@ -270,6 +322,23 @@ class AcademiaUmbramed {
                 experience: 'Más de 10 años'
             }
         };
+        // Usuario admin Kike preconfigurado (solo si no existe ya en localStorage)
+        if(!this.userData['kike@umbramed.org']){
+            this.userData['kike@umbramed.org'] = {
+                id: 'admin-kike',
+                email: 'kike@umbramed.org',
+                name: 'Kike',
+                password: 'mola',
+                role: 'admin',
+                courses: ['kike-lo-va-a-petar'],
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                profileComplete: true,
+                specialty: 'Microbiología',
+                workPlace: 'UMBRAMED',
+                experience: 'Preparación OPE'
+            };
+        }
     }
     
     loadUserStats() {
