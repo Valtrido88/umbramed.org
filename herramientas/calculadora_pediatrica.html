@@ -142,34 +142,8 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo-container">
-                <a href="../index.html">
-                    <div class="logo-dna">
-                        <!-- SVG del logo -->
-                    </div>
-                    <div>
-                        <div class="brand-text">UMBRAMED</div>
-                        <div class="subtitle">MEDICAL DIVISION</div>
-                    </div>
-                </a>
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="../herramientas.html" class="active">Herramientas</a></li>
-                    <li class="nav-item"><a href="../academia.html" style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a></li>
-                    <li class="nav-item"><a href="../medicamentos_sin_lactosa.html" style="color: #C41E3A;">💊 Sin Lactosa</a></li>
-                    <li class="nav-item admin-only" style="display: none;"><a href="../index.html#admin">Admin</a></li>
-                    <li class="nav-item">
-                        <div id="loginArea">
-                            <button class="login-btn" onclick="showLogin()">LOGIN</button>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <script src="../js/common.js"></script>
+    <script>document.addEventListener('DOMContentLoaded',()=>UmbramedComponents.init('herramientas'));</script>
 
     <main class="main-content">
         <div class="container">

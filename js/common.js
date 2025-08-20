@@ -21,10 +21,19 @@ class UmbramedComponents {
                             <a href="herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
                         </li>
                         <li class="nav-item">
+                            <a href="docs/unzipped_dietas_ia/dist/index.html" ${activePage === 'dietas' ? 'class="active"' : ''}>🥗 Dietas IA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="diabetes_tipo_2.html" ${activePage === 'diabetes' ? 'class="active"' : ''}>🩸 Diabetes</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="herramientas/calculadora_pediatrica.html" ${activePage === 'calculadora' ? 'class="active"' : ''}>👶 Calculadora Pediátrica</a>
                         </li>
                         <li class="nav-item">
                             <a href="academia.html" ${activePage === 'academia' ? 'class="active"' : ''} style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="medicamentos_visados.html" ${activePage === 'visados' ? 'class="active"' : ''} style="color:#C41E3A;">🔴 Visados SAS</a>
                         </li>
                         <li class="nav-item">
                             <a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;" ${activePage === 'medicamentos' ? 'class="active"' : ''}>💊 Sin Lactosa</a>
@@ -74,6 +83,22 @@ class UmbramedComponents {
             authScript.src = 'js/auth.js';
             document.head.appendChild(authScript);
         }
+
+        // Adaptar área de login si hay sesión
+        setTimeout(()=>{
+            try {
+                const loginArea = document.getElementById('loginArea');
+                if (!loginArea) return;
+                const session = window.UmbraAuthCore?.getSession?.();
+                if (session && session.email) {
+                    loginArea.innerHTML = `<div style="display:flex;align-items:center;gap:.5rem;">
+                        <span style="font-size:.7rem;font-weight:600;color:#6C757D;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${session.email}">👤 ${session.email}</span>
+                        <button style="background:#C41E3A;color:#fff;border:none;padding:.35rem .6rem;border-radius:6px;font-size:.6rem;font-weight:600;cursor:pointer;" onclick="(window.UmbraAuthCore?.logout?.(), window.dispatchEvent(new Event('umbramed:logout')))">Salir</button>
+                    </div>`;
+                }
+                window.addEventListener('umbramed:login',()=>setTimeout(()=>UmbramedComponents.init(activePage),10));
+            } catch {}
+        },150);
     }
 }
 
@@ -82,6 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname.includes('medicamentos_sin_lactosa') ? 'medicamentos' :
                        window.location.pathname.includes('herramientas') ? 'herramientas' :
                        window.location.pathname.includes('academia') ? 'academia' :
+                       window.location.pathname.includes('medicamentos_visados') ? 'visados' :
+                       window.location.pathname.includes('dietas') || window.location.pathname.includes('asistente_dietas') ? 'dietas' :
+                       window.location.pathname.includes('diabetes') ? 'diabetes' :
                        window.location.pathname.includes('calculadora') ? 'herramientas' : '';
     
     // Solo auto-inicializar si no está ya presente

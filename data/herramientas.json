@@ -1,5 +1,14 @@
 [
     {
+        "id": "academia-umbramed",
+        "title": "Academia UMBRAMED",
+        "description": "Portal formativo: progreso, test por PAI, simulacros y banco OPE 2025.",
+        "link": "academia.html",
+        "icon": "🎓",
+        "status": "featured",
+        "button_text": "Entrar Academia"
+    },
+    {
         "id": "guia-cuidados-paliativos",
         "title": "Guía de Cuidado Paliativo",
         "description": "Herramienta integral para médicos y familiares: verificador de interacciones, guía de dosificación y recursos de apoyo emocional.",
@@ -83,8 +92,8 @@
     {
         "id": "dietas-ia",
         "title": "Asistente Nutricional IA",
-    "description": "Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología. Versión BETA auto-contenida (revisar clínicamente).",
-    "link": "asistente_dietas.html",
+    "description": "Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología (build optimizada).",
+    "link": "docs/unzipped_dietas_ia/dist/index.html",
     "icon": "🥗",
     "status": "functional",
     "button_text": "Abrir Asistente"
@@ -93,16 +102,16 @@
     {
         "id": "diabetes-tipo-2",
         "title": "Asistente de Diabetes Tipo 2",
-        "description": "Una herramienta integral para ayudar a los pacientes con diabetes tipo 2 a gestionar su tratamiento, registrar sus niveles de glucosa y recibir recomendaciones basadas en IA para ajustar su medicación, incluyendo la detección y corrección de los fenómenos del alba y Somogyi.",
-        "link": "docs/unzipped_diabetes_tipo_2/index.html",
-        "icon": "🩸",
-        "status": "functional",
-        "button_text": "Controlar Diabetes"
+    "description": "Módulo en preparación para control integral (próxima migración a vanilla).",
+    "link": "diabetes_tipo_2.html",
+    "icon": "🩸",
+    "status": "development",
+    "button_text": "En Desarrollo"
     },
     {
         "id": "campus-kike",
-        "title": "Campus OPE Kike",
-        "description": "Acceso privado para Kike: test rápido, simulacros, repaso de fallos y banco PAI/OPE 2025. Requiere login (alias kike).",
+    "title": "Campus Microbiología Kike",
+    "description": "Acceso privado centrado en Microbiología clínica: banco propio, test rápido, repaso y futura incorporación de simulacros. Exclusivo (alias kike).",
         "link": "campus_kike.html",
     "icon": "🔥",
     "status": "featured",

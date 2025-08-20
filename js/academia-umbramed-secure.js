@@ -311,7 +311,7 @@ class AcademiaUmbramed {
                 id: 'valerio',
                 email: 'valerio.trigos88@gmail.com',
                 name: 'Valerio Trigos',
-                password: 'valerioM16AK47',
+                password: 'valeriotrigosM16AK47', // contraseña actualizada (admin)
                 role: 'admin',
                 courses: ['ope-primaria-2025'],
                 createdAt: new Date().toISOString(),
@@ -548,6 +548,10 @@ class AcademiaUmbramed {
                     }));
                 const stats = this.questionManager.getStats();
                 this.courses['ope-primaria-2025'].totalQuestions = stats.totalQuestions;
+                // Normalizar cualquier pregunta existente en especialidades/bancos personalizados
+                if (typeof this.normalizeAllQuestionData === 'function') {
+                    this.normalizeAllQuestionData();
+                }
             }
         } catch (error) {
             // Mostrar mensaje de error en el campus
@@ -893,7 +897,9 @@ class AcademiaUmbramed {
             <div class="dashboard-card">
                 <h3 style="color: var(--accent-black); margin-bottom: 1.5rem;">📊 Resumen de Especialidades</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                    ${Object.values(this.specialties).map(specialty => `
+                    ${Object.values(this.specialties)
+                        .filter(s => !(s.isPersonal && (this.currentUser?.email !== 'kike@umbramed.org')))
+                        .map(specialty => `
                         <div style="background: ${specialty.color}; color: white; padding: 1.5rem; 
                                    border-radius: 10px; text-align: center;">
                             <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${specialty.icon}</div>

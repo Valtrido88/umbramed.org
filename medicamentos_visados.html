@@ -501,53 +501,8 @@
     </style>
 </head>
 <body>
-    <!-- Header común -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo-container">
-                <a href="index.html">
-                    <div class="logo-dna">
-                        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="width: 50px; height: 70px;">
-                            <line x1="20" y1="35" x2="80" y2="35" stroke="#C41E3A" stroke-width="2"/>
-                            <line x1="20" y1="55" x2="80" y2="55" stroke="#C41E3A" stroke-width="2"/>
-                            <line x1="20" y1="75" x2="80" y2="75" stroke="#C41E3A" stroke-width="2"/>
-                            <line x1="20" y1="95" x2="80" y2="95" stroke="#C41E3A" stroke-width="2"/>
-                            <circle cx="20" cy="10" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="10" r="3" fill="#C41E3A"/>
-                            <circle cx="20" cy="30" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="30" r="3" fill="#C41E3A"/>
-                            <circle cx="20" cy="50" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="50" r="3" fill="#C41E3A"/>
-                            <circle cx="20" cy="70" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="70" r="3" fill="#C41E3A"/>
-                            <circle cx="20" cy="90" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="90" r="3" fill="#C41E3A"/>
-                            <circle cx="20" cy="110" r="3" fill="#C41E3A"/>
-                            <circle cx="80" cy="110" r="3" fill="#C41E3A"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="brand-text">UMBRAMED</div>
-                        <div class="subtitle">MEDICAL DIVISION</div>
-                    </div>
-                </a>
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="index.html">INICIO</a></li>
-                    <li class="nav-item"><a href="herramientas.html">HERRAMIENTAS</a></li>
-                    <li class="nav-item"><a href="academia.html" style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a></li>
-                    <li class="nav-item"><a href="medicamentos_sin_lactosa.html">💊 SIN LACTOSA</a></li>
-                    <li class="nav-item"><a href="medicamentos_visados.html" class="active" style="color: #C41E3A;">📋 VISADOS SAS</a></li>
-                    <li class="nav-item">
-                        <div id="loginArea">
-                            <button class="login-btn" onclick="showLogin()">LOGIN</button>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <script src="js/common.js"></script>
+    <script>document.addEventListener('DOMContentLoaded',()=>UmbramedComponents.init('visados'));</script>
 
     <main class="main-content">
         <!-- Hero Section -->

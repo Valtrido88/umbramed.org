@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Asistente Diabetes Tipo 2 - UMBRAMED</title><meta http-equiv="Cache-Control" content="no-store"/><meta http-equiv="Pragma" content="no-cache"/><meta http-equiv="Expires" content="0"/>
+<style>body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;margin:0;background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);min-height:100vh;color:#1a1a1a;}main{max-width:860px;margin:120px auto 3rem;padding:0 1rem;}h1{font-size:2rem;margin:.5rem 0;color:#C41E3A;}p{line-height:1.5;font-size:1rem;} .status{background:#fff;border:2px solid #e5e7eb;padding:1.25rem 1.5rem;border-radius:16px;box-shadow:0 8px 30px -10px rgba(0,0,0,.1);margin:1.5rem 0;} .tag{display:inline-block;background:#334155;color:#fff;padding:.35rem .7rem;border-radius:999px;font-size:.65rem;font-weight:700;letter-spacing:.5px;margin-right:.4rem;} .roadmap{display:grid;gap:.9rem;margin-top:1.2rem;} .step{background:#fff;border:2px solid #e5e7eb;padding:.9rem 1rem;border-radius:12px;display:flex;gap:.75rem;align-items:flex-start;} .step span.badge{background:#C41E3A;color:#fff;font-size:.6rem;padding:.35rem .55rem;border-radius:8px;font-weight:700;letter-spacing:.5px;margin-top:.2rem;} .muted{color:#6b7280;font-size:.8rem;margin-top:.5rem;} a.button{display:inline-block;background:linear-gradient(45deg,#C41E3A,#8B0000);color:#fff;text-decoration:none;padding:.75rem 1.1rem;border-radius:10px;font-weight:600;font-size:.8rem;letter-spacing:.5px;box-shadow:0 4px 14px rgba(196,30,58,.35);} a.button:hover{filter:brightness(1.05);} .note{background:#fef3c7;border:1px solid #fcd34d;padding:.8rem 1rem;border-radius:10px;font-size:.8rem;margin-top:1rem;color:#92400e;font-weight:600;}</style>
+</head><body>
+<script src="js/common.js"></script>
+<main>
+  <h1>🩸 Asistente de Diabetes Tipo 2</h1>
+  <div class="status">
+    <span class="tag">MIGRACIÓN</span><span class="tag" style="background:#6366f1;">FASE 1</span>
+    <p>Estamos preparando un módulo avanzado para el manejo integral de la diabetes tipo 2: ajuste terapéutico inteligente, detección de fenómenos del alba y Somogyi, registro simplificado de glucemias y soporte educativo para el paciente.</p>
+    <p>La versión interactiva se encuentra en construcción y pronto estará disponible con un núcleo 100% vanilla optimizado y validación clínica incremental.</p>
+    <div class="roadmap">
+      <div class="step"><span class="badge">1</span><div><strong>Estructura de datos clínica</strong><br><small>Mapeo de objetivos individualizados (edad, comorbilidades, riesgo hipoglucemia).</small></div></div>
+      <div class="step"><span class="badge">2</span><div><strong>Motor de recomendaciones</strong><br><small>Algoritmo para intensificación/ajuste según HbA1c, IMC, ECV establecida y función renal.</small></div></div>
+      <div class="step"><span class="badge">3</span><div><strong>Detección alba vs Somogyi</strong><br><small>Análisis de patrón de glucemias nocturnas y matutinas.</small></div></div>
+      <div class="step"><span class="badge">4</span><div><strong>Registro + exportación</strong><br><small>Tabla de seguimiento y descarga en CSV / PDF.</small></div></div>
+      <div class="step"><span class="badge">5</span><div><strong>Integración educativa</strong><br><small>Mensajes personalizados sobre dieta, ejercicio y adherencia.</small></div></div>
+    </div>
+    <div class="note">Si eres administrador y quieres priorizar este módulo, indícalo. La lógica clínica base se podrá activar parcialmente antes del UI final.</div>
+    <p class="muted">Versión placeholder segura. No usar para decisiones clínicas todavía.</p>
+    <a class="button" href="herramientas.html">← Volver a Herramientas</a>
+  </div>
+</main>
+<script>document.addEventListener('DOMContentLoaded',()=>{UmbramedComponents.init('diabetes');});</script>
+<script src="js/versioning.js"></script>
+</body></html>

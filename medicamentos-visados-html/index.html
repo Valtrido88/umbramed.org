@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Medicamentos Visados - Índice</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 2rem; }
+    .container { max-width: 900px; margin: auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px #0001; padding: 2rem; }
+    h1 { color: #007bff; margin-top: 0; }
+    input, select { padding: .5rem; margin: .5rem 0; border-radius: 6px; border: 1px solid #ccc; width: 100%; max-width: 350px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid #eee; }
+    th { background: #f1f3f6; }
+    a { color: #007bff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Medicamentos Visados</h1>
+    <div>
+      <input type="text" id="search" placeholder="Buscar por principio activo, indicación o marca comercial..." oninput="filtrar()">
+    </div>
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>Principio Activo</th>
+          <th>Indicación</th>
+          <th>Marca Comercial</th>
+          <th>Ver Ficha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filas generadas por JS -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    // Datos: principio activo, indicación, marca comercial, archivo
+    const medicamentos = [
+      {nombre:'Apixaban', indicacion:'Prevención de ictus y embolia sistémica en FA', marca:'Eliquis', archivo:'apixaban.html'},
+      {nombre:'Rivaroxaban', indicacion:'TVP y EP', marca:'Xarelto', archivo:'rivaroxaban.html'},
+      {nombre:'Dabigatrán', indicacion:'Prevención tromboembolismo en cirugía', marca:'Pradaxa', archivo:'dabigatran.html'},
+      {nombre:'Edoxaban', indicacion:'TVP y EP', marca:'Lixiana', archivo:'edoxaban.html'},
+      {nombre:'Sitagliptina', indicacion:'Diabetes tipo 2', marca:'Januvia', archivo:'sitagliptin.html'},
+      {nombre:'Empagliflozina', indicacion:'Diabetes tipo 2 e IC', marca:'Jardiance', archivo:'empagliflozin.html'},
+      {nombre:'Clozapina', indicacion:'Esquizofrenia resistente', marca:'Leponex', archivo:'clozapine.html'},
+      {nombre:'Olanzapina', indicacion:'Esquizofrenia y manía', marca:'Zyprexa', archivo:'olanzapine.html'},
+      {nombre:'Epoetina Alfa', indicacion:'Anemia en IRC', marca:'Eprex', archivo:'epoetin.html'},
+      {nombre:'Tolvaptán', indicacion:'Hiponatremia y poliquistosis renal', marca:'Samsca', archivo:'tolvaptan.html'},
+      {nombre:'Amiodarona', indicacion:'Arritmias graves', marca:'Tranquil', archivo:'amiodarone.html'},
+      {nombre:'Atorvastatina', indicacion:'Hipercolesterolemia y prevención CV', marca:'Lipitor', archivo:'atorvastatin.html'},
+      {nombre:'Cinacalcet', indicacion:'Hiperparatiroidismo secundario', marca:'Mimpara', archivo:'cinacalcet.html'},
+      {nombre:'Levotiroxina', indicacion:'Hipotiroidismo y supresión TSH', marca:'Eutirox', archivo:'levothyroxine.html'},
+      {nombre:'Bevacizumab', indicacion:'Cáncer colorrectal, pulmón, renal', marca:'Avastin', archivo:'bevacizumab.html'},
+      {nombre:'Levetiracetam', indicacion:'Epilepsia', marca:'Keppra', archivo:'levetiracetam.html'}
+    ];
+    function filtrar() {
+      const val = document.getElementById('search').value.toLowerCase();
+      const tbody = document.querySelector('#tabla tbody');
+      tbody.innerHTML = '';
+      medicamentos.forEach(med => {
+        if (
+          med.nombre.toLowerCase().includes(val) ||
+          med.indicacion.toLowerCase().includes(val) ||
+          med.marca.toLowerCase().includes(val)
+        ) {
+          tbody.innerHTML += `<tr>
+            <td>${med.nombre}</td>
+            <td>${med.indicacion}</td>
+            <td>${med.marca}</td>
+            <td><a href="${med.archivo}" target="_blank">Ver ficha</a></td>
+          </tr>`;
+        }
+      });
+    }
+    filtrar();
+  </script>
+</body>
+</html>
