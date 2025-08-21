@@ -10,7 +10,7 @@ const functionsToTest = [
     'handleFileSelect',
     'processFile',
     'analyzeReport',
-    'performGeminiAnalysis',
+    'performAIAnalysis', // nuevo motor unificado
     'displayReport',
     'showLoading',
     'showError',
@@ -63,17 +63,11 @@ if (allElementsExist) {
     console.error('❌ Algunos elementos DOM no están disponibles');
 }
 
-// Test 3: Verificar configuración de API
-if (typeof GEMINI_API_KEY !== 'undefined' && GEMINI_API_KEY.length > 0) {
-    console.log('✅ API Key de Gemini configurada');
+// Test 3: Verificar configuración de endpoint IA genérico o fallback local
+if (typeof window.UMBRA_AI_ENDPOINT === 'string' && window.UMBRA_AI_ENDPOINT.length > 0) {
+    console.log('✅ Endpoint IA configurado:', window.UMBRA_AI_ENDPOINT);
 } else {
-    console.error('❌ API Key de Gemini no configurada');
-}
-
-if (typeof GEMINI_API_URL !== 'undefined' && GEMINI_API_URL.includes('generativelanguage.googleapis.com')) {
-    console.log('✅ URL de API Gemini configurada correctamente');
-} else {
-    console.error('❌ URL de API Gemini no configurada correctamente');
+    console.warn('⚠️ Endpoint IA no configurado: se usará fallback local basado en reglas');
 }
 
 // Test 4: Verificar que no hay errores en la consola
@@ -96,39 +90,29 @@ setTimeout(() => {
 }, 1000);
 
 // Test 5: Función de prueba simulada (opcional)
-window.testGeminiConnection = async function() {
-    console.log('🔗 Probando conexión con Gemini API...');
+window.testAIEndpoint = async function() {
+    if(!window.UMBRA_AI_ENDPOINT){
+        console.warn('⚠️ No hay endpoint configurado. Nada que probar.');
+        return false;
+    }
+    console.log('🔗 Probando conexión con endpoint IA...');
     try {
-        const testPrompt = "Test de conexión";
-        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(window.UMBRA_AI_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: testPrompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.1,
-                    maxOutputTokens: 100,
-                }
-            })
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({prompt:'Ping diagnóstico serología VHB', purpose:'diagnostic'})
         });
-        
-        if (response.ok) {
-            console.log('✅ Conexión con Gemini API exitosa');
+        if(response.ok){
+            console.log('✅ Endpoint IA responde HTTP 200');
             return true;
         } else {
-            console.error('❌ Error en la conexión con Gemini API:', response.status);
+            console.error('❌ Endpoint IA respondió código', response.status);
             return false;
         }
-    } catch (error) {
-        console.error('❌ Error al conectar con Gemini API:', error);
+    } catch(err){
+        console.error('❌ Error conectando con endpoint IA:', err.message);
         return false;
     }
 };
 
-console.log('💡 Para probar la conexión con Gemini API, ejecuta: testGeminiConnection()');
+console.log('💡 Para probar la conexión con el endpoint IA ejecuta: testAIEndpoint()');

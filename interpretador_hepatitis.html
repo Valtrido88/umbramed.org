@@ -175,7 +175,80 @@
     function formatFileSize(bytes){if(bytes===0)return'0 Bytes';const k=1024;const sizes=['Bytes','KB','MB','GB'];const i=Math.floor(Math.log(bytes)/Math.log(k));return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+' '+sizes[i];}
     async function analyzeReport(){if(isAnalyzing)return;const additional=id('lab-report-text').value.trim();if(!selectedFile&&!additional){showError('Seleccione archivo o texto.');return;} isAnalyzing=true;showLoading(true);hideError();try{let imageData=null;if(selectedFile){imageData=await fileToBase64(selectedFile);} const analysis=await performAIAnalysis(imageData,additional,selectedFile?.type);displayReport(analysis);}catch(err){console.error(err);showError('Error al analizar.');}finally{isAnalyzing=false;showLoading(false);}}
     function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{res(r.result.split(',')[1]);};r.onerror=rej;r.readAsDataURL(file);});}
-    async function performAIAnalysis(imageData,additionalText,mimeType){if(!AI_ENDPOINT) throw new Error('Falta endpoint IA (defina window.UMBRA_AI_ENDPOINT)');const prompt=`Eres un experto en serología de Hepatitis B. Devuelve SOLO JSON válido con campos: estadoSerologico, interpretacion, marcadoresDetectados:[{marcador,resultado,significado}], recomendaciones[], seguimiento, nivelRiesgo (Bajo/Moderado/Alto), alertas[]. Usa español clínico conciso. Si faltan datos indícalo. Texto:${additionalText||'solo imagen'}`;const payload={prompt,purpose:'hepatitis_serology',image:{mimeType,data:imageData}};const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),AI_TIMEOUT_MS);try{const res=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});if(!res.ok) throw new Error('HTTP_'+res.status);const data=await res.json();let raw=(typeof data.content==='string'?data.content:JSON.stringify(data.content));const match=raw.match(/\{[\s\S]*\}/);if(!match) throw new Error('JSON ausente');return JSON.parse(match[0]);}finally{clearTimeout(timeout);} }
+        async function performAIAnalysis(imageData,additionalText,mimeType){
+            // Si no hay endpoint IA, usar fallback local basado en reglas
+            if(!AI_ENDPOINT){
+                return localFallbackAnalysis(additionalText||'');
+            }
+            const prompt=`Eres un experto en serología de Hepatitis B. Devuelve SOLO JSON válido con campos: estadoSerologico, interpretacion, marcadoresDetectados:[{marcador,resultado,significado}], recomendaciones[], seguimiento, nivelRiesgo (Bajo/Moderado/Alto), alertas[]. Usa español clínico conciso. Si faltan datos indícalo. Texto:${additionalText||'solo imagen'}`;
+            const payload={prompt,purpose:'hepatitis_serology',image:imageData?{mimeType,data:imageData}:undefined};
+            const controller=new AbortController();
+            const timeout=setTimeout(()=>controller.abort(),AI_TIMEOUT_MS);
+            try{
+                const res=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
+                if(!res.ok) throw new Error('HTTP_'+res.status);
+                const data=await res.json();
+                let raw=(typeof data.content==='string'?data.content:JSON.stringify(data.content));
+                const match=raw.match(/\{[\s\S]*\}/);
+                if(!match) throw new Error('JSON ausente');
+                return JSON.parse(match[0]);
+            }finally{clearTimeout(timeout);} }
+        function localFallbackAnalysis(text){
+            const markers=[
+                {pat:/hbsag\s*:?\s*(posi|nega|reactivo|no reactivo|\+|\-)/i,name:'HBsAg'},
+                {pat:/(anti-?hbs|hbsab)\s*:?\s*([0-9]+\.?[0-9]*\s*m?iu\/?m?l|posi|nega|\+|\-)/i,name:'Anti-HBs'},
+                {pat:/(anti-?hbc\s*igm)\s*:?\s*(posi|nega|\+|\-)/i,name:'Anti-HBc IgM'},
+                {pat:/(anti-?hbc( total)?)\s*:?\s*(posi|nega|\+|\-)/i,name:'Anti-HBc Total'},
+                {pat:/hbeag\s*:?\s*(posi|nega|\+|\-)/i,name:'HBeAg'},
+                {pat:/(anti-?hbe)\s*:?\s*(posi|nega|\+|\-)/i,name:'Anti-HBe'},
+                {pat:/(dna\s*vh?b|vhb\s*dna|hbv\s*dna)\s*:?\s*([0-9]+[.,]?[0-9]*\s*(iu|cop)?\/m?l|detectable|no detectable|indetectable)/i,name:'DNA VHB'}
+            ];
+            const found=[]; const lower=text.toLowerCase();
+            markers.forEach(m=>{const mt=m.pat.exec(text); if(mt){
+                let res=mt[2]||mt[1];
+                res=res.replace(/reactivo/i,'Positivo').replace(/no reactivo/i,'Negativo');
+                if(/posi|\+/i.test(res)) res='Positivo'; else if(/nega|\-/i.test(res)) res='Negativo';
+                found.push({marcador:m.name,resultado:res,significado:inferMeaning(m.name,res,lower)});
+            }});
+            const estado=inferState(found);
+            return {
+                estadoSerologico: estado.estado,
+                interpretacion: estado.interpretacion,
+                marcadoresDetectados: found,
+                recomendaciones: estado.recomendaciones,
+                seguimiento: estado.seguimiento,
+                nivelRiesgo: estado.riesgo,
+                alertas: estado.alertas
+            };
+        }
+        function inferMeaning(marker,res,lower){
+            const pos=res.toLowerCase()==='positivo';
+            switch(marker){
+                case 'HBsAg': return pos? 'Antígeno de superficie presente: infección activa o crónica':'No evidencia de antígeno de superficie.';
+                case 'Anti-HBs': return pos? 'Inmunidad (vacunación o infección resuelta)':'Sin anticuerpos protectores.';
+                case 'Anti-HBc IgM': return pos? 'Infección aguda / ventana serológica':'IgM negativo.';
+                case 'Anti-HBc Total': return pos? 'Contacto previo o infección en curso':'No contacto previo.';
+                case 'HBeAg': return pos? 'Alta replicación viral':'No marcador de alta replicación.';
+                case 'Anti-HBe': return pos? 'Seroconversión / menor replicación':'Sin seroconversión evidenciada.';
+                case 'DNA VHB': return /detect/i.test(res)? 'ADN detectable: replicación viral' :'ADN no detectable.';
+                default: return '';
+            }
+        }
+        function inferState(found){
+            const byName = Object.fromEntries(found.map(f=>[f.marcador,f.resultado.toLowerCase()]));
+            let estado='Datos insuficientes'; let interpretacion='No se pudo establecer un perfil serológico completo.'; let riesgo='Bajo';
+            const rec=[]; const alertas=[]; let seguimiento='Repetir serología y completar panel si faltan marcadores.';
+            const pos = n=> byName[n] && byName[n].includes('positivo');
+            const neg = n=> byName[n] && byName[n].includes('negativo');
+            if(pos('HBsAg') && pos('Anti-HBc IgM')){ estado='Infección Aguda VHB'; interpretacion='Perfil compatible con infección aguda (HBsAg+, IgM anti-HBc+).'; riesgo='Moderado'; rec.push('Evaluar función hepática','Considerar contacto y profilaxis de convivientes'); seguimiento='Control clínico y de transaminasas cada 4-6 semanas.'; }
+            else if(pos('HBsAg') && pos('HBeAg')){ estado='Infección Crónica Replicativa'; interpretacion='HBsAg persistente con HBeAg sugiere fase replicativa.'; riesgo='Alto'; rec.push('Solicitar ADN VHB cuantitativo','Valorar tratamiento antiviral'); seguimiento='Monitorizar ALT y ADN cada 3-6 meses.'; }
+            else if(pos('HBsAg') && pos('Anti-HBe')){ estado='Infección Crónica No Replicativa'; interpretacion='Seroconversión a Anti-HBe con HBsAg persistente: menor replicación.'; riesgo='Moderado'; rec.push('Seguir ADN VHB y ALT periódicamente'); seguimiento='Control semestral.'; }
+            else if(neg('HBsAg') && pos('Anti-HBs') && pos('Anti-HBc Total')){ estado='Infección Resuelta'; interpretacion='Inmunidad natural (Anti-HBs + Anti-HBc total) con HBsAg negativo.'; riesgo='Bajo'; rec.push('No requiere tratamiento','Vacunación contactos susceptibles'); seguimiento='No específico salvo factores de riesgo.'; }
+            else if(neg('HBsAg') && pos('Anti-HBs') && neg('Anti-HBc Total')){ estado='Vacunado'; interpretacion='Inmunidad por vacunación (solo Anti-HBs).'; riesgo='Bajo'; rec.push('Refuerzo según guías si Anti-HBs <10 mIU/mL'); seguimiento='Control título si riesgo ocupacional.'; }
+            else if(neg('HBsAg') && pos('Anti-HBc Total') && neg('Anti-HBs')){ estado='Posible Infección Resuelta / Falso Positivo'; interpretacion='Anti-HBc aislado: repetir y valorar ADN VHB / vacunación.'; riesgo='Bajo'; rec.push('Repetir serología','Medir Anti-HBs tras vacunación de prueba'); seguimiento='Reevaluar en 1-2 meses.'; }
+            if(riesgo==='Alto') alertas.push('Derivar a hepatología');
+            return {estado,interpretacion,riesgo,recomendaciones:rec,seguimiento,alertas};
+        }
     function displayReport(analysis){const rd=id('report-display');const html=`<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden"><div class="bg-blue-600 text-white p-6"><h2 class="text-2xl font-bold mb-2">Informe Serológico VHB</h2><p class="text-blue-100">${new Date().toLocaleDateString('es-ES')}</p></div><div class="p-6 border-b border-gray-200"><div class="flex items-center justify-between mb-4"><h3 class="text-xl font-semibold text-gray-800">Estado Serológico</h3><span class="px-4 py-2 rounded-full text-sm font-semibold ${getRiskBadgeClass(analysis.nivelRiesgo)}">${analysis.nivelRiesgo?`Riesgo ${analysis.nivelRiesgo}`:'Evaluación'}</span></div><div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg"><p class="text-lg font-semibold text-blue-800 mb-2">${sanitize(analysis.estadoSerologico)}</p><p class="text-gray-700">${sanitize(analysis.interpretacion)}</p></div></div><div class="p-6 border-b border-gray-200"><h3 class="text-xl font-semibold text-gray-800 mb-4">Marcadores Serológicos</h3><div class="grid gap-3">${(analysis.marcadoresDetectados||[]).map(m=>`<div class='flex items-center justify-between p-3 bg-gray-50 rounded-lg border'><div class='flex-1'><p class='font-semibold text-gray-800'>${sanitize(m.marcador)}</p><p class='text-sm text-gray-600'>${sanitize(m.significado)}</p></div><div class='ml-4'><span class='px-3 py-1 rounded-full text-sm font-medium ${getMarkerBadgeClass(m.resultado)}'>${sanitize(m.resultado)}</span></div></div>`).join('')||'<p class="text-gray-500 italic">Sin marcadores.</p>'}</div></div><div class="p-6 border-b border-gray-200"><h3 class="text-xl font-semibold text-gray-800 mb-4">Recomendaciones Clínicas</h3><div class="space-y-2">${(analysis.recomendaciones||[]).map(r=>`<div class='flex items-start'><span class='mr-2'>✔️</span><p class='text-gray-700'>${sanitize(r)}</p></div>`).join('')||'<p class="text-gray-500 italic">Sin recomendaciones.</p>'}</div></div>${analysis.seguimiento?`<div class='p-6 border-b border-gray-200'><h3 class='text-xl font-semibold text-gray-800 mb-4'>Seguimiento</h3><div class='bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg'><p class='text-gray-700'>${sanitize(analysis.seguimiento)}</p></div></div>`:''}${(analysis.alertas||[]).length?`<div class='p-6 border-b border-gray-200'><h3 class='text-xl font-semibold text-gray-800 mb-4'>Alertas Importantes</h3><div class='space-y-2'>${analysis.alertas.map(a=>`<div class='bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg'><p class='text-red-700 font-medium'>${sanitize(a)}</p></div>`).join('')}</div></div>`:''}<div class='p-6 bg-gray-50 text-center text-sm text-gray-600'><p class='mb-2'><strong>AVISO:</strong> Informe generado por IA; validar clínicamente.</p></div></div><div class='mt-6 flex flex-wrap gap-3 justify-center'><button onclick='printReport()' class='px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'>Imprimir</button><button onclick='newAnalysis()' class='px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors'>Nuevo Análisis</button></div>`;rd.innerHTML=html;rd.classList.remove('hidden');rd.scrollIntoView({behavior:'smooth',block:'start'});} 
     function sanitize(str){return (str||'').toString().replace(/[<>]/g,c=>({'<':'&lt;','>':'&gt;'}[c]));}
     function getRiskBadgeClass(r){switch((r||'').toLowerCase()){case'bajo':return'bg-green-100 text-green-800';case'moderado':return'bg-yellow-100 text-yellow-800';case'alto':return'bg-red-100 text-red-800';default:return'bg-gray-100 text-gray-800';}} function getMarkerBadgeClass(res){const l=(res||'').toLowerCase();if(l.includes('positivo')||l.includes('+'))return'bg-red-100 text-red-800';if(l.includes('negativo')||l.includes('-'))return'bg-green-100 text-green-800';return'bg-blue-100 text-blue-800';}
@@ -183,184 +256,6 @@
     function showError(msg){const d=id('error-display');id('error-message').textContent=msg;d.classList.remove('hidden');setTimeout(()=>hideError(),10000);} function hideError(){id('error-display').classList.add('hidden');}
     function printReport(){window.print();} function newAnalysis(){if(selectedFile)removeFile();id('lab-report-text').value='';const rd=id('report-display');rd.classList.add('hidden');rd.innerHTML='';id('main-content').scrollIntoView({behavior:'smooth'});} 
     </script>
-
-        function handleDragOver(event) {
-            event.preventDefault();
-            const dropZone = document.getElementById('drop-zone');
-            dropZone.classList.remove('border-gray-300');
-            dropZone.classList.add('border-blue-500', 'bg-blue-50');
-        }
-
-        function handleDragLeave(event) {
-            event.preventDefault();
-            const dropZone = document.getElementById('drop-zone');
-            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-            dropZone.classList.add('border-gray-300');
-        }
-
-        function handleDrop(event) {
-            event.preventDefault();
-            handleDragLeave(event);
-            const files = event.dataTransfer.files;
-            if (files.length > 0) {
-                processFile(files[0]);
-            }
-        }
-
-        function processFile(file) {
-            const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
-            if (!validTypes.includes(file.type)) {
-                showError('Tipo de archivo no soportado. Solo se permiten imágenes PNG, JPG o WEBP.');
-                return;
-            }
-
-            const maxSize = 10 * 1024 * 1024;
-            if (file.size > maxSize) {
-                showError('El archivo es demasiado grande. Máximo permitido: 10MB.');
-                return;
-            }
-
-            selectedFile = file;
-            showFilePreview(file);
-        }
-
-        function showFilePreview(file) {
-            const filePreview = document.getElementById('file-preview');
-            const uploadPrompt = document.getElementById('upload-prompt');
-            const previewImg = document.getElementById('preview-img');
-            const fileName = document.getElementById('file-name');
-            const fileSize = document.getElementById('file-size');
-
-            const fileUrl = URL.createObjectURL(file);
-            previewImg.src = fileUrl;
-            fileName.textContent = file.name;
-            fileSize.textContent = formatFileSize(file.size);
-
-            uploadPrompt.classList.add('hidden');
-            filePreview.classList.remove('hidden');
-            filePreview.classList.add('flex');
-        }
-
-        function removeFile() {
-            selectedFile = null;
-            const filePreview = document.getElementById('file-preview');
-            const uploadPrompt = document.getElementById('upload-prompt');
-            const previewImg = document.getElementById('preview-img');
-            const fileInput = document.getElementById('file-input');
-
-            URL.revokeObjectURL(previewImg.src);
-            previewImg.src = '';
-            fileInput.value = '';
-
-            filePreview.classList.add('hidden');
-            filePreview.classList.remove('flex');
-            uploadPrompt.classList.remove('hidden');
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        async function analyzeReport() {
-            if (isAnalyzing) return;
-
-            const additionalText = document.getElementById('lab-report-text').value.trim();
-            
-            if (!selectedFile && !additionalText) {
-                showError('Por favor, seleccione un archivo o ingrese texto del informe.');
-                return;
-            }
-
-            isAnalyzing = true;
-            showLoading(true);
-            hideError();
-
-            try {
-                let imageData = null;
-                if (selectedFile) {
-                    imageData = await fileToBase64(selectedFile);
-                }
-
-                const analysis = await performGeminiAnalysis(imageData, additionalText, selectedFile?.type);
-                displayReport(analysis);
-                
-            } catch (error) {
-                console.error('Error en el análisis:', error);
-                showError(`Error al analizar el informe: ${error.message}`);
-            } finally {
-                isAnalyzing = false;
-                showLoading(false);
-            }
-        }
-
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function performGeminiAnalysis(imageData, additionalText, mimeType) {
-            const prompt = `
-            Como experto en medicina y serología, analiza este informe de Hepatitis B y proporciona una interpretación completa en formato JSON con la siguiente estructura:
-
-            {
-              "estadoSerologico": "Estado serológico principal",
-              "interpretacion": "Interpretación detallada del estado serológico",
-              "marcadoresDetectados": [
-                {
-                  "marcador": "Nombre del marcador",
-                  "resultado": "Positivo/Negativo/Valor",
-                  "significado": "Significado clínico"
-                }
-              ],
-              "recomendaciones": [
-                "Lista de recomendaciones clínicas"
-              ],
-              "seguimiento": "Recomendaciones de seguimiento",
-              "nivelRiesgo": "Bajo/Moderado/Alto",
-              "alertas": [
-                "Alertas importantes si las hay"
-              ]
-            }
-
-            IMPORTANTE: 
-            - Analiza SOLO marcadores serológicos de Hepatitis B (HBsAg, HBsAb, HBcAb IgM, HBcAb IgG, HBeAg, HBeAb, DNA VHB)
-            - Proporciona interpretación médica precisa basada en guías clínicas actuales
-            - Incluye recomendaciones de seguimiento apropiadas
-            - Identifica el estado de infección: aguda, crónica, resuelta, vacunado, etc.
-            - Si no hay datos suficientes, indica la limitación
-
-            Texto del informe: ${additionalText || 'Analizar imagen únicamente'}
-            `;
-
-            const requestBody = {
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            };
-
-            if (imageData && mimeType) {
-                requestBody.contents[0].parts.push({
-                    inline_data: {
-                        mime_type: mimeType,
-                        data: imageData
-                    }
-                });
-            }
-
-            // Este bloque legacy se ha desactivado: ahora se usa performAIAnalysis() seguro arriba.
-            throw new Error('Mecanismo legacy Gemini deshabilitado: use AI_ENDPOINT genérico.');
-        }
 
         function displayReport(analysis) {
             const reportDisplay = document.getElementById('report-display');

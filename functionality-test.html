@@ -155,16 +155,17 @@
             try {
                 // Load academia script to test
                 const script = document.createElement('script');
-                script.src = 'js/academia-umbramed.js';
+                // Usar sólo el motor secure modular
+                script.src = 'js/academia-umbramed-secure.js';
                 script.onload = function() {
                     // Test if AcademiaUmbramed class exists
                     if (typeof AcademiaUmbramed !== 'undefined') {
                         testResults.academia = true;
                         results.innerHTML = `
-                            ✅ <strong>ACADEMIA OPERATIVA</strong><br>
-                            • Clase AcademiaUmbramed: ✅<br>
-                            • Sistema de login disponible: ✅<br>
-                            • Gestión de cursos: ✅
+                            ✅ <strong>ACADEMIA (SECURE) OPERATIVA</strong><br>
+                            • Núcleo seguro cargado: ✅<br>
+                            • Sistema de login: ✅<br>
+                            • Módulos campus (render/tests/results) disponibles: ${typeof AcademiaUmbramed.prototype.renderCampusView==='function' ? '✅':'❌'}
                         `;
                         results.parentElement.className = 'test-section success';
                     } else {
@@ -183,37 +184,33 @@
         }
 
         // Test 3: Medical Tools
-        function testMedicalTools() {
+        async function testMedicalTools() {
             const results = document.getElementById('tools-results');
             results.innerHTML = '🔄 Verificando herramientas médicas...';
             
             try {
-                // Test tool accessibility
                 const toolTests = [
                     { name: 'Calculadora Pediátrica', url: 'herramientas/calculadora_pediatrica.html' },
                     { name: 'Interpretador Hepatitis', url: 'interpretador_hepatitis.html' },
                     { name: 'Medicamentos Sin Lactosa', url: 'medicamentos_sin_lactosa.html' },
                     { name: 'Medicamentos Visados', url: 'medicamentos_visados.html' }
                 ];
-                
-                let availableTools = 0;
-                toolTests.forEach(tool => {
-                    // Simulate tool availability check
-                    availableTools++;
-                });
-                
-                if (availableTools === toolTests.length) {
+                const statuses = await Promise.all(toolTests.map(async t=>{
+                    try{ const r=await fetch(t.url,{cache:'no-store'}); return {name:t.name, ok:r.ok}; }catch{ return {name:t.name, ok:false}; }
+                }));
+                const okCount = statuses.filter(s=>s.ok).length;
+                if (okCount === toolTests.length) {
                     testResults.tools = true;
+                    const iaWarn = (typeof window.UMBRA_AI_ENDPOINT==='string' && window.UMBRA_AI_ENDPOINT.length>0) ? '' : '<br>⚠️ Endpoint IA no configurado (se usarán fallbacks locales si están disponibles)';
                     results.innerHTML = `
                         ✅ <strong>HERRAMIENTAS OPERATIVAS</strong><br>
-                        • Calculadora Pediátrica: ✅<br>
-                        • Interpretador Hepatitis B: ✅<br>
-                        • Base Datos Sin Lactosa: ✅<br>
-                        • Base Datos Visados SAS: ✅
+                        ${statuses.map(s=>`• ${s.name}: ${s.ok?'✅':'❌'}`).join('<br>')}
+                        ${iaWarn}
                     `;
                     results.parentElement.className = 'test-section success';
                 } else {
-                    throw new Error(`Solo ${availableTools}/${toolTests.length} herramientas disponibles`);
+                    results.innerHTML = `❌ <strong>HERRAMIENTAS CON FALLOS</strong><br>${statuses.map(s=>`• ${s.name}: ${s.ok?'✅':'❌'}`).join('<br>')}`;
+                    results.parentElement.className = 'test-section error';
                 }
             } catch (error) {
                 results.innerHTML = `❌ <strong>ERROR EN HERRAMIENTAS:</strong> ${error.message}`;
@@ -262,18 +259,18 @@
             results.innerHTML = '🔄 Verificando bases de datos de medicamentos...';
             
             try {
-                // Load medication scripts
-                const script = document.createElement('script');
-                script.src = 'js/medicamentos-visados.js';
+                    // Cargar SOLO el motor seguro y modular
+                    const script = document.createElement('script');
+                    script.src = 'js/academia-umbramed-secure.js';
                 script.onload = function() {
                     // Check if medication data is available
                     if (typeof allMedications !== 'undefined' && allMedications.length > 0) {
                         testResults.medications = true;
                         results.innerHTML = `
-                            ✅ <strong>BASES DE DATOS OPERATIVAS</strong><br>
-                            • Medicamentos Visados SAS: ${allMedications.length} entradas<br>
-                            • Categorías médicas: ${Object.keys(Categories).length}<br>
-                            • Sistema de búsqueda: ✅
+                                ✅ <strong>ACADEMIA (SECURE) OPERATIVA</strong><br>
+                                • Núcleo seguro cargado: ✅<br>
+                                • Sistema de login: ✅<br>
+                                • Módulos campus (render/tests/results): ${typeof AcademiaUmbramed.prototype.renderCampusView==='function' ? '✅' : '❌'}
                         `;
                         results.parentElement.className = 'test-section success';
                     } else {

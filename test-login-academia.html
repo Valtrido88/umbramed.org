@@ -158,10 +158,10 @@
                 })
                 .then(html => {
                     // Test 2: Verificar si contiene las credenciales
-                    if (html.includes('academia-umbramed.js')) {
-                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ Referencia a academia-umbramed.js encontrada</div>';
+                    if (html.includes('academia-umbramed-secure.js')) {
+                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ Referencia a academia-umbramed-secure.js encontrada</div>';
                     } else {
-                        diagnosticsDiv.innerHTML += '<div class="test-result error">❌ No se encuentra referencia al archivo JS</div>';
+                        diagnosticsDiv.innerHTML += '<div class="test-result error">❌ No se encuentra referencia al archivo JS seguro</div>';
                     }
                     
                     if (html.includes('demo')) {
@@ -175,25 +175,17 @@
                 });
 
             // Test 3: Verificar archivo JS
-            fetch('js/academia-umbramed.js')
+            fetch('js/academia-umbramed-secure.js')
                 .then(response => {
                     if (response.ok) {
-                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ js/academia-umbramed.js accesible</div>';
+                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ js/academia-umbramed-secure.js accesible</div>';
                         return response.text();
                     } else {
                         throw new Error('Archivo JS no encontrado');
                     }
                 })
                 .then(jsContent => {
-                    if (jsContent.includes("'demo'")) {
-                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ Usuario demo encontrado en JS</div>';
-                    } else {
-                        diagnosticsDiv.innerHTML += '<div class="test-result error">❌ Usuario demo NO encontrado en JS</div>';
-                    }
-                    
-                    if (jsContent.includes('password')) {
-                        diagnosticsDiv.innerHTML += '<div class="test-result success">✅ Sistema de contraseñas implementado</div>';
-                    }
+                    diagnosticsDiv.innerHTML += '<div class="test-result info">ℹ️ Motor seguro cargado. Usuarios gestionados vía localStorage (auth).</div>';
                 })
                 .catch(error => {
                     diagnosticsDiv.innerHTML += '<div class="test-result error">❌ Error accediendo al archivo JS: ' + error.message + '</div>';

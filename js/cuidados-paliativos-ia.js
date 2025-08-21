@@ -62,6 +62,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const callAI = async ({ prompt, purpose }) => {
             if (!AI_ENDPOINT) {
+                // Fallback local simple para modo offline
+                if(purpose==='protocol'){
+                    const names = (prompt.match(/incluye exactamente estos fármacos: ([^.]+)/i)?.[1]||'los fármacos seleccionados').trim();
+                    return sanitizeHTML(`
+                        <h3>Preparación</h3>
+                        <p>Perfusión SC continua para: <strong>${names}</strong>. Usar diluyente habitual (SF o SG5%) y volumen estándar (p. ej., 48-60 ml) salvo protocolo local.</p>
+                        <h3>Compatibilidad general</h3>
+                        <ul><li>Verificar compatibilidad fármaco-fármaco y estabilidad en BNF/local.</li><li>Evitar mezclas con riesgo de precipitación.</li></ul>
+                        <h3>Dosis orientativas</h3>
+                        <ul><li>Ajustar a situación clínica y guía local.</li><li>Titulación progresiva según respuesta y efectos adversos.</li></ul>
+                        <h3>Titulación y monitorización</h3>
+                        <ul><li>Revisar cada 24 h al inicio.</li><li>Monitorizar sedación, delirium, estreñimiento, retención.</li></ul>
+                        <h3>Estabilidad</h3>
+                        <p>Preparar en condiciones asépticas. Cambiar jeringa según protocolo (24 h habitual).</p>
+                        <h3>Advertencias</h3>
+                        <ul><li>Individualizar siempre. Consultar protocolo del centro.</li></ul>
+                    `);
+                }
+                if(purpose==='family_letter'){
+                    return sanitizeHTML(`
+                        <h2>Carta para familiares y cuidadores</h2>
+                        <p>Sabemos que este momento es delicado. Queremos ofrecer orientaciones claras y cercanas.</p>
+                        <h3>Qué pueden notar</h3>
+                        <ul><li>Cambios en el apetito y el sueño</li><li>Respiración irregular</li><li>Confusión o somnolencia</li></ul>
+                        <h3>Apoyo emocional</h3>
+                        <ul><li>Escuchar y acompañar sin presiones.</li><li>Pedir ayuda a otros familiares.</li></ul>
+                        <h3>Manejo práctico</h3>
+                        <ul><li>Mantener higiene y confort.</li><li>Hidratación según indicación profesional.</li></ul>
+                        <h3>Cuándo contactar</h3>
+                        <ul><li>Dolor no controlado</li><li>Dificultad respiratoria marcada</li><li>Fiebre alta</li></ul>
+                        <p>Gracias por el cuidado y el amor que ofrecen cada día.</p>
+                    `);
+                }
                 throw new Error('NO_ENDPOINT_CONFIGURED');
             }
             const controller = new AbortController();
