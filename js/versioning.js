@@ -1,6 +1,6 @@
 // Sistema sencillo de versionado y busting de caché UmbraMed
 (function(){
-  window.UMBRA_BUILD_VERSION = '2025-08-17-01'; // Incrementar este valor al desplegar cambios
+  window.UMBRA_BUILD_VERSION = '2025-08-22-01'; // Incrementar este valor al desplegar cambios
   const versionParam = 'v=' + window.UMBRA_BUILD_VERSION;
   function applyVersioning(){
     const nodes = [
