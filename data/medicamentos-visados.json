@@ -1,6 +1,124 @@
 [
     {
-        "id": "apixaban",
+            "id": "semaglutide",
+            "name": "Semaglutida",
+            "category": "Antidiabéticos",
+            "indication": "Tratamiento de diabetes tipo 2 y control de peso en obesidad (según indicación).",
+            "fichaTecnica": {
+                "mecanismo": "Agonista del receptor GLP-1 que incrementa secreción de insulina y reduce apetito.",
+                "posologia": "Iniciar 0.25 mg SC semanal, titular a 0.5 mg y hasta 1 mg (o 2.4 mg en obesidad).",
+                "efectosAdversos": "Náuseas, vómitos, diarrea, riesgo de pancreatitis.",
+                "contraindicaciones": "Antecedentes de cáncer medular de tiroides o MEN2."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "liraglutide",
+            "name": "Liraglutida",
+            "category": "Antidiabéticos",
+            "indication": "DM2 y manejo de peso en obesidad.",
+            "fichaTecnica": {
+                "mecanismo": "Agonista GLP-1.",
+                "posologia": "0.6 mg/día SC aumentando semanalmente hasta 1.2-1.8 mg/día (3 mg en obesidad).",
+                "efectosAdversos": "GI, riesgo de pancreatitis.",
+                "contraindicaciones": "MEN2/cáncer medular de tiroides."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "evolocumab",
+            "name": "Evolocumab",
+            "category": "Cardiología",
+            "indication": "Hipercolesterolemia primaria o dislipidemia mixta, prevención CV en alto riesgo.",
+            "fichaTecnica": {
+                "mecanismo": "Anticuerpo monoclonal inhibidor PCSK9.",
+                "posologia": "140 mg cada 2 semanas o 420 mg mensual SC.",
+                "efectosAdversos": "Reacciones en lugar de inyección, nasofaringitis.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "alirocumab",
+            "name": "Alirocumab",
+            "category": "Cardiología",
+            "indication": "Hipercolesterolemia en combinación con dieta/estatinas, o intolerancia a estatinas.",
+            "fichaTecnica": {
+                "mecanismo": "Inhibidor PCSK9.",
+                "posologia": "75-150 mg SC cada 2 semanas.",
+                "efectosAdversos": "Reacciones locales, nasofaringitis.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "sacubitril-valsartan",
+            "name": "Sacubitrilo/Valsartán",
+            "category": "Cardiología",
+            "indication": "Insuficiencia cardiaca con fracción de eyección reducida.",
+            "fichaTecnica": {
+                "mecanismo": "Inhibidor de neprilisina + antagonista del receptor de angiotensina.",
+                "posologia": "Iniciar según tolerancia, titular a 97/103 mg BID.",
+                "efectosAdversos": "Hipotensión, hiperpotasemia, insuficiencia renal.",
+                "contraindicaciones": "Uso concomitante con IECAs, angioedema previo."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "omalizumab",
+            "name": "Omalizumab",
+            "category": "Neumología/Inmunología",
+            "indication": "Asma alérgica grave y urticaria crónica espontánea.",
+            "fichaTecnica": {
+                "mecanismo": "Anticuerpo monoclonal anti-IgE.",
+                "posologia": "75-600 mg SC cada 2-4 semanas según IgE y peso.",
+                "efectosAdversos": "Reacciones en el lugar, cefalea, infecciones respiratorias.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": true,
+            "calculatorType": "OMALIZUMAB"
+        },
+        {
+            "id": "mepolizumab",
+            "name": "Mepolizumab",
+            "category": "Neumología/Inmunología",
+            "indication": "Asma eosinofílica grave, EGPA.",
+            "fichaTecnica": {
+                "mecanismo": "Anticuerpo anti-IL-5.",
+                "posologia": "100 mg SC cada 4 semanas (dosis específicas por indicación).",
+                "efectosAdversos": "Cefalea, reacciones locales.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "tezepelumab",
+            "name": "Tezepelumabe",
+            "category": "Neumología/Inmunología",
+            "indication": "Asma grave no controlada.",
+            "fichaTecnica": {
+                "mecanismo": "Anticuerpo anti-TSLP.",
+                "posologia": "210 mg SC cada 4 semanas.",
+                "efectosAdversos": "Artralgia, faringitis.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": false
+        },
+        {
+            "id": "dupilumab",
+            "name": "Dupilumab",
+            "category": "Dermatología/Inmunología",
+            "indication": "Dermatitis atópica moderada-grave, asma, rinosinusitis con pólipos nasales.",
+            "fichaTecnica": {
+                "mecanismo": "Anticuerpo anti-IL-4Rα.",
+                "posologia": "Carga 600 mg, mantenimiento 300 mg cada 2 semanas (según indicación).",
+                "efectosAdversos": "Conjuntivitis, reacciones locales.",
+                "contraindicaciones": "Hipersensibilidad."
+            },
+            "hasCalculator": false
+    },
+    {
+    "id": "apixaban",
         "name": "Apixaban",
         "category": "Anticoagulantes",
         "indication": "Prevención de ictus y embolia sistémica en pacientes con fibrilación auricular no valvular.",

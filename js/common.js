@@ -21,7 +21,7 @@ class UmbramedComponents {
                             <a href="herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
                         </li>
                         <li class="nav-item">
-                            <a href="docs/unzipped_dietas_ia/dist/index.html" ${activePage === 'dietas' ? 'class="active"' : ''}>🥗 Dietas IA</a>
+                            <a href="asistente_dietas.html" ${activePage === 'dietas' ? 'class="active"' : ''}>🥗 Dietas IA</a>
                         </li>
                         <li class="nav-item">
                             <a href="diabetes_tipo_2.html" ${activePage === 'diabetes' ? 'class="active"' : ''}>🩸 Diabetes</a>

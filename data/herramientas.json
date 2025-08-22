@@ -12,7 +12,7 @@
         "id": "guia-cuidados-paliativos",
         "title": "Guía de Cuidado Paliativo",
         "description": "Herramienta integral para médicos y familiares: verificador de interacciones, guía de dosificación y recursos de apoyo emocional.",
-        "link": "guia_cuidados_paliativos.html",
+    "link": "cuidados-paliativos-ia.html",
         "icon": "🩺",
         "status": "functional",
         "button_text": "Acceder a Guía"
@@ -92,8 +92,8 @@
     {
         "id": "dietas-ia",
         "title": "Asistente Nutricional IA",
-    "description": "Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología (build optimizada).",
-    "link": "docs/unzipped_dietas_ia/dist/index.html",
+    "description": "Genera planes dietéticos, guías de nutrientes, interacciones y recomendaciones por patología (versión auto-contenida).",
+    "link": "asistente_dietas.html",
     "icon": "🥗",
     "status": "functional",
     "button_text": "Abrir Asistente"
@@ -102,8 +102,8 @@
     {
         "id": "diabetes-tipo-2",
         "title": "Asistente de Diabetes Tipo 2",
-    "description": "Módulo en preparación para control integral (próxima migración a vanilla).",
-    "link": "diabetes_tipo_2.html",
+    "description": "Módulo en preparación para control integral (en migración).",
+    "link": "#",
     "icon": "🩸",
     "status": "development",
     "button_text": "En Desarrollo"
