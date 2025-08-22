@@ -1073,9 +1073,12 @@
             setupEventListeners();
         });
 
-        // Common login functions
-        function showLogin() {
-            window.location.href = 'academia.html';
+        // Login gestionado por js/auth.js; este placeholder evita errores si no está cargado aún
+        if (!window.showLogin) {
+            window.showLogin = function(){
+                // Cargar auth.js dinámicamente si falta
+                const s=document.createElement('script'); s.src='js/auth.js'; s.onload=()=>window.showLogin(); document.head.appendChild(s);
+            };
         }
     </script>
 </body>

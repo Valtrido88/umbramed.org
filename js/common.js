@@ -77,11 +77,22 @@ class UmbramedComponents {
             document.body.insertAdjacentHTML('beforeend', this.generateFooter());
         }
         
-        // Cargar scripts de autenticación
-        if (!window.showLogin) {
+        // Cargar scripts de autenticación (con stub de carga diferida)
+        if (!window.UmbraAuthCore) {
             const authScript = document.createElement('script');
             authScript.src = 'js/auth.js';
             document.head.appendChild(authScript);
+        }
+        // Si aún no existe showLogin, crear un stub que carga auth.js y reintenta
+        if (!window.showLogin) {
+            window.showLogin = function(){
+                if (window.UmbraAuthCore && typeof window.showLogin === 'function') {
+                    return window.showLogin();
+                }
+                const s=document.querySelector('script[src="js/auth.js"]')||document.createElement('script');
+                if (!s.src) { s.src='js/auth.js'; document.head.appendChild(s); }
+                s.onload = ()=> window.showLogin && window.showLogin();
+            };
         }
 
         // Adaptar área de login si hay sesión
@@ -92,8 +103,8 @@ class UmbramedComponents {
                 const session = window.UmbraAuthCore?.getSession?.();
                 if (session && session.email) {
                     loginArea.innerHTML = `<div style="display:flex;align-items:center;gap:.5rem;">
-                        <span style="font-size:.7rem;font-weight:600;color:#6C757D;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${session.email}">👤 ${session.email}</span>
-                        <button style="background:#C41E3A;color:#fff;border:none;padding:.35rem .6rem;border-radius:6px;font-size:.6rem;font-weight:600;cursor:pointer;" onclick="(window.UmbraAuthCore?.logout?.(), window.dispatchEvent(new Event('umbramed:logout')))">Salir</button>
+                        <span style=\"font-size:.7rem;font-weight:600;color:#6C757D;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\" title=\"${session.email}\">👤 ${session.email}</span>
+                        <button style=\"background:#C41E3A;color:#fff;border:none;padding:.35rem .6rem;border-radius:6px;font-size:.6rem;font-weight:600;cursor:pointer;\" onclick=\"(window.logoutUmbra ? logoutUmbra() : (window.UmbraAuthCore?.clearSession?.(), window.UmbraAuthCore?.updateLoginUI?.(), window.dispatchEvent(new Event('umbramed:logout'))))\">Salir</button>
                     </div>`;
                 }
                 window.addEventListener('umbramed:login',()=>setTimeout(()=>UmbramedComponents.init(activePage),10));

@@ -183,6 +183,37 @@
             }
         }
 
+        // Test 2.1: Auth System
+        async function testAuthSystem() {
+            const results = document.getElementById('academia-results');
+            const container = document.createElement('div');
+            container.style.marginTop = '8px';
+            container.textContent = '🔄 Verificando autenticación UmbraAuthCore...';
+            results.appendChild(container);
+            try {
+                // Cargar auth.js si no está
+                if (!window.UmbraAuthCore) {
+                    await new Promise((resolve, reject)=>{
+                        const s=document.createElement('script'); s.src='js/auth.js'; s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+                    });
+                }
+                // Mostrar modal
+                if (typeof window.showLogin !== 'function') throw new Error('showLogin no disponible');
+                window.showLogin();
+                const modal = document.getElementById('loginModal');
+                const modalVisible = modal && getComputedStyle(modal).display !== 'none';
+                // Cerrar modal
+                if (modalVisible) window.closeLogin && window.closeLogin();
+                // Verificar UI de loginArea
+                setTimeout(()=>{
+                    const hasLoginArea = !!document.getElementById('loginArea');
+                    container.innerHTML = `✅ Autenticación: modal ${modalVisible?'visible':'no visible'}; loginArea ${hasLoginArea?'presente':'ausente'}`;
+                }, 50);
+            } catch (e) {
+                container.innerHTML = `❌ Error en autenticación: ${e.message}`;
+            }
+        }
+
         // Test 3: Medical Tools
         async function testMedicalTools() {
             const results = document.getElementById('tools-results');
@@ -324,11 +355,12 @@
         function runAllTests() {
             testNavigation();
             setTimeout(testAcademia, 500);
-            setTimeout(testMedicalTools, 1000);
-            setTimeout(testQuestionSystem, 1500);
-            setTimeout(testMedicationDatabases, 2000);
-            setTimeout(testCompleteWorkflow, 2500);
-            setTimeout(updateSummary, 3500);
+            setTimeout(testAuthSystem, 1000);
+            setTimeout(testMedicalTools, 1500);
+            setTimeout(testQuestionSystem, 2000);
+            setTimeout(testMedicationDatabases, 2500);
+            setTimeout(testCompleteWorkflow, 3000);
+            setTimeout(updateSummary, 4000);
         }
 
         // Update summary
