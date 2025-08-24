@@ -4,22 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medicamentos Visados SAS - UmbraMed.Org</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <script src="js/versioning.js"></script>
-    <script>
-        // Cargar common.js con versión y, al terminar, inicializar componentes de navegación
-        (function(){
-            var s = document.createElement('script');
-            var v = (window.UMBRA_BUILD_VERSION || Date.now());
-            s.src = 'js/common.js?v=' + v;
-            s.onload = function(){
-                try { window.UmbramedComponents && window.UmbramedComponents.init('visados'); } catch(e) { console.warn('Init UmbramedComponents falló:', e); }
-            };
-            document.head.appendChild(s);
-        })();
-    </script>
     <!-- Eliminado styles.css: estilos esenciales inlined abajo para página auto-contenida -->
     <style>
         :root { --primary-red:#C41E3A; --dark-red:#8B0000; --blood-red:#880808; --warning-red:#FF4444; --success-green:#28a745; --light-bg:#FFFFFF; --lighter-bg:#F8F9FA; --text-dark:#343A40; --text-light:#6C757D; --accent-black:#1A1A1A; }
@@ -517,7 +501,8 @@
     </style>
 </head>
 <body>
-    
+    <script src="js/common.js"></script>
+    <script>document.addEventListener('DOMContentLoaded',()=>UmbramedComponents.init('visados'));</script>
 
     <main class="main-content">
         <!-- Hero Section -->
@@ -665,7 +650,18 @@
         </div>
     </footer>
 
-    <!-- Login gestionado por js/auth.js a través del header común -->
+    <!-- Login Modal -->
+    <div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px; width: 90%;">
+            <button onclick="closeLogin()" style="float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            <h2 style="color: #C41E3A; text-align: center; margin-bottom: 1.5rem;">ACCESO AUTORIZADO</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="username" placeholder="Usuario" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                <input type="password" id="password" placeholder="Contraseña" required style="width: 100%; padding: 0.8rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                <button type="submit" style="width: 100%; padding: 0.8rem; background: #C41E3A; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">ACCEDER</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -675,8 +671,7 @@
             let activeTab = 'info';
 
             function initializePage() {
-                const v = (window.UMBRA_BUILD_VERSION || Date.now());
-                fetch('data/medicamentos-visados.json?v=' + v)
+                fetch('data/medicamentos-visados.json')
                     .then(response => response.json())
                     .then(data => {
                         allMedications = data;
@@ -1081,12 +1076,8 @@
         // Login gestionado por js/auth.js; este placeholder evita errores si no está cargado aún
         if (!window.showLogin) {
             window.showLogin = function(){
-                // Cargar auth.js dinámicamente si falta con busting de caché
-                const s=document.createElement('script'); 
-                const v = (window.UMBRA_BUILD_VERSION || Date.now());
-                s.src='js/auth.js?v=' + v; 
-                s.onload=()=>window.showLogin(); 
-                document.head.appendChild(s);
+                // Cargar auth.js dinámicamente si falta
+                const s=document.createElement('script'); s.src='js/auth.js'; s.onload=()=>window.showLogin(); document.head.appendChild(s);
             };
         }
     </script>

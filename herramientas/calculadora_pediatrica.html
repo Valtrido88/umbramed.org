@@ -143,7 +143,7 @@
 </head>
 <body>
     <script src="../js/common.js"></script>
-    <script>document.addEventListener('DOMContentLoaded',()=>UmbramedComponents.init('herramientas'));</script>
+    <script>document.addEventListener('DOMContentLoaded',()=>UmbramedComponents.init('calculadora'));</script>
 
     <main class="main-content">
         <div class="container">
@@ -157,36 +157,215 @@
 
             <div class="content">
                 <div id="calculator" class="tab-content active">
-                    <!-- Contenido existente de la calculadora -->
+                    <div class="grid grid-3">
+                        <div class="card">
+                            <h3 style="margin-top:0">Datos del paciente</h3>
+                            <div class="input-group">
+                                <label class="label" for="age">Edad</label>
+                                <div style="display:flex;gap:.5rem;align-items:center;">
+                                    <input class="input" id="age" type="number" min="0" step="0.1" placeholder="Años" style="max-width:130px">
+                                    <span style="color:#6b7280;font-size:.9rem">años</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="label" for="weight">Peso</label>
+                                <div style="display:flex;gap:.5rem;align-items:center;">
+                                    <input class="input" id="weight" type="number" min="0" step="0.1" placeholder="kg" style="max-width:130px">
+                                    <span style="color:#6b7280;font-size:.9rem">kg</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="label" for="height">Talla (opcional)</label>
+                                <div style="display:flex;gap:.5rem;align-items:center;">
+                                    <input class="input" id="height" type="number" min="0" step="0.5" placeholder="cm" style="max-width:130px">
+                                    <span style="color:#6b7280;font-size:.9rem">cm</span>
+                                </div>
+                            </div>
+                            <button class="button button-primary" id="calc-btn">Calcular</button>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="margin-top:0">Líquidos de mantenimiento</h3>
+                            <p style="margin:0 0 .5rem;color:#6b7280">Regla de Holliday-Segar</p>
+                            <div class="result-card" id="fluids-result">
+                                Introduce peso para calcular mL/día y mL/h.
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="margin-top:0">Antitérmicos</h3>
+                            <div class="result-card" id="antipyretics-result">
+                                Introduce peso para calcular Paracetamol e Ibuprofeno por dosis.
+                            </div>
+                            <div class="warning-card">
+                                <div class="warning-title">Notas de seguridad</div>
+                                <div class="warning-text">
+                                    • Paracetamol: 10–15 mg/kg/dosis cada 4–6h (máx. 60 mg/kg/día).<br>
+                                    • Ibuprofeno: 10 mg/kg/dosis cada 6–8h (evitar < 6 meses salvo indicación).<br>
+                                    • Verificar concentraciones del jarabe disponible.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-top:0">Superficie Corporal (SC) - Mosteller</h3>
+                        <div class="result-card" id="bsa-result">Introduce peso y talla para estimar SC.</div>
+                    </div>
                 </div>
+
                 <div id="medications" class="tab-content">
-                    <!-- Contenido existente de medicamentos -->
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h3 style="margin-top:0">Paracetamol</h3>
+                            <div class="input-group">
+                                <label class="label" for="p-weight">Peso (kg)</label>
+                                <input id="p-weight" class="input" type="number" min="0" step="0.1" placeholder="kg">
+                            </div>
+                            <div class="input-group">
+                                <label class="label" for="p-conc">Concentración (mg/mL)</label>
+                                <input id="p-conc" class="input" type="number" min="1" step="1" value="24" placeholder="p.ej. 24 mg/mL">
+                            </div>
+                            <button class="button button-primary" id="p-calc">Calcular dosis</button>
+                            <div class="result-card" id="p-result">—</div>
+                        </div>
+                        <div class="card">
+                            <h3 style="margin-top:0">Ibuprofeno</h3>
+                            <div class="input-group">
+                                <label class="label" for="i-weight">Peso (kg)</label>
+                                <input id="i-weight" class="input" type="number" min="0" step="0.1" placeholder="kg">
+                            </div>
+                            <div class="input-group">
+                                <label class="label" for="i-conc">Concentración (mg/mL)</label>
+                                <input id="i-conc" class="input" type="number" min="1" step="1" value="20" placeholder="p.ej. 20 mg/mL">
+                            </div>
+                            <button class="button button-primary" id="i-calc">Calcular dosis</button>
+                            <div class="result-card" id="i-result">—</div>
+                        </div>
+                    </div>
+                    <div class="warning-card">
+                        <div class="warning-title">Aviso</div>
+                        <div class="warning-text">Las dosis son orientativas y deben confirmarse con la ficha técnica y protocolo local.</div>
+                    </div>
                 </div>
+
                 <div id="scales" class="tab-content">
-                    <!-- Contenido existente de escalas -->
+                    <div class="card">
+                        <h3 style="margin-top:0">Escala FLACC (dolor 2 meses–7 años)</h3>
+                        <p style="margin-top:0;color:#6b7280">F = Cara, L = Piernas, A = Actividad, C = Llanto, C = Consolabilidad. 0–10.</p>
+                        <ul>
+                            <li>0–3: Dolor leve → medidas de confort.</li>
+                            <li>4–6: Dolor moderado → considerar analgésico.</li>
+                            <li>7–10: Dolor intenso → valoración médica.</li>
+                        </ul>
+                    </div>
                 </div>
+
                 <div id="advice" class="tab-content">
-                    <!-- Contenido existente de consejos -->
+                    <div class="card">
+                        <h3 style="margin-top:0">Consejos generales</h3>
+                        <ul>
+                            <li>Usa siempre peso actual y comprueba unidades.</li>
+                            <li>Evita duplicar fármacos de la misma familia.</li>
+                            <li>Ante duda o edad < 3 meses, consulta.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <p class="footer-text">
-                UmbraMed Medical Division - Portal de Recursos Médicos Profesionales
-            </p>
-            <p class="footer-warning">
-                ⚠️ ACCESO RESTRINGIDO - SOLO PERSONAL MÉDICO AUTORIZADO ⚠️
-            </p>
-        </div>
-    </footer>
-
-    <script src="../js/auth.js"></script>
-    <script src="../js/main.js"></script>
     <script>
-        // Código JavaScript existente de la calculadora
+        // Tabs
+        function showTab(id){
+            document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+            document.querySelectorAll('.nav-button').forEach(el=>el.classList.remove('active'));
+            const tab=document.getElementById(id); if(tab) tab.classList.add('active');
+            const btn=Array.from(document.querySelectorAll('.nav-button')).find(b=>b.textContent.toLowerCase().includes(id==='calculator'?'calculadora':id));
+            if(btn) btn.classList.add('active');
+        }
+
+        // Utilidades
+        const round = (n, d=2)=> Number.isFinite(n)? Number(n.toFixed(d)) : n;
+        const lsKey = (k)=> `calc_ped_${k}`;
+
+        function saveInputs(){
+            ['age','weight','height'].forEach(id=>{
+                const v=document.getElementById(id)?.value||''; localStorage.setItem(lsKey(id), v);
+            });
+        }
+        function loadInputs(){
+            ['age','weight','height'].forEach(id=>{
+                const el=document.getElementById(id); if(!el) return; const v=localStorage.getItem(lsKey(id)); if(v!==null) el.value=v;
+            });
+        }
+
+        function calcFluids(weight){
+            if(!(weight>0)) return null;
+            let perDay=0;
+            if(weight<=10) perDay = weight*100;
+            else if(weight<=20) perDay = 1000 + (weight-10)*50;
+            else perDay = 1500 + (weight-20)*20;
+            return { perDay: round(perDay), perHour: round(perDay/24,1) };
+        }
+        function calcBSA(weight, height){
+            if(!(weight>0) || !(height>0)) return null;
+            // Mosteller m^2
+            const bsa = Math.sqrt((height*weight)/3600);
+            return round(bsa, 3);
+        }
+        function calcAntipyretics(weight){
+            if(!(weight>0)) return null;
+            const pMin = round(weight*10); // mg
+            const pMax = round(weight*15);
+            const iDose = round(weight*10);
+            return { paracetamol: { doseRangeMg: `${pMin}–${pMax} mg` }, ibuprofeno: { doseMg: `${iDose} mg` } };
+        }
+
+        function renderResults(){
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            const fluids = calcFluids(w);
+            const antipy = calcAntipyretics(w);
+            const bsa = calcBSA(w, h);
+            const fr = document.getElementById('fluids-result');
+            const ar = document.getElementById('antipyretics-result');
+            const br = document.getElementById('bsa-result');
+            fr.innerHTML = fluids ? `
+                <div><strong>${fluids.perDay} mL/día</strong> (${fluids.perHour} mL/h)</div>
+            `: 'Introduce peso para calcular mL/día y mL/h.';
+            ar.innerHTML = antipy ? `
+                <div><strong>Paracetamol:</strong> ${antipy.paracetamol.doseRangeMg} por dosis (c/4–6h)</div>
+                <div><strong>Ibuprofeno:</strong> ${antipy.ibuprofeno.doseMg} por dosis (c/6–8h)</div>
+            `: 'Introduce peso para calcular Paracetamol e Ibuprofeno por dosis.';
+            br.textContent = bsa ? `${bsa} m²` : 'Introduce peso y talla para estimar SC.';
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+            loadInputs();
+            renderResults();
+            document.getElementById('calc-btn').addEventListener('click', ()=>{ saveInputs(); renderResults(); });
+            ['age','weight','height'].forEach(id=>{
+                const el=document.getElementById(id); if(!el) return; el.addEventListener('input', ()=>{ saveInputs(); renderResults(); });
+            });
+
+            // Meds calculators
+            document.getElementById('p-calc').addEventListener('click', ()=>{
+                const w=parseFloat(document.getElementById('p-weight').value);
+                const conc=parseFloat(document.getElementById('p-conc').value||'0');
+                if(!(w>0) || !(conc>0)) { document.getElementById('p-result').textContent='Introduce peso y concentración.'; return; }
+                const doseMin=round(w*10); const doseMax=round(w*15); // mg
+                const mlMin=round(doseMin/conc,2); const mlMax=round(doseMax/conc,2);
+                document.getElementById('p-result').innerHTML = `Dosis: ${doseMin}–${doseMax} mg por toma ≈ ${mlMin}–${mlMax} mL (c/4–6h)`;
+            });
+            document.getElementById('i-calc').addEventListener('click', ()=>{
+                const w=parseFloat(document.getElementById('i-weight').value);
+                const conc=parseFloat(document.getElementById('i-conc').value||'0');
+                if(!(w>0) || !(conc>0)) { document.getElementById('i-result').textContent='Introduce peso y concentración.'; return; }
+                const dose=round(w*10); // mg
+                const ml=round(dose/conc,2);
+                document.getElementById('i-result').innerHTML = `Dosis: ${dose} mg por toma ≈ ${ml} mL (c/6–8h)`;
+            });
+        });
     </script>
 </body>
 </html>

@@ -3,11 +3,11 @@ class UmbramedComponents {
     
     // Genera el header de navegación
     static generateHeader(activePage = '') {
-        return `
+    return `
         <header class="header">
             <div class="nav-container">
                 <div class="logo-container">
-                    <a href="index.html">
+            <a href="/index.html">
                         <div class="logo-dna">...SVG...</div>
                         <div>
                             <div class="brand-text">UMBRAMED</div>
@@ -18,28 +18,28 @@ class UmbramedComponents {
                 <nav>
                     <ul class="nav-menu">
                         <li class="nav-item">
-                            <a href="herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
+                <a href="/herramientas.html" ${activePage === 'herramientas' ? 'class="active"' : ''}>Herramientas</a>
                         </li>
                         <li class="nav-item">
-                            <a href="asistente_dietas.html" ${activePage === 'dietas' ? 'class="active"' : ''}>🥗 Dietas IA</a>
+                <a href="/docs/unzipped_dietas_ia/dist/index.html" ${activePage === 'dietas' ? 'class="active"' : ''}>🥗 Dietas IA</a>
                         </li>
                         <li class="nav-item">
-                            <a href="diabetes_tipo_2.html" ${activePage === 'diabetes' ? 'class="active"' : ''}>🩸 Diabetes</a>
+                <a href="/diabetes_tipo_2.html" ${activePage === 'diabetes' ? 'class="active"' : ''}>🩸 Diabetes</a>
                         </li>
                         <li class="nav-item">
-                            <a href="herramientas/calculadora_pediatrica.html" ${activePage === 'calculadora' ? 'class="active"' : ''}>👶 Calculadora Pediátrica</a>
+                <a href="/herramientas/calculadora_pediatrica.html" ${activePage === 'calculadora' ? 'class="active"' : ''}>👶 Calculadora Pediátrica</a>
                         </li>
                         <li class="nav-item">
-                            <a href="academia.html" ${activePage === 'academia' ? 'class="active"' : ''} style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a>
+                <a href="/academia.html" ${activePage === 'academia' ? 'class="active"' : ''} style="color: #667eea; font-weight: 600;">🎓 ACADEMIA</a>
                         </li>
                         <li class="nav-item">
-                            <a href="medicamentos_visados.html" ${activePage === 'visados' ? 'class="active"' : ''} style="color:#C41E3A;">🔴 Visados SAS</a>
+                <a href="/medicamentos_visados.html" ${activePage === 'visados' ? 'class="active"' : ''} style="color:#C41E3A;">🔴 Visados SAS</a>
                         </li>
                         <li class="nav-item">
-                            <a href="medicamentos_sin_lactosa.html" style="color: #C41E3A;" ${activePage === 'medicamentos' ? 'class="active"' : ''}>💊 Sin Lactosa</a>
+                <a href="/medicamentos_sin_lactosa.html" style="color: #C41E3A;" ${activePage === 'medicamentos' ? 'class="active"' : ''}>💊 Sin Lactosa</a>
                         </li>
                         <li class="nav-item admin-only" style="display: none;">
-                            <a href="index.html#admin">Admin</a>
+                <a href="/index.html#admin">Admin</a>
                         </li>
                         <li class="nav-item">
                             <div id="loginArea">
@@ -80,7 +80,7 @@ class UmbramedComponents {
         // Cargar scripts de autenticación (con stub de carga diferida)
         if (!window.UmbraAuthCore) {
             const authScript = document.createElement('script');
-            authScript.src = 'js/auth.js';
+            authScript.src = '/js/auth.js';
             document.head.appendChild(authScript);
         }
         // Si aún no existe showLogin, crear un stub que carga auth.js y reintenta
@@ -89,8 +89,8 @@ class UmbramedComponents {
                 if (window.UmbraAuthCore && typeof window.showLogin === 'function') {
                     return window.showLogin();
                 }
-                const s=document.querySelector('script[src="js/auth.js"]')||document.createElement('script');
-                if (!s.src) { s.src='js/auth.js'; document.head.appendChild(s); }
+                const s=document.querySelector('script[src="/js/auth.js"]')||document.createElement('script');
+                if (!s.src) { s.src='/js/auth.js'; document.head.appendChild(s); }
                 s.onload = ()=> window.showLogin && window.showLogin();
             };
         }
